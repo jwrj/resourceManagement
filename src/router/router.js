@@ -43,32 +43,41 @@ export default [
 		]
 	},
 	{
-		path: '/user',
-		name: 'user',
+		path: '/resource',
+		name: 'resource',
 		meta: {
-			title: '会员管理',
+			title: 'XXXX',
 			icon: 'md-alarm',
 			showAlways: true
 		},
 		component: Main,
 		children: [
 			{
-				path: 'joinChamber',
-				name: 'joinChamber',
+				path: 'resourceIn',
+				name: 'resourceIn',
 				meta: {
-					title: '申请加入商会',
+					title: '会内资源',
 					icon: 'md-alarm',
 				},
-				component: () => import('@/views/user/joinChamber.vue')
+				component: () => import('@/views/resource/resourceIn.vue')
 			},
 			{
-				path: 'userList',
-				name: 'userList',
+				path: 'resourceOut',
+				name: 'resourceOut',
 				meta: {
-					title: '会员列表',
+					title: '会间资源',
 					icon: 'md-alarm',
 				},
-				component: () => import('@/views/user/userList.vue')
+				component: () => import('@/views/resource/resourceCen.vue')
+		  },
+			{
+			path: 'resourceGov',
+			name: 'resourceGov',
+			meta: {
+				title: '政府资源',
+				icon: 'md-alarm',
+			},
+			component: () => import('@/views/resource/resourceGov.vue')	
 			}
 		]
 	},
