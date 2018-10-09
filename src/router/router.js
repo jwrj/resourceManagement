@@ -46,7 +46,7 @@ export default [
 		path: '/resource',
 		name: 'resource',
 		meta: {
-			title: 'XXXX',
+			title: '查看资源',
 			icon: 'md-alarm',
 			showAlways: true
 		},
@@ -81,123 +81,79 @@ export default [
 			}
 		]
 	},
+
 	{
-		path: '/chamber',
-		name: 'chamber',
+		path: '/manage',
+		name: 'manage',
 		meta: {
-			title: '商会管理',
+			title: '资源管理',
 			icon: 'md-alarm',
 			showAlways: true
 		},
 		component: Main,
 		children: [
 			{
-				path: 'createChamber',
-				name: 'createChamber',
+				path: 'chamberRes',
+				name: 'chamberRes',
 				meta: {
-					title: '创建商会',
+					title: '商会资源发布',
 					icon: 'md-alarm',
 				},
-				component: () => import('@/views/chamber/createChamber.vue')
+				component: () => import('@/views/manage/chamberRes.vue')
 			},
 			{
-				path: 'postSet',
-				name: 'postSet',
+				path: 'govRes',
+				name: 'govRes',
 				meta: {
-					title: '岗位配置',
+					title: '政府资源发布',
 					icon: 'md-alarm',
 				},
-				component: () => import('@/views/chamber/postSet.vue')
+				component: () => import('@/views/manage/govRes.vue')
 			},
 			{
-				path: 'staffSet',
-				name: 'staffSet',
+				path: 'myPost',
+				name: 'myPost',
 				meta: {
-					title: '人员配置',
+					title: '我发布的资源',
 					icon: 'md-alarm',
 				},
-				component: () => import('@/views/chamber/staffSet.vue')
+				component: () => import('@/views/manage/myPost.vue')
+			},
+			{
+				path: 'myGet',
+				name: 'myGet',
+				meta: {
+					title: '我承接的资源',
+					icon: 'md-alarm',
+				},
+				component: () => import('@/views/manage/myGet.vue')
 		  },
 			{
-				path: 'sessionSet',
-				name: 'sessionSet',
+				path: 'getResoure',
+				name: 'getResoure',
 				meta: {
-					title: '届次配置',
+					title: '资源承接单位',
 					icon: 'md-alarm',
 				},
-				component: () => import('@/views/chamber/sessionSet.vue')
-			},
-			{
-				path: 'approve',
-				name: 'approve',
-				meta: {
-					title: '会员审批',
-					icon: 'md-alarm',
-				},
-				component: () => import('@/views/chamber/approve.vue')
+				component: () => import('@/views/manage/detail/getResoure.vue')
 			}
 		]
 	},
 	{
-		path: '/activity',
-		name: 'activity',
-		meta: {
-			title: '活动/会议管理',
-			icon: 'md-alarm',
-			showAlways: true
-		},
-		component: Main,
-		children: [
-			{
-				path: 'activityList',
-				name: 'activityList',
-				meta: {
-					title: '活动/会议列表',
-					icon: 'md-alarm',
-				},
-				component: () => import('@/views/activity/activityList.vue')
+			path: '/auditResC',
+			name: 'auditResC',
+			meta: {
+				hideMenu: true,
 			},
-			{
-				path: 'createActivity',
-				name: 'createActivity',
-				meta: {
-					title: '创建活动/会议',
-					icon: 'md-alarm',
-				},
-				component: () => import('@/views/activity/createActivity.vue')
-			},
-			{
-				path: 'activityDetails',
-				name: 'activityDetails',
-				meta: {
-					title: '活动/会议详情',
-					icon: 'md-alarm',
-				},
-				component: () => import('@/views/activity/activityDetails.vue')
-			}
-
-		]
+			component: () => import('@/views/manage/detail/auditResC.vue')
 	},
 	{
-		path: '/price',
-		name: 'price',
-		meta: {
-			title: '会费管理',
-			icon: 'md-alarm',
-			showAlways: true
-		},
-		component: Main,
-		children: [
-			{
-				path: 'dues',
-				name: 'dues',
-				meta: {
-					title: '会费情况',
-					icon: 'md-alarm',
-				},
-				component: () => import('@/views/price/dues.vue')
-			}
-		]
+			path: '/auditResG',
+			name: 'auditResG',
+			meta: {
+        hideMenu: true,
+			},
+			component: () => import('@/views/manage/detail/auditResG.vue')
 	},
 	{
 		path: '/testPages',

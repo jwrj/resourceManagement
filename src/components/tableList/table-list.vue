@@ -81,12 +81,10 @@ export default {
 			type: Array,
 			required: true
 		},
-		
-//		tableData: {//表格数据
-//			type: Array,
-//			default: () => []
-//		},
-
+		chamber:{
+			type:Array,
+			default: () => []
+		},
 		filterShow: {
 			type: Boolean,
 			default: true
@@ -111,6 +109,7 @@ export default {
         	tableData: tableData,//表格数据
         	
         	checkedData: [],
+			SelectData:[]
         	
         }
     },
@@ -171,6 +170,7 @@ export default {
     	},
     	tabSelectAll(selection){//全选
     		console.log('全选');
+			this.SelectData=selection;
     		this.checkedData = selection;
     		this.tableData.forEach(item => {
     			selection.forEach(item2 => {
@@ -183,6 +183,7 @@ export default {
     	},
     	tabSelect(selection, row){//单选
     		console.log('单选');
+			this.SelectData=selection;
     		this.tableData.forEach(item => {
     			if(item.id === row.id){
       				this.$set(item, '_checked', true);
@@ -193,6 +194,7 @@ export default {
     		
     		if(selection.length === 0){
     			console.log('取消全选');
+				this.SelectData=[];
     			this.tableData.forEach(item => {
     				this.$set(item, '_checked', false);
     			});
@@ -213,14 +215,18 @@ export default {
       				this.$set(item, '_checked', false);
     			}
     		});
-    	},
+    	}
     	
     },
     computed: {//计算属性
         	
     },
     watch: {//监测数据变化
-    	
+    	chamber(){
+			
+				console.log('选择的商会是'+this.chamber)
+		
+		}
 	},
     
     //===================组件钩子===========================
@@ -228,6 +234,7 @@ export default {
     created () {//实例被创建完毕之后执行
     	
     	this.initColumns();
+		this.SelectData=[]
     	
 	},
     mounted () {//模板被渲染完毕之后执行

@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<Form :model="formInline">
+			<slot name="header"></slot>
 			<DatePicker v-model="formInline.time" type="daterange" split-panels placeholder="选择时间" style="width: 200px"></DatePicker>
 			<Input v-model="formInline.word" style="width: 200px;margin:0 5px;" />
 			<Button type="primary" @click.native="search">搜索</Button>
@@ -13,7 +14,7 @@
 			</p>
 		</Form>
 		<div class="imgtext" style="margin: 15px;">
-			<div class="centent" v-for="(data,index) of datalist" :key="index">
+			<div class="centent" v-for="(data,index) of datalist" :key="index" @click="rowclick">
 				<Icon type="md-image" size="120" />
 				<div class="middle">
 					<Row :gutter="16">
@@ -86,6 +87,9 @@
 		methods: { //方法
 			search() {
 				this.$emit('search',this.formInline);
+			},
+			rowclick(){
+				this.$emit('openview','aa');
 			}
 		},
 		computed: { //计算属性

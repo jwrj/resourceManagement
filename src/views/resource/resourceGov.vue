@@ -5,32 +5,7 @@
 			<div slot="title">
 				<h1>政府资源</h1>
 			</div>
-			<div>
-						<div class="content">
-							<p class="choice" :style="{background:'#fff',padding:'10px'}">
-					       <slot name="header"></slot>
-						   <Row >
-						<Col span="10">
-							
-							<Button type="info">选择省</Button><Button type="info">选择市</Button>
-							<p><Button type="info">商会名称123</Button></p>
-							<Button class="children">下属商会1</Button><Button class="children">下属商会2</Button><Button class="children">下属商会3</Button>
-						</Col>
-						<Col span="14"  :style="{minHeight:'150px'}" class="yx" >
-						<div :style="{padding:'10px'}">
-							<p class="title">已选条件</p>
-								<Badge text='X' type="warning" v-for="(data,index) in xs" :key="index">
-				<Button class="children">{{data}}</Button >
-					</Badge>
-				
-						</div>
-						</Col>
-					</Row>
-							</p>
-						</div>
-			</div>
 			<img-text @search="searchList"></img-text>
-			
 		</Card>
 
 
@@ -56,15 +31,13 @@
 		},
 		data() { //数据
 			return {
-            datalist:[],
-			xs:['下属商会1','下属商会2','下属商会3','下属商会4']
-
+            datalist:[]
 			}
 		},
 		methods: { //方法
       searchList(list){
 		  this.datalist=list;
-	   console.log('政府资源'+this.datalist.word);
+	   console.log('接收到了'+this.datalist.word);
       }
 		},
 		computed: { //计算属性
@@ -120,28 +93,5 @@
 </script>
 
 <style scoped lang="less">
-	.content{
-		margin: 12px 0;
-	}
-	.title{
-		font-size: 20px;
-		font-family: "arial black";
-		font-weight: 700;
-	}
-	Button{
-		margin: 5px 3px;
-		width: 100px;
-		height: 30px;
-		border-radius: none;
-	}
-	.children{
-		background: #c5c8ce;
-		color: white;
-	}
-	.yx{
-		border-left: 1px solid #c5c8ce;
-	     top: -9px;
-		display: flex;
-		align-items: flex-start;
-	}
+
 </style>
