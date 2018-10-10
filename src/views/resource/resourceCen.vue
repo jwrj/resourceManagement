@@ -7,21 +7,49 @@
 			</div>
 			<img-text @search="searchList">
 				<div slot="header" style="margin-bottom: 50px;">
-					<Button type="primary" @click="showImport=true">请选择商会</Button>
+					<Button type="primary" @click="showImport=true">
+						请选择商会
+					</Button>
 					<p style="margin-top: 5px;">
 						已选商会:
-						<Button style="margin: 5px;" v-for="(res,index) in result" :key="index">{{res}}
+						<Button
+						style="margin: 5px;" 
+						v-for="(res,index) in result" 
+						:key="index">{{res}}
 						</Button>
 					</p>
-					<p><Button @click="resetResult" v-if="result.length !== 0" type="primary">清空</Button></p>
+					
+					<p>
+						<Button 
+						@click="resetResult" 
+						v-if="result.length !== 0" 
+						type="primary">清空
+						</Button>
+					</p>
 				</div>
 			</img-text>
 		</Card>
 
-		<Modal v-model="showImport" :mask-closable="false" title="请选择商会" @on-ok="getData" :width="800">
-			<table-list :tableColumns="tableColumns" ref="selectCham" :chamber="result">
+		<Modal 
+		v-model="showImport" 
+		:mask-closable="false" 
+		title="请选择商会" 
+		@on-ok="getData" 
+		:width="800">
+		
+			<table-list 
+			:tableColumns="tableColumns" 
+			:modalTitle="modalTitle" 
+			:tableData="tableData" 
+			ref="selectCham" 
+			:chamber="result"
+			@on-btn-click="btnClick">
+			
 				<div slot="header">
-					<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
+					<al-cascader 
+					v-model="res_s" 
+					placeholder="选择地区" 
+					style="width: 300px;" />
 				</div>
 			</table-list>
 		</Modal>
@@ -50,6 +78,7 @@
 		data() { //数据
 			return {
 				datalist: [],
+				modalTitle:'',
 				res_s: [],
 				showImport: false,
 				result: [],
@@ -67,6 +96,48 @@
 					{
 						title: '日期',
 						key: 'date'
+					},
+					{
+						align: 'center',
+						width: 130,
+							title: '操作',
+							handle: [
+								{
+									name: '查看详情',
+									key: 0,
+									modalShow:false,
+									props: {
+										loading: false
+									}
+								},
+								],
+					}
+				],
+				tableData:[
+					{
+						id: 1,
+						name: '张三',
+						date: '2016-10-03'
+					},
+					{
+						id: 2,
+						name: '李四',
+						date: '2016-10-01'
+					},
+					{
+						id: 3,
+						name: '麻五',
+						date: '2016-10-02'
+					},
+					{
+						id: 4,
+						name: '徐六',
+						date: '2016-10-04'
+					},
+					{
+						id: 5,
+						name: '吴老七',
+						date: '2016-10-04'
 					}
 				]
 
@@ -79,7 +150,6 @@
 			},
 			getData() {
 				let sk = this.$refs.selectCham.SelectData;
-				console.log('youde');
 				sk.forEach(item => {
 					this.result.push(item.name)
 				});
@@ -87,6 +157,10 @@
 			},
 			resetResult() {
 				this.result = [];
+			},
+			btnClick(val){
+				this.modalTitle='暂时标题';
+				console.log(val);
 			}
 		},
 		computed: { //计算属性

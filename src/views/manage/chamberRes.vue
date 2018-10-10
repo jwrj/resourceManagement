@@ -22,60 +22,91 @@
 		ref="link" 
 		style="margin-top: 5px;">
 					<FormItem label="标题" prop="title">
-						<Input v-model="resList.title" type="text" style="width: 200px;">
+						<Input v-model="resList.title" 
+						type="text" style="width: 200px;">
 						</Input>
 					</FormItem>
 					
 			<FormItem label="发布范围">
-				<Button :type="inter==true ? 'error' : 'primary'" style="margin-right: 5px;" @click="inter=true,out=false">会内</Button>
-				<Button :type="out==true ? 'error' : 'primary'" @click="inter=false,out=true">会外</Button>
+				<Button :type="inter==true ? 'error' : 'primary'" 
+				style="margin-right: 5px;"
+				 @click="inter=true,out=false">
+				 会内
+				 </Button>
+				<Button :type="out==true ? 'error' : 'primary'" 
+				@click="inter=false,out=true">
+				会外
+				</Button>
 			
 			<div v-if="out==true" style="margin-top: 30px;">
-				<Button type="primary" @click="showImport=true">请选择商会</Button>
+				<Button type="primary" @click="showImport=true">
+					请选择商会
+				</Button>
 				<p style="margin-top: 5px;">
 					已选商会:
-					<Button style="margin: 5px;" v-for="(res,index) in result" :key="index">{{res}}
+					<Button 
+					style="margin: 5px;" 
+					v-for="(res,index) in result" 
+					:key="index">{{res}}
 					</Button>
 				</p>
-				<p><Button @click="resetResult" v-if="result.length !== 0" type="primary">清空</Button></p>
+				<p>
+					<Button @click="resetResult" 
+					v-if="result.length !== 0" 
+					type="primary">清空
+					</Button>
+				</p>
 			</div>
-</FormItem>
+			</FormItem>
 				<Row>
 					<Col :lg="12" :md="16" :sm="24" :xs="24">
 					<FormItem label="起始时间" prop="time">
-						<DatePicker v-model="resList.time" type="daterange" split-panels placeholder="选择时间" style="width: 200px"></DatePicker>
+						<DatePicker 
+						v-model="resList.time" 
+						type="daterange" 
+						split-panels placeholder="选择时间" 
+						style="width: 200px">
+						</DatePicker>
 					</FormItem>
 					<FormItem label="项目总额" prop="num">
-						<Input v-model="resList.num" type="text" style="width: 200px;">
+						<Input v-model="resList.num" 
+						type="text" 
+						style="width: 200px;">
 						<span slot="append">万元</span>
 						</Input>
 					</FormItem>
 					<FormItem label="担保金额" prop="assure">
-						<Input v-model="resList.assure" type="text" style="width: 200px;">
+						<Input v-model="resList.assure" 
+						type="text" style="width: 200px;">
 						<span slot="append">万元</span>
 						</Input>
 					</FormItem>
 					<FormItem label="介绍费用" prop="price">
-						<Input v-model="resList.price" type="text" style="width: 200px;">
+						<Input v-model="resList.price" 
+						type="text" style="width: 200px;">
 						<span slot="append">万元</span>
 						</Input>
 					</FormItem>
 					</Col>
 					<Col :lg="12" :md="16" :sm="24" :xs="24">
 					<FormItem label="资质需求">
-						<Input v-model="resList.need" type="text" style="width: 200px;">
+						<Input v-model="resList.need" 
+						type="text" style="width: 200px;">
 						</Input>
 					</FormItem>
 					<FormItem label="项目周期">
-						<Input v-model="resList.circle" type="text" style="width: 200px;">
+						<Input v-model="resList.circle" 
+						type="text" style="width: 200px;">
 						</Input>
 					</FormItem>
 					<FormItem label="交付地点">
-						<Input v-model="resList.place" type="text" style="width: 200px;">
+						<Input v-model="resList.place" 
+						type="text" style="width: 200px;">
 						</Input>
 					</FormItem>
 					<FormItem label="协助成都">
-						<Input v-model="resList.help" type="text" style="width: 200px;">
+						<Input v-model="resList.help" 
+						type="text" style="width: 200px;">
 						</Input>
 					</FormItem>
 					</Col>
@@ -92,14 +123,24 @@
 		
 					<file-manage currentRouteName="createActivity"></file-manage>
 		<p style="margin-top: 15px;text-align: center;width: 100%;">
-			<Button type="primary" @click="handleSubmit('link')">立即创建</Button>
+			<Button type="primary" 
+			@click="handleSubmit('link')">
+			立即创建
+			</Button>
 		</p>
 				</Card>
-		<Modal v-model="showImport" 
+		<Modal 
+		v-model="showImport" 
 		:mask-closable="false" 
 		title="请选择商会"
-		@on-ok="getData" :width="800">
-			<table-list :tableColumns="tableColumns" ref="selectCham" :chamber="result">
+		@on-ok="getData" 
+		:width="800">
+			<table-list 
+			:tableColumns="tableColumns" 
+			ref="selectCham" 
+			:chamber="result"
+			:tableData="tableData"
+			>
 				<div slot="header">
 					<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
 				</div>
@@ -165,6 +206,33 @@
 					{
 						title: '日期',
 						key: 'date'
+					}
+				],
+				tableData:[
+					{
+						id: 1,
+						name: '张三的商会',
+						date: '2016-10-03'
+					},
+					{
+						id: 2,
+						name: '李四的商会',
+						date: '2016-10-01'
+					},
+					{
+						id: 3,
+						name: '麻五的商会',
+						date: '2016-10-02'
+					},
+					{
+						id: 4,
+						name: '徐六的商会',
+						date: '2016-10-04'
+					},
+					{
+						id: 5,
+						name: '吴老七的商会',
+						date: '2016-10-04'
 					}
 				],
 				ruleValidate: {

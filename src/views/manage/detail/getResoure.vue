@@ -37,7 +37,9 @@
 	</div>
 		<div style="flex: 1;">
 			<Card>
-				<div slot="title">发布人信息</div>
+				<div slot="title">
+					<h1>发布人信息</h1>
+				</div>
 				<div class="centent">
 								<Icon type="md-image" size="120" />
 								<div class="middle">
@@ -51,7 +53,15 @@
 			</Card>
 			
 			<Card style="margin-top: 5px;">
-				<div slot="title">其他承接单位</div>
+				<div slot="title">
+					<h1>其他承接单位</h1>
+				</div>
+				
+				<div class="unit" v-for="(unit,index) of units" :key="index">
+					<p style="font-size: 16px;color: black;" >{{unit.name}}</p>
+					<p class="gray">商会：{{unit.cham}}</p>
+					<p class="gray">时间：{{unit.date}}</p>
+				</div>
 			</Card>
 		</div>
 		
@@ -76,7 +86,33 @@ export default {
 	},
     data () {//数据
         return {
-        	
+        	units:[
+				{
+					name:'深圳市中投顾问股份有限公司',
+					cham:'广西湖北商会',
+					date:'2017-01-01'
+				},
+				{
+					name:'南宁市高新顾问股份有限公司',
+					cham:'广西湖北商会',
+					date:'2017-08-01'
+				},
+				{
+					name:'中山市石头信息科技有限公司',
+					cham:'广西湖北商会',
+					date:'2017-07-21'
+				},
+				{
+					name:'桂林市大富翁股份有限公司',
+					cham:'广西湖北商会',
+					date:'2017-11-09'
+				},
+				{
+					name:'北京市豆浆油条有限公司',
+					cham:'广西湖北商会',
+					date:'2017-12-13'
+				}
+			]
         }
     },
     methods: {//方法
@@ -138,5 +174,12 @@ export default {
 	.centent {
 		display: flex;
 		align-items: center;
+	}
+	.gray{
+		font-size: 12px;
+	}
+	.unit{
+		border-bottom: 1px solid #C2CCD1;
+		padding: 8px 2px;
 	}
 </style>

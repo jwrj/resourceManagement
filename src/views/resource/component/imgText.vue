@@ -2,7 +2,14 @@
 	<div>
 		<Form :model="formInline">
 			<slot name="header"></slot>
-			<DatePicker v-model="formInline.time" type="daterange" split-panels placeholder="选择时间" style="width: 200px"></DatePicker>
+			<DatePicker 
+			v-model="formInline.time" 
+			type="daterange" 
+			split-panels 
+			placeholder="选择时间" 
+			style="width: 200px">
+			</DatePicker>
+			
 			<Input v-model="formInline.word" style="width: 200px;margin:0 5px;" />
 			<Button type="primary" @click.native="search">搜索</Button>
 			<p style="margin-top: 6px;">
@@ -96,7 +103,7 @@
 
 		},
 		watch: { //监测数据变化
-
+  
 		},
 
 		//===================组件钩子===========================
@@ -105,7 +112,6 @@
 
 		},
 		mounted() { //模板被渲染完毕之后执行
-
 		},
 
 		//=================组件路由勾子==============================

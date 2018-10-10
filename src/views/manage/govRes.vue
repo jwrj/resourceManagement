@@ -107,7 +107,14 @@
 		:mask-closable="false" 
 		title="请选择商会"
 		@on-ok="getData" :width="800">
-			<table-list :tableColumns="tableColumns" ref="selectCham" :chamber="result">
+			<table-list 
+			:tableColumns="tableColumns" 
+			ref="selectCham" 
+			:chamber="result"
+			:tableData="tableData" 
+			:modalTitle="modalTitle"
+			@on-btn-click="btnClick"
+			>
 				<div slot="header">
 					<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
 				</div>
@@ -147,6 +154,7 @@
 				inter: true,
 				out: false,
 				res_s: [],
+				modalTitle:'',
 				showImport: false,
 				result: [],
 				resList: {
@@ -182,6 +190,48 @@
 					{
 						title: '日期',
 						key: 'date'
+					},
+					{
+						align: 'center',
+						width: 130,
+							title: '操作',
+							handle: [
+								{
+									name: '查看详情',
+									key: 0,
+									modalShow:true,
+									props: {
+										loading: false
+									}
+								},
+								],
+					}
+				],
+				tableData:[
+					{
+						id: 1,
+						name: '张三的商会',
+						date: '2016-10-03'
+					},
+					{
+						id: 2,
+						name: '李四的商会',
+						date: '2016-10-01'
+					},
+					{
+						id: 3,
+						name: '麻五的商会',
+						date: '2016-10-02'
+					},
+					{
+						id: 4,
+						name: '徐六的商会',
+						date: '2016-10-04'
+					},
+					{
+						id: 5,
+						name: '吴老七的商会',
+						date: '2016-10-04'
 					}
 				],
 				ruleValidate: {
@@ -259,7 +309,11 @@
             },
             handleRemove (index) {
                 this.resList.personList[index].status = 0;
-            }
+            },
+			btnClick(val){
+				this.modalTitle=val.params.row.name;
+				console.log(val);
+			}
 		},
 		computed: { //计算属性
 

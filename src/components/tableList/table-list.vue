@@ -37,7 +37,7 @@
 		:class-name="$store.state.app.isCollapsed ? 'my-ivu-modal-wrap leftmin' : 'my-ivu-modal-wrap leftmax'"
 		>
 	    	<div slot="header" style="position: relative;">
-	    		<h1>标题</h1>
+	    		<h1>{{modalTitle}}</h1>
 		    	<div style="position: absolute;top: -8px;right: 0;">
 		    		<Button icon="md-close" type="success" @click="modalShow = false">关闭</Button>
 		    		<Button type="primary" icon="md-refresh" style="margin-left: 6px;">刷新</Button>
@@ -62,8 +62,6 @@
 
 import { edit, details, buttonItem } from './handleButton.js'
 
-import { tableData } from './data.js'
-
 export default {
 	name: 'tableList',
 	components:{//组件模板
@@ -80,6 +78,11 @@ export default {
 		tableColumns: {//表头数据
 			type: Array,
 			required: true
+		},
+		
+		tableData: {//表格数据
+			type: Array,
+			default: () => []
 		},
 		chamber:{
 			type:Array,
@@ -100,13 +103,16 @@ export default {
 			default: true
 		},
 		
+		modalTitle: {//弹窗标题
+			type: String,
+			default: '标题'
+		},
+		
 	},
     data () {//数据
         return {
         	
         	modalShow: false,
-        	
-        	tableData: tableData,//表格数据
         	
         	checkedData: [],
 			SelectData:[]
@@ -158,7 +164,11 @@ export default {
 	    					
 	    				});
 	    				
-	    				return h('div',children);
+	    				return h('div',{
+	    					style: {
+	    						padding: '4px 0'
+	    					}
+	    				},children);
 	    				
 	    			}
 	    			
@@ -170,8 +180,8 @@ export default {
     	},
     	tabSelectAll(selection){//全选
     		console.log('全选');
-			this.SelectData=selection;
     		this.checkedData = selection;
+			this.SelectData=selection;
     		this.tableData.forEach(item => {
     			selection.forEach(item2 => {
     				if(item.id === item2.id){
@@ -215,7 +225,7 @@ export default {
       				this.$set(item, '_checked', false);
     			}
     		});
-    	}
+    	},
     	
     },
     computed: {//计算属性
@@ -234,43 +244,9 @@ export default {
     created () {//实例被创建完毕之后执行
     	
     	this.initColumns();
-		this.SelectData=[]
-    	
+    	this.SelectData=[];
 	},
     mounted () {//模板被渲染完毕之后执行
-	},
-	
-	//=================组件路由勾子==============================
-	
-	beforeRouteEnter (to, from, next) {//在组件创建之前调用（放置页面加载时请求的Ajax）
-		
-		(async() => {//执行异步函数
-			
-			//async、await错误处理
-			try {
-				
-				/*
-				 * 
-				 * ------串行执行---------
-				 * console.log(await getAjaxData());
-				 * ...
-				 * 
-				 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-				 * let abc = getAjaxData();//先执行promise函数
-				 * ...
-				 * console.log(await abc);
-				 * ...
-				*/
-				next(vm => {
-					
-				});
-				
-			} catch(err) {
-				console.log(err);
-			}
-			
-		})();
-		
 	},
 	
 }
@@ -317,5 +293,8 @@ export default {
 		     width: 100% !important;
 		     margin: 0 !important; 
 		}
+	}
+	.my-modal-box .ivu-modal-header{
+		height: 45px;
 	}
 </style>

@@ -140,6 +140,36 @@ export default [
 		]
 	},
 	{
+		path: '/audit',
+		name: 'audit',
+		meta: {
+			title: '审核',
+			icon: 'md-alarm',
+			showAlways: true
+		},
+		component: Main,
+		children: [
+			{
+				path: 'auditResource',
+				name: 'auditResource',
+				meta: {
+					title: '资源审核',
+					icon: 'md-alarm',
+				},
+				component: () => import('@/views/audit/auditResource.vue')
+			},
+			{
+				path: 'auditAccount',
+				name: 'auditAccount',
+				meta: {
+					title: '账户审核',
+					icon: 'md-alarm',
+				},
+				component: () => import('@/views/audit/auditAccount.vue')
+			}
+		]
+	},
+	{
 			path: '/auditResC',
 			name: 'auditResC',
 			meta: {
