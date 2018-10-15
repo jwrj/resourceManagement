@@ -44,11 +44,16 @@
 				</Button>
 				<p style="margin-top: 5px;">
 					已选商会:
-					<Button 
-					style="margin: 5px;" 
+					<Tag 
+					color="primary"
+					type="border"
+					closable
+					:name="res.id"
 					v-for="(res,index) in result" 
-					:key="index">{{res}}
-					</Button>
+					:key="index"
+					@on-close="closeTag(res,index)"
+					>{{res.name}}
+					</Tag>
 				</p>
 				<p>
 					<Button @click="resetResult" 
@@ -253,7 +258,6 @@
 						}
 					}],
 					num: [{
-						type:'number',
 						required: true,
 						message: '请填写项目总额',
 						trigger: 'blur'
@@ -279,11 +283,9 @@
 
 		methods: { //方法
 			getData() {
-				let sk = this.$refs.selectCham.SelectData;
-				console.log('youde');
-				sk.forEach(item => {
-					this.result.push(item.name)
-				});
+				let sk = this.$refs.selectCham.checkedData;
+             let ck =Object.assign({},this.result,sk);
+			 this.result=ck;
 
 			},
 			resetResult() {
@@ -297,7 +299,11 @@
 						//this.$Message.error('添加失败!');
 					}
 				})
-			}
+			},
+			closeTag(res,index){
+			
+          }
+		  
 		},
 		computed: { //计算属性
 

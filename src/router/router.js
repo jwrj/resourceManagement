@@ -166,6 +166,24 @@ export default [
 					icon: 'md-alarm',
 				},
 				component: () => import('@/views/audit/auditAccount.vue')
+			},
+			{
+				path: 'chamDetail',
+				name: 'chamDetail',
+				meta: {
+					title: '会间资源审核详情',
+					icon: 'md-alarm',
+				},
+				component: () => import('@/views/audit/chamDetail.vue')
+			},
+			{
+				path: 'govDetail',
+				name: 'govDetail',
+				meta: {
+					title: '政府资源审核详情',
+					icon: 'md-alarm',
+				},
+				component: () => import('@/views/audit/govDetail.vue')
 			}
 		]
 	},

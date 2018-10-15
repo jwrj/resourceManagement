@@ -1,40 +1,6 @@
 <template>
 	
-	<div style="display: flex;">
-	<div style="flex: 3;margin-right: 5px;">
-		<Card style="padding: 15px;">
-			<p style="font-size: 26px;margin-bottom: 20px;color:#333333;" class="bold">
-				中国（武汉·新洲）厨卫基地发展战略规划与招商策划案例
-			</p>
-			
-			<p style="padding: 15px 0;">
-				<h1>承接单位信息</h1>
-				<br>
-				<p>承接单位：广西建工集团</p>
-				<p>联系人：张三</p>
-				<p>联系电话：0771-1234567</p>
-				<p>承接时间：2017-01-16</p>
-				<p>进度状况：已承接</p>
-				<p>交付时间：2019-02-01</p>
-				<div>
-					<p>资质:</p>
-					<Icon type="md-image"  size="100"/>
-					<Icon type="md-image"  size="100"/>
-					<Icon type="md-image"  size="100"/>
-				</div>
-				
-				<div>
-					<p>担保金额:50万</p>
-					<Icon type="md-image"  size="100"/>
-				</div>
-				
-				<div>
-					<p>介绍费用:10万</p>
-					<Icon type="md-image"  size="100"/>
-				</div>
-			</p>
-		</Card>
-	</div>
+	<div>
 		<div style="flex: 1;">
 			<Card>
 				<div slot="title">
@@ -43,13 +9,32 @@
 				<div class="centent">
 								<Icon type="md-image" size="120" />
 								<div class="middle">
-				                <h1>张三丰</h1>
+								<h1>张三丰</h1>
 								<p>所属单位：广西南宁政府</p>
 								<p>所属职务：联系专员</p>
 								<p>商会实名认证</p>
 								</div>
-								<hr>
 				</div>
+				
+				<div class="audit" v-if="showAudit">
+						<h1>审核选项</h1>
+						<br>
+					<p>
+						<Button type="primary" style="margin-left: 15px;">通过审核</Button>
+						<Button style="margin-left: 15px;">未通过审核</Button>
+					</p>
+				</div>
+			</Card>
+			
+			<Card style="margin-top: 5px;" v-if="showResource">
+				<div slot="title">
+					<h1>资源状态</h1>
+				</div>
+				<p>开放承接：正在开放</p>
+				<p>审核状态：已通过</p>
+				<p>可见区域：会内可见</p>
+				<p>时限状态：未结束资源</p>
+				<Button type="primary" style="margin: 15px 0 0 15px;">我要承接</Button>
 			</Card>
 			
 			<Card style="margin-top: 5px;">
@@ -65,6 +50,7 @@
 			</Card>
 		</div>
 		
+		
 	</div>
 	
 </template>
@@ -72,7 +58,7 @@
 <script>
 
 export default {
-	name: '',
+	name: 'rightCard',
 	components:{//组件模板
 	},
 	props:{//组件道具（参数）
@@ -83,36 +69,47 @@ export default {
 		 * 默认值 default: ''
 		 * 
 		 */
+		showResource:{
+			type:Boolean,
+			default:false
+		},
+		showAudit:{
+			type:Boolean,
+			default:false
+		},
+		units:{
+			type:Array,
+			default:() =>[
+					{
+						name:'深圳市中投顾问股份有限公司',
+						cham:'广西湖北商会',
+						date:'2017-01-01'
+					},
+					{
+						name:'南宁市高新顾问股份有限公司',
+						cham:'广西湖北商会',
+						date:'2017-08-01'
+					},
+					{
+						name:'中山市石头信息科技有限公司',
+						cham:'广西湖北商会',
+						date:'2017-07-21'
+					},
+					{
+						name:'桂林市大富翁股份有限公司',
+						cham:'广西湖北商会',
+						date:'2017-11-09'
+					},
+					{
+						name:'北京市豆浆油条有限公司',
+						cham:'广西湖北商会',
+						date:'2017-12-13'
+					}
+			]
+		}
 	},
     data () {//数据
         return {
-        	units:[
-				{
-					name:'深圳市中投顾问股份有限公司',
-					cham:'广西湖北商会',
-					date:'2017-01-01'
-				},
-				{
-					name:'南宁市高新顾问股份有限公司',
-					cham:'广西湖北商会',
-					date:'2017-08-01'
-				},
-				{
-					name:'中山市石头信息科技有限公司',
-					cham:'广西湖北商会',
-					date:'2017-07-21'
-				},
-				{
-					name:'桂林市大富翁股份有限公司',
-					cham:'广西湖北商会',
-					date:'2017-11-09'
-				},
-				{
-					name:'北京市豆浆油条有限公司',
-					cham:'广西湖北商会',
-					date:'2017-12-13'
-				}
-			]
         }
     },
     methods: {//方法
@@ -181,5 +178,10 @@ export default {
 	.unit{
 		border-bottom: 1px solid #C2CCD1;
 		padding: 8px 2px;
+	}
+	.audit{
+		border-top: 1px solid #C2CCD1;
+		margin: 10px 0;
+		padding-top: 10px;
 	}
 </style>

@@ -60,7 +60,7 @@
  * slot-scope
  */
 
-import { buttonItem } from './handleButton.js'
+import { edit, details, buttonItem } from './handleButton.js'
 
 export default {
 	name: 'tableList',
@@ -84,7 +84,10 @@ export default {
 			type: Array,
 			default: () => []
 		},
-
+		chamber:{
+			type:Array,
+			default: () => []
+		},
 		filterShow: {
 			type: Boolean,
 			default: true
@@ -112,6 +115,7 @@ export default {
         	modalShow: false,
         	
         	checkedData: [],
+			SelectData:[]
         	
         }
     },
@@ -125,6 +129,29 @@ export default {
     		
     		this.tableColumns.forEach(item => {
     		
+//	    		if(item.handle){
+//	    			
+//	    			item.render = (h,params) => {
+//	    				
+//	    				let children = [];
+//	    				
+//	    				item.handle.forEach(btnItem => {
+//	    					
+//	    					if(btnItem === 'edit'){
+//	    						children.push(edit(this, h, params));
+//	    					}else if(btnItem === 'details'){
+//	    						children.push(details(this, h, params));
+//	    					}
+//	    					
+//	    				})
+//	    				
+//	    				return h('div',children);
+//	    				
+//	    			}
+//	    			
+//	    		}
+	    		
+	    		
 	    		if(item.handle){
 	    			
 	    			item.render = (h,params) => {
@@ -133,7 +160,7 @@ export default {
 	    				
 	    				item.handle.forEach(btnItem => {
 	    					
-	    					children.push(buttonItem(this, h, params, btnItem));
+	    					children.push(buttonItem(this, h, params, btnItem, btnItem.props || {}));
 	    					
 	    				});
 	    				
@@ -154,6 +181,7 @@ export default {
     	tabSelectAll(selection){//全选
     		console.log('全选');
     		this.checkedData = selection;
+			this.SelectData=selection;
     		this.tableData.forEach(item => {
     			selection.forEach(item2 => {
     				if(item.id === item2.id){
@@ -165,6 +193,7 @@ export default {
     	},
     	tabSelect(selection, row){//单选
     		console.log('单选');
+			this.SelectData=selection;
     		this.tableData.forEach(item => {
     			if(item.id === row.id){
       				this.$set(item, '_checked', true);
@@ -175,6 +204,7 @@ export default {
     		
     		if(selection.length === 0){
     			console.log('取消全选');
+				this.SelectData=[];
     			this.tableData.forEach(item => {
     				this.$set(item, '_checked', false);
     			});
@@ -184,10 +214,9 @@ export default {
     			
     		}
     		
-    		this.checkedData = selection;
-    		
-    		this.$emit('select-change', this.checkedData);
-    		
+//  		console.log('选择改变时');
+//  		this.checkedData = selection;
+//  		this.$emit('selectChange', this.checkedData);
     	},
     	tabSelectCancel(selection, row){//单个取消选择
     		console.log('单个取消选择');
@@ -203,7 +232,11 @@ export default {
         	
     },
     watch: {//监测数据变化
-    	
+    	chamber(){
+			
+				console.log('选择的商会是'+this.chamber)
+		
+		}
 	},
     
     //===================组件钩子===========================
@@ -211,7 +244,7 @@ export default {
     created () {//实例被创建完毕之后执行
     	
     	this.initColumns();
-    	
+    	this.SelectData=[];
 	},
     mounted () {//模板被渲染完毕之后执行
 	},

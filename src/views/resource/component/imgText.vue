@@ -3,10 +3,11 @@
 		<Form :model="formInline">
 			<slot name="header"></slot>
 			<DatePicker 
-			v-model="formInline.time" 
+			:value="formInline.time" 
 			type="daterange" 
 			split-panels 
-			placeholder="选择时间" 
+			placeholder="选择时间"
+			@on-change="formatTime"
 			style="width: 200px">
 			</DatePicker>
 			
@@ -21,7 +22,7 @@
 			</p>
 		</Form>
 		<div class="imgtext" style="margin: 15px;">
-			<div class="centent" v-for="(data,index) of datalist" :key="index" @click="rowclick">
+			<div class="centent" v-for="(data,index) of datalist" :key="index" @click="rowclick(data)">
 				<Icon type="md-image" size="120" />
 				<div class="middle">
 					<Row :gutter="16">
@@ -44,6 +45,7 @@
 
 			</div>
 		</div>
+		
 	</div>
 
 </template>
@@ -95,15 +97,17 @@
 			search() {
 				this.$emit('search',this.formInline);
 			},
-			rowclick(){
-				this.$emit('openview','aa');
+			rowclick(data){
+				this.$emit('openview',data.title);
+			},
+			formatTime(date){
+				this.formInline.time = date;
 			}
 		},
 		computed: { //计算属性
 
 		},
-		watch: { //监测数据变化
-  
+		watch: { //监测数据变化,
 		},
 
 		//===================组件钩子===========================
@@ -111,7 +115,7 @@
 		created() { //实例被创建完毕之后执行
 
 		},
-		mounted() { //模板被渲染完毕之后执行
+		mounted() { //模板被渲染完毕之后执行	
 		},
 
 		//=================组件路由勾子==============================

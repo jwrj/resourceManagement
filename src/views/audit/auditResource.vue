@@ -3,6 +3,18 @@
 	<div>
 		<Card>
 			<h1 slot="title">资源审核</h1>
+	  <RadioGroup v-model="range" type="button" style="margin-bottom: 5px;">	
+			<Radio :label="item.label" 
+			v-for="item of List" 
+			:key="item.value"
+			style="margin-right: 5px;"
+			>
+			</Radio>
+      </RadioGroup>
+	  
+			<img-text @search="searchList"
+			 @openview="openDetail">
+			</img-text>
 		</Card>
 		
 		
@@ -11,10 +23,11 @@
 </template>
 
 <script>
-
+import imgText from '@/views/resource/component/imgText.vue'
 export default {
 	name: '',
-	components:{//组件模板
+	components:{//组件模板,
+	imgText
 	},
 	props:{//组件道具（参数）
 		/* ****属性用法*****
@@ -27,17 +40,45 @@ export default {
 	},
     data () {//数据
         return {
-        	
+        	datalist:[],
+			range:'会内资源',
+			routeName:'chamDetail',
+			 List: [
+                    {
+                        value: '会内资源',
+                        label: '会内资源'
+                    },
+					{
+						value: '会外资源',
+						label: '会外资源'
+					},
+					{
+						value: '政府资源',
+						label: '政府资源'
+					}
+					]
         }
     },
     methods: {//方法
-    	
+    	searchList(list) {
+    		this.datalist = list;
+    		console.log('接收到了' + this.datalist.word);
+    	},
+		openDetail(title){
+				this.$router.push({name: this.routeName, params: {title: title}});
+		}
     },
     computed: {//计算属性
         	
     },
-    watch: {//监测数据变化
-    	
+    watch: {//监测数据变化,
+	range(){
+		if(this.range==='政府资源'){
+			this.routeName='govDetail';
+		}else{
+			this.routeName='chamDetail';
+		}
+	}
 	},
     
     //===================组件钩子===========================

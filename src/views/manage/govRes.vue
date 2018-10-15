@@ -31,8 +31,16 @@
 				<Button type="primary" @click="showImport=true">请选择商会</Button>
 				<p style="margin-top: 5px;">
 					已选商会:
-					<Button style="margin: 5px;" v-for="(res,index) in result" :key="index">{{res}}
-					</Button>
+					<Tag 
+					color="primary"
+					type="border"
+					closable
+					:name="res.id"
+					v-for="(res,index) in result" 
+					:key="index"
+					@on-close="closeTag(res,index)"
+					>{{res.name}}
+					</Tag>
 				</p>
 				<p><Button @click="resetResult" v-if="result.length !== 0" type="primary">清空</Button></p>
 			</FormItem>
@@ -110,7 +118,6 @@
 			<table-list 
 			:tableColumns="tableColumns" 
 			ref="selectCham" 
-			:chamber="result"
 			:tableData="tableData" 
 			:modalTitle="modalTitle"
 			@on-btn-click="btnClick"
@@ -278,12 +285,11 @@
 
 		methods: { //方法
 			getData() {
-				let sk = this.$refs.selectCham.SelectData;
-				console.log('youde');
-				sk.forEach(item => {
-					this.result.push(item.name)
-				});
-
+			 let sk = this.$refs.selectCham.checkedData;
+			this.result = this.result.concat(sk);
+			 this.$refs.selectCham.tableData.forEach(item => { //去掉默认选中
+			 	this.$set(item, '_checked', false);
+			 });
 			},
 			resetResult() {
 				this.result = [];
@@ -313,6 +319,9 @@
 			btnClick(val){
 				this.modalTitle=val.params.row.name;
 				console.log(val);
+			},
+			closeTag(res,index){
+				
 			}
 		},
 		computed: { //计算属性

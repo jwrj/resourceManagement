@@ -12,11 +12,16 @@
 					</Button>
 					<p style="margin-top: 5px;">
 						已选商会:
-						<Button
-						style="margin: 5px;" 
-						v-for="(res,index) in result" 
-						:key="index">{{res}}
-						</Button>
+					<Tag 
+					color="primary"
+					type="border"
+					closable
+					:name="res.id"
+					v-for="(res,index) in result" 
+					:key="index"
+					@on-close="closeTag(res,index)"
+					>{{res.name}}
+					</Tag>
 					</p>
 					
 					<p>
@@ -149,11 +154,10 @@
 				console.log('接收到了' + this.datalist.word);
 			},
 			getData() {
-				let sk = this.$refs.selectCham.SelectData;
-				sk.forEach(item => {
-					this.result.push(item.name)
-				});
+				let sk = this.$refs.selectCham.checkedData;
 
+//去重？
+            this.result = this.result.concat(sk);
 			},
 			resetResult() {
 				this.result = [];
@@ -161,6 +165,9 @@
 			btnClick(val){
 				this.modalTitle='暂时标题';
 				console.log(val);
+			},
+			closeTag(res,index){
+				//关闭标签触发
 			}
 		},
 		computed: { //计算属性
