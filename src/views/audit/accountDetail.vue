@@ -45,6 +45,29 @@
 			
 			<div class="content">
 				<h1 style="border-bottom: 1px solid brown; padding-bottom: 10px;">单位信息</h1>
+					<div class="content-body">
+						<Row type="flex" justify="start">
+							<Col span="4">职务：</Col>
+							<Col span="6">{{datalist.job}}</Col>
+						</Row>
+						<Row type="flex" justify="start">
+							<Col span="4">单位名称：</Col>
+							<Col span="6">{{datalist.unit}}</Col>
+						</Row>
+						<Row type="flex" justify="start">	
+							<Col span="4">单位地区：</Col>
+							<Col span="6">{{datalist.addr}}</Col>
+						</Row>
+						<Row type="flex" justify="start">	
+							<Col span="4">单位执照：</Col>
+							<Col span="18">
+								<img :src="imgUrl" style="width: 100px;">
+								<img :src="imgUrl" style="width: 100px;">
+								<img :src="imgUrl" style="width: 100px;">
+							</Col>
+						</Row>
+					</div>
+	
 			</div>
 			
 			
@@ -74,7 +97,8 @@ export default {
 	},
     data () {//数据
         return {
-        	datalist:[]
+        	datalist:[],
+			imgUrl:'http://yuanxing.bzttech.com/cocsys/coc_resourceSystem/images/%E5%8F%91%E5%B8%83%E8%B5%84%E6%BA%90-%E4%BC%9A%E5%86%85%E4%BC%9A%E9%97%B4/u708.png'
         }
     },
     methods: {//方法
@@ -140,4 +164,9 @@ export default {
 	.middle{
 		flex: 3;
 	}
+	.content-body{
+		padding: 15px 30px;
+		width: 800px;
+	}
+
 </style>

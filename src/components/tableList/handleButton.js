@@ -10,40 +10,6 @@ let defaultPoptip = {
     transfer: true
 }
 
-export const edit = (vm, h, params) => {
-    return h('Button',{
-    	props: {
-    		type: 'primary',
-    		size: 'small',
-    	},
-    	style: {
-    		margin: '0 2px',
-    	},
-    	on: {
-    		click: () => {
-    			vm.modalShow = true;
-    		}
-    	},
-    },'编辑');
-}
-
-export const details = (vm, h, params) => {
-    return h('Button',{
-    	props: {
-    		type: 'success',
-    		size: 'small',
-    	},
-    	style: {
-    		margin: '0 2px',
-    	},
-    	on: {
-    		click: () => {
-    			vm.modalShow = true;
-    		}
-    	},
-    },'详情');
-}
-
 export const buttonItem = (vm, h, params, btnParams={}) => {
 	
 	if(!btnParams.poptipOpen){
@@ -108,15 +74,15 @@ export const buttonItem = (vm, h, params, btnParams={}) => {
 		    		
 		    	},
 		    	
-		    	on: {
-	    		
-		    		click: () => {
-		    			
-		    			vm.$emit('on-btn-click', Object.assign({}, btnParams, {params: params}));
-		    			
-		    		}
-		    		
-		    	},
+//		    	on: {
+//	    		
+//		    		click: () => {
+//		    			
+//		    			vm.$emit('on-btn-click', Object.assign({}, btnParams, {params: params}));
+//		    			
+//		    		}
+//		    		
+//		    	},
 		    	
 		    },btnParams.name || '按钮')
 			

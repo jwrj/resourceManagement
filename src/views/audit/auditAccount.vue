@@ -119,7 +119,7 @@ export default {
 				{
 					name:'张三丰',
 					unit:'某某机关单位',
-					unitLicense:['链接1','链接2'],
+					unitLicense:['../../assets/img/default-img/u710.png'],
 					prove:[],
 					job:'联系专员',
 					addr:'南宁市',

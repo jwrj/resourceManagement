@@ -3,9 +3,13 @@
 
 modalTitle {String} '标题' 对话框标题
 
-tableColumns {Array} [必传] 表格列表表头数据
+tableColumns {Array} **必传** 表格列表表头数据
 
 tableData {Array} [] 表格列表数据
+
+seekShow {Boolean} true 是否显示搜索控件
+
+pageShow {Boolean} true 是否显示分页控件
 
 
 ***事件
@@ -18,6 +22,7 @@ tableData {Array} [] 表格列表数据
 
 @select-change {data：已选数据} 选择改变时触发
 
+
 ***handle
 
 name {String} '按钮' 按钮名称
@@ -29,3 +34,12 @@ poptipOpen {Boolean} false 是否打开气泡提示
 button_props {Object} {} 按钮的api属性
 
 poptip_props {Object} {} 气泡提示的api属性
+
+
+***slot
+
+header 表格页头
+
+footer 表格页尾
+
+modalContent 对话框内容

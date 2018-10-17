@@ -110,6 +110,7 @@ export default {
 	},
     data () {//数据
         return {
+		
         }
     },
     methods: {//方法

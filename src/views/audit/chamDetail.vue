@@ -63,7 +63,8 @@
 	 </Card>
 		
 	</div>
-   <right-card :showAudit="true" :showResource="true"></right-card>
+   <right-card :showAudit="true" :showResource="true">
+	 </right-card>
 	</div>
 	
 </template>

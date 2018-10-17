@@ -3,7 +3,7 @@
 	<div>
 		
 		<header class="header">
-			<slot name="header" :binEvent="selectChange"></slot>
+			<slot name="header" :slotEvent="slotEvent"></slot>
 			<Input v-if="seekShow" :search="true" enter-button clearable placeholder="搜索..." class="seek" />
 		</header>
 		
@@ -56,10 +56,6 @@
 
 <script>
 
-/**
- * slot-scope
- */
-
 import { buttonItem } from './handleButton.js'
 
 export default {
@@ -85,11 +81,6 @@ export default {
 			default: () => []
 		},
 
-		filterShow: {
-			type: Boolean,
-			default: true
-		},
-		
 		seekShow: {//搜索框控件
 			type: Boolean,
 			default: true
@@ -117,8 +108,11 @@ export default {
     },
     methods: {//方法
     	
-    	selectChange(val){
+    	slotEvent(val){//插槽事件
+    		
     		console.log(val);
+    		console.log('执行了子组件的事件');
+    		
     	},
     	
     	initColumns(){//初始化表头数据
@@ -241,7 +235,7 @@ export default {
 <style lang="less">
 	.my-ivu-modal-wrap{
 		position: flex !important;
-		top: 91px !important;
+		top: 93px !important;
 		transition: left 0.2s ease-in-out;
 	}
 	.leftmax{
