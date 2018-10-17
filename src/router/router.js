@@ -62,8 +62,8 @@ export default [
 				component: () => import('@/views/resource/resourceIn.vue')
 			},
 			{
-				path: 'resourceOut',
-				name: 'resourceOut',
+				path: 'resourceCen',
+				name: 'resourceCen',
 				meta: {
 					title: '会间资源',
 					icon: 'md-alarm',
@@ -184,6 +184,15 @@ export default [
 					icon: 'md-alarm',
 				},
 				component: () => import('@/views/audit/govDetail.vue')
+			},
+			{
+				path: 'accountDetail',
+				name: 'accountDetail',
+				meta: {
+					title: '账户审核详情',
+					icon: 'md-alarm',
+				},
+				component: () => import('@/views/audit/accountDetail.vue')
 			}
 		]
 	},
@@ -195,14 +204,7 @@ export default [
 			},
 			component: () => import('@/views/manage/detail/auditResC.vue')
 	},
-	{
-			path: '/auditResG',
-			name: 'auditResG',
-			meta: {
-        hideMenu: true,
-			},
-			component: () => import('@/views/manage/detail/auditResG.vue')
-	},
+
 	{
 		path: '/testPages',
 		name: 'testPages',

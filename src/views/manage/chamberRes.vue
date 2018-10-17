@@ -282,14 +282,32 @@
 		},
 
 		methods: { //方法
-			getData() {
+			getData() {//获取选中的数据并去重 去重待改进
 				let sk = this.$refs.selectCham.checkedData;
-             let ck =Object.assign({},this.result,sk);
-			 this.result=ck;
-
+			// this.result = this.result.concat(sk);			
+				let res = sk;
+			for(let i = 0; i < this.result.length; i++){
+					let item = this.result[i];
+					var repeat = false;
+					for (let j = 0; j < res.length; j++) {
+							if (item.id == res[j].id) {
+									repeat = true;
+									break;
+							}
+					}
+					if (!repeat) {
+							res.push(item);
+					}
+			}
+			this.result=res;
+			this.$refs.selectCham.tableData.forEach(item => { //去掉默认选中
+			this.$set(item, '_checked', false);
+			});
+			
 			},
-			resetResult() {
+			resetResult() {//清空
 				this.result = [];
+				this.$refs.selectCham.checkedData=[];
 			},
 			handleSubmit(name) {
 				this.$refs[name].validate((valid) => {
@@ -301,8 +319,14 @@
 				})
 			},
 			closeTag(res,index){
-			
-          }
+				//关闭标签触发
+				for(let i=0;i<this.result.length;i++){
+					if(this.result[i].name==res.name){
+						this.result.splice(i,1)
+						
+					}
+				}
+			}
 		  
 		},
 		computed: { //计算属性

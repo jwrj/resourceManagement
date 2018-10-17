@@ -27,13 +27,61 @@
 					</Form>
 					<div class="imgtext" style="margin: 15px;">
 						<div class="centent" v-for="(data,index) of datalist" :key="index" @click="rowclick(data)">
-							<Icon type="md-image" size="120" />
+							<Icon type="md-image" size="180" />
 							<div class="middle">
-				<p>{{data.name}}</p>
-			     <p>{{data.addr}}</p>
+						<p>
+							<div class="user">{{data.name}}</div>
+						<span style="color: #AAAAAA;">注册时间：2018-01-18</span>
+						</p>
+				
+				<Row type="flex" justify="start" align="top" >
+					<Col span="8">
+						<div style="display: flex;">
+							<div>
+
+								<p>单位</p>
+								<p>职务</p>
+								<p>地区</p>
+							</div>
+							<div>
+								<p>：{{data.unit}}</p>
+								<p>：{{data.job}}</p>
+								<p>：{{data.addr}}</p>
+							</div>
+						</div>
+					</Col>
+					
+					<Col span="8">				
+					<div style="display: flex;">
+						<div>
+							<p>单位执照</p>
+							<p>身份证</p>
+							<p>单位证明</p>
+						</div>
+						<div>
+							<p >：{{data.unitLicense | flag}}</p>
+							<p>：{{data.card | flag}}</p>
+							<p>：{{data.prove | flag}}</p>
+						</div>
+					</div>
+					</Col>
+					<Col span="8">
+
+						<div style="display: flex;">
+							<div>
+								<p>审核单位</p>
+								<p>审核时间</p>
+							</div>
+							<div>
+								<p>：{{data.unitAudit}}</p>
+								<p>：{{data.unitTime}}</p>
+							</div>
+						</div>
+					</Col>
+				</Row>
 							</div>
 							<hr>
-			
+
 						</div>
 					</div>
 					
@@ -66,17 +114,29 @@ export default {
         		word: '',
         		time: []
         	},
+			pageShow:true,
 			datalist:[
 				{
 					name:'张三丰',
 					unit:'某某机关单位',
-					unitLicense:true,
-					prove:true,
+					unitLicense:['链接1','链接2'],
+					prove:[],
 					job:'联系专员',
 					addr:'南宁市',
-					card:true,
+					card:'45080957864058',
 					unitAudit:'广西湖北商会',
 					unitTime:'2018-01-09'
+				},
+				{
+					name:'白展堂',
+					unit:'同福客栈文艺酒店',
+					unitLicense:[],
+					prove:['链接1'],
+					job:'联系专员',
+					addr:'南宁市',
+					card:'',
+					unitAudit:'广西湖北商会',
+					unitTime:'2018-11-15'
 				}
 			]
         }
@@ -86,26 +146,52 @@ export default {
     		console.log('搜索')
     	},
     	rowclick(data){
-    		console.log('go')
+    		this.$router.push({name: 'accountDetail', params: {datalist: data}});
     	},
     	formatTime(date){
     		this.formInline.time = date;
     	}
     },
     computed: {//计算属性
-        	
+	
+// 		text(){
+// 			
+// 			let txt = '未上传';
+// 			
+// 			if(JSON.stringify(value) === '[]'||JSON.stringify(value)===''){
+// 				txt = '';
+// 			}else{
+// 				txt = '';
+// 			}
+// 			
+// 			return txt;
+// 			
+// 		}
+		
+		
     },
     watch: {//监测数据变化
-    	
+
 	},
-    
+    filters:{
+		
+		flag:function(value){
+			
+			if(JSON.stringify(value) !== '[]'&& value.length!==0){
+				return '已上传'
+			}else{
+				return '未上传'
+			}
+		}
+		
+	},
     //===================组件钩子===========================
     
     created () {//实例被创建完毕之后执行
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+ 
 	},
 	
 	//=================组件路由勾子==============================
@@ -145,5 +231,17 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+	.centent {
+		display: flex;
+		align-items: center;
+		border-bottom: 1px solid #BBBBBB;
+	}
+	.middle{
+		flex: 3;
+	}
+     .user{
+		 font-size: 18px;
+		 font-weight: 700;
+		 margin-right: 5px;
+	 }
 </style>
