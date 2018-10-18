@@ -4,7 +4,7 @@
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p  class="bold top">
-				{{title}}
+				{{title?title:'政府资源标题1'}}
 			</p>
   <div style="padding: 15px 0; border-bottom: 1px solid #C2CCD1;">
 	  <Row style="width: 70%;">
@@ -50,7 +50,7 @@
    
 		</Card>
 		
-	 <Card style="margin-top: 5px;">
+	 <Card style="margin-top: 5px;padding-left: 15px;">
 		<h1 slot="title">投资环境介绍</h1>
      <div class="cham">
 		 <p>
@@ -66,7 +66,7 @@
 	 </Card>
 		
 	</div>
-    <right-card :showResource="true"></right-card>
+    <right-card :list="datalist" :showResource="true"></right-card>
 		
 	</div>
 	
@@ -93,7 +93,8 @@ export default {
     data () {//数据
         return {
 			title:'',
-			img:defaultImg
+			img:defaultImg,
+			datalist:[]
 			
         }
     },
@@ -110,7 +111,10 @@ export default {
     //===================组件钩子===========================
     
     created () {//实例被创建完毕之后执行
-    	this.title=this.$route.params.title||'中国(武汉·新洲)厨卫基地发展战略规划与招商策划案例'
+   if(this.$route.params.list){
+		 this.title=this.$route.params.list.title;
+		 this.datalist=this.$route.params.list;
+	 }
 	},
     mounted () {//模板被渲染完毕之后执行
     	

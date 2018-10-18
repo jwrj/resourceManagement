@@ -9,9 +9,9 @@
 				<div class="centent">
 								<Icon type="md-image" size="120" />
 								<div class="middle">
-								<h1>张三丰</h1>
-								<p>所属单位：广西南宁政府</p>
-								<p>所属职务：联系专员</p>
+								<h1>{{list.person}}</h1>
+								<p>所属单位：{{list.unit}}</p>
+								<p>所属职务：{{list.work}}</p>
 								<p>商会实名认证</p>
 								</div>
 				</div>
@@ -42,7 +42,7 @@
 					<h1>其他承接单位</h1>
 				</div>
 				
-				<div class="unit" v-for="(unit,index) of units" :key="index">
+				<div class="unit" v-for="(unit,index) of units" :key="index" @click="rowclick(unit)">
 					<p style="font-size: 16px;color: black;" >{{unit.name}}</p>
 					<p class="gray">商会：{{unit.cham}}</p>
 					<p class="gray">时间：{{unit.date}}</p>
@@ -106,15 +106,21 @@ export default {
 						date:'2017-12-13'
 					}
 			]
-		}
+		},
+    list: {
+      // 对象或数组默认值必须从一个工厂函数获取
+      default:() =>[]
+	  }
 	},
     data () {//数据
         return {
-		
+
         }
     },
     methods: {//方法
-    	
+    	rowclick(unitData){
+			this.$emit('openDetail',unitData);
+		}
     },
     computed: {//计算属性
         	

@@ -119,7 +119,7 @@ export default {
 				{
 					name:'张三丰',
 					unit:'某某机关单位',
-					unitLicense:['../../assets/img/default-img/u710.png'],
+					unitLicense:['http://yuanxing.bzttech.com/cocsys/coc_resourceSystem/images/%E5%8F%91%E5%B8%83%E8%B5%84%E6%BA%90-%E4%BC%9A%E5%86%85%E4%BC%9A%E9%97%B4/u708.png'],
 					prove:[],
 					job:'联系专员',
 					addr:'南宁市',

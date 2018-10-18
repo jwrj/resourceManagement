@@ -1,18 +1,54 @@
 <template>
 	
-	<div>
-		
-		
+	<div style="display: flex;">
+	<div style="flex: 3;margin-right: 5px;">
+		<Card style="padding: 15px;">
+			<p style="font-size: 26px;margin-bottom: 20px;color:#333333;" class="bold">
+				{{title}}
+			</p>
+			
+			<p style="padding: 15px 0;">
+				<h1>承接单位信息</h1>
+				<br>
+				<p>承接单位：广西建工集团</p>
+				<p>联系人：张三</p>
+				<p>联系电话：0771-1234567</p>
+				<p>承接时间：2017-01-16</p>
+				<p>进度状况：已承接</p>
+				<p>交付时间：2019-02-01</p>
+				<div>
+					<p>资质:</p>
+					<Icon type="md-image"  size="100"/>
+					<Icon type="md-image"  size="100"/>
+					<Icon type="md-image"  size="100"/>
+				</div>
+				
+				<div>
+					<p>担保金额:50万</p>
+					<Icon type="md-image"  size="100"/>
+				</div>
+				
+				<div>
+					<p>介绍费用:10万</p>
+					<Icon type="md-image"  size="100"/>
+				</div>
+			</p>
+		</Card>
+	</div>
+	 <div style="flex: 1;">
+		 <right-card :list="list" :showAudit="true" :showResource="true" @openDetail="openDetail"></right-card>
+	 </div>
 		
 	</div>
 	
 </template>
 
 <script>
-
+import rightCard from '@/views/audit/component/rightCard.vue'
 export default {
 	name: '',
 	components:{//组件模板
+	rightCard
 	},
 	props:{//组件道具（参数）
 		/* ****属性用法*****
@@ -25,11 +61,18 @@ export default {
 	},
     data () {//数据
         return {
-        	
+        	list:{
+				unit:'发布人单位',
+				work:'职务',
+				person:'user'
+			},
+			title:'标题',
         }
     },
     methods: {//方法
-    	
+    	openDetail(detailData){
+    	this.list=detailData.unit;
+    	}
     },
     computed: {//计算属性
         	
@@ -44,7 +87,11 @@ export default {
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+		if(this.$route.params.list){
+			this.list.unit=this.$route.params.list.name;
+			this.title=this.$route.params.title;
+			console.log(this.list)
+		}
 	},
 	
 	//=================组件路由勾子==============================

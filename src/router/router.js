@@ -127,16 +127,7 @@ export default [
 					icon: 'md-alarm',
 				},
 				component: () => import('@/views/manage/myGet.vue')
-		  },
-			{
-				path: 'getResoure',
-				name: 'getResoure',
-				meta: {
-					title: '资源承接单位',
-					icon: 'md-alarm',
-				},
-				component: () => import('@/views/manage/detail/getResoure.vue')
-			}
+		  }
 		]
 	},
 	{
@@ -193,16 +184,17 @@ export default [
 					icon: 'md-alarm',
 				},
 				component: () => import('@/views/audit/accountDetail.vue')
+			},
+			{
+				path: 'carryDetail',
+				name: 'carryDetail',
+				meta: {
+					title: '资源承接单位详情页',
+					icon: 'md-alarm',
+				},
+				component: () => import('@/views/audit/carryDetail.vue')
 			}
 		]
-	},
-	{
-			path: '/auditResC',
-			name: 'auditResC',
-			meta: {
-				hideMenu: true,
-			},
-			component: () => import('@/views/manage/detail/auditResC.vue')
 	},
 
 	{

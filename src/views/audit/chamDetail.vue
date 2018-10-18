@@ -4,7 +4,7 @@
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p style="font-size: 26px;margin-bottom: 20px;color:#333333;" class="bold">
-				{{title}}
+				{{title?title:'湖南老白干酒业'}}
 			</p>
   <div style="padding: 15px 0; border-bottom: 1px solid #C2CCD1;">
 	  <Row style="width: 70%;">
@@ -47,7 +47,7 @@
    </div>
 		</Card>
 		
-	 <Card style="margin-top: 5px;">
+	 <Card style="margin-top: 5px;padding-left: 15px;">
 		<h1 slot="title">审核单位信息</h1>
      <div class="cham">
 		 <p>审核单位：广西湖北商会</p>
@@ -63,7 +63,7 @@
 	 </Card>
 		
 	</div>
-   <right-card :showAudit="true" :showResource="true">
+   <right-card :list="datalist" :showAudit="true" :showResource="true" @openDetail="openDetail">
 	 </right-card>
 	</div>
 	
@@ -90,11 +90,14 @@ export default {
     data () {//数据
         return {
 			title:'',
+			datalist:[],
 			img:defaultImg		
         }
     },
     methods: {//方法
-    	
+    	openDetail(detailData){
+			this.$router.push({name:'carryDetail', params: {list:detailData ,title:this.title}});
+			}
     },
     computed: {//计算属性
         	
@@ -106,7 +109,10 @@ export default {
     //===================组件钩子===========================
     
     created () {//实例被创建完毕之后执行
-    	this.title=this.$route.params.title||'湖南老白干酒商会'
+   if(this.$route.params.list){
+		 this.title=this.$route.params.list.title;
+		 this.datalist=this.$route.params.list;
+	 }
 	},
     mounted () {//模板被渲染完毕之后执行
     	

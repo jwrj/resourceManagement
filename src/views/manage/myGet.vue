@@ -1,5 +1,5 @@
-<template>
-	
+
+<template>	
 	<div>
 	<Card>
 		<div slot="title">
@@ -39,8 +39,9 @@ export default {
     	this.datalist=list;
     	console.log('接收到了'+this.datalist.word);
     	},
-		getResDetail(){
-			this.$router.push('/manage/getResoure')
+		getResDetail(list){
+			this.$router.push({name:'carryDetail', params: {list: list}});
+
 		}
     },
     computed: {//计算属性

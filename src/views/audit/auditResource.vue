@@ -64,8 +64,8 @@ export default {
     		this.datalist = list;
     		console.log('接收到了' + this.datalist.word);
     	},
-		openDetail(title){
-				this.$router.push({name: this.routeName, params: {title: title}});
+		openDetail(list){
+				this.$router.push({name: this.routeName, params: {list: list}});
 		}
     },
     computed: {//计算属性
