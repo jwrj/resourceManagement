@@ -7,7 +7,7 @@
 				{{title?title:'政府资源标题1'}}
 			</p>
   <div style="padding: 15px 0; border-bottom: 1px solid #C2CCD1;">
-	  <Row style="width: 70%;">
+	  <Row style="width: 75%;">
 	  	<Col span="5" >
 	  		<p>开始时间：</p>
 	  		<p>发布范围：</p>
@@ -15,22 +15,22 @@
 	  		<p>收益年限：</p>
 	  	</Col>
 	  	<Col span="5" style="text-align: left;">
-	  		<p>2018-01-01</p>
-	  		<p>商会1，商会2</p>
-	  		<p>1200万</p>
-	  		<p>3年</p>
+	  		<p>{{datalist.start}}</p>
+	  		<p><span v-for="(data,index) of datalist.cham">{{data}}</span></p>
+	  		<p>{{datalist.invest}}万</p>
+	  		<p>{{datalist.year}}年</p>
 	  	</Col>
 	  	<Col span="5" >
 	  		<p>结束时间：</p>
 	  		<p>合作方式：</p>
 	  		<p>预计收益：</p>
-	  		<p>联系方式：</p>
+	  		<p>联系人员：</p>
 	  	</Col>
 	  	<Col span="7" style="text-align: left;">
-	  		<p>2019-01-01</p>
+	  		<p>{{datalist.end}}</p>
 	  		<p>政企合作</p>
-	  		<p>500万</p>
-			<p>李四：18299997777</p>
+	  		<p>{{datalist.money}}万</p>
+			<div><p v-for="(u,index) of datalist.personList">{{u.name}}-{{u.phone}}</p></div>
 	  	</Col>
 	  </Row>
   </div>

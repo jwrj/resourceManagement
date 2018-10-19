@@ -11,16 +11,16 @@
 	  	<Col span="5" style="text-align: right;">
 	  		<p>开始时间：</p>
 	  		<p>发布范围：</p>
-	  		<p>项目数量：</p>
+	  		<p>协助程度：</p>
 	  		<p>介绍费用：</p>
 	  		<p>项目周期：</p>
 	  	</Col>
 	  	<Col span="5">
-	  		<p>2018-01-01</p>
+	  		<p>{{datalist.time[0]}}</p>
 	  		<p>会间</p>
-	  		<p>1</p>
-	  		<p>3.2万</p>
-	  		<p>2年</p>
+	  		<p>{{datalist.help}}</p>
+	  		<p>{{datalist.price}}万</p>
+	  		<p>{{datalist.circle}}年</p>
 	  	</Col>
 	  	<Col span="5" style="text-align: right;">
 	  		<p>结束时间：</p>
@@ -30,11 +30,11 @@
 	  		<p>交付地点：</p>
 	  	</Col>
 	  	<Col span="5">
-	  		<p>2019-01-01</p>
-	  		<p>132万</p>
-	  		<p>50万</p>
-	  		<p>建筑/土木_工程科技</p>
-	  		<p>——</p>
+	  		<p>{{datalist.time[1]}}</p>
+	  		<p>{{datalist.num}}万</p>
+	  		<p>{{datalist.assure}}万</p>
+	  		<p>{{datalist.need}}</p>
+	  		<p>{{datalist.place}}</p>
 	  	</Col>
 	  </Row>
   </div>
@@ -50,7 +50,7 @@
 	 <Card style="margin-top: 5px;padding-left: 15px;">
 		<h1 slot="title">审核单位信息</h1>
      <div class="cham">
-		 <p>审核单位：广西湖北商会</p>
+		 <p>审核单位：{{datalist.cham}}</p>
 		 <p>审核日期：2018-01-14</p>
 		 <p>审核人员：张三</p>
 		 <p>所属职务：秘书长</p>
@@ -63,7 +63,7 @@
 	 </Card>
 		
 	</div>
-   <right-card :list="datalist" :showAudit="true" :showResource="true" @openDetail="openDetail">
+   <right-card :list="datalist" :showAudit="true" :showResource="true">
 	 </right-card>
 	</div>
 	
@@ -95,9 +95,9 @@ export default {
         }
     },
     methods: {//方法
-    	openDetail(detailData){
-			this.$router.push({name:'carryDetail', params: {list:detailData ,title:this.title}});
-			}
+//     	openDetail(detailData){
+// 			this.$router.push({name:'carryDetail', params: {list:detailData ,title:this.title}});
+// 			}
     },
     computed: {//计算属性
         	

@@ -10,7 +10,7 @@
 								<Icon type="md-image" size="120" />
 								<div class="middle">
 								<h1>{{list.person}}</h1>
-								<p>所属单位：{{list.unit}}</p>
+								<p>所属单位：{{list.name}}</p>
 								<p>所属职务：{{list.work}}</p>
 								<p>商会实名认证</p>
 								</div>
@@ -42,10 +42,10 @@
 					<h1>其他承接单位</h1>
 				</div>
 				
-				<div class="unit" v-for="(unit,index) of units" :key="index" @click="rowclick(unit)">
+				<div class="unit" v-for="(unit,index) of unitlist" :key="index" @click="rowclick(unit)">
 					<p style="font-size: 16px;color: black;" >{{unit.name}}</p>
 					<p class="gray">商会：{{unit.cham}}</p>
-					<p class="gray">时间：{{unit.date}}</p>
+					<p class="gray">时间：{{unit.start}}</p>
 				</div>
 			</Card>
 		</div>
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-
+import {bus} from '@/components/bus/event-bus.js'
 export default {
 	name: 'rightCard',
 	components:{//组件模板
@@ -119,11 +119,15 @@ export default {
     },
     methods: {//方法
     	rowclick(unitData){
-			this.$emit('openDetail',unitData);
+				console.log(unitData);
+			bus.$emit('unitDetail',unitData.name);
+			this.$router.push({name:'carryDetail', params: {list:bus.currentResource}});
 		}
     },
     computed: {//计算属性
-        	
+        unitlist(){
+					return bus.unitlist;
+				}	
     },
     watch: {//监测数据变化
     	

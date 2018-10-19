@@ -13,7 +13,7 @@
       </RadioGroup>
 	  
 			<img-text @search="searchList"
-			 @openview="openDetail">
+			 @openview="openDetail" :range="range">
 			</img-text>
 		</Card>
 		
@@ -24,6 +24,7 @@
 
 <script>
 import imgText from '@/views/resource/component/imgText.vue'
+import {bus} from '@/components/bus/event-bus.js'
 export default {
 	name: '',
 	components:{//组件模板,
@@ -41,7 +42,7 @@ export default {
     data () {//数据
         return {
         	datalist:[],
-			range:'会内资源',
+			range:'',
 			routeName:'chamDetail',
 			 List: [
                     {
@@ -75,8 +76,10 @@ export default {
 	range(){
 		if(this.range==='政府资源'){
 			this.routeName='govDetail';
+			bus.scopeRes=bus.govlist;
 		}else{
 			this.routeName='chamDetail';
+			bus.scopeRes=bus.unitlist;
 		}
 	}
 	},
@@ -87,7 +90,9 @@ export default {
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+		  this.range='会内资源';
+    	this.routeName='chamDetail';
+    	bus.scopeRes=bus.unitlist;
 	},
 	
 	//=================组件路由勾子==============================

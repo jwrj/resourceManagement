@@ -7,10 +7,10 @@
 			</div>
 			<div class="news">
 				<span> <strong>发布人信息</strong></span>
-				<span>姓名：张三</span>
-				<span>会内职务：会长</span>
+				<span>姓名：{{person}}</span>
+				<span>会内职务：{{work}}</span>
 				<span> 身份证号：450112345678123</span>
-				<span>联系电话：0771-1234567</span>
+				<span>联系电话：{{phone}}</span>
 				<span>手机：15612341234</span>
 			</div>
 			<br>
@@ -70,6 +70,7 @@
 						v-model="resList.time" 
 						type="daterange" 
 						split-panels placeholder="选择时间" 
+						@on-change="formatTime"
 						style="width: 200px">
 						</DatePicker>
 					</FormItem>
@@ -109,7 +110,7 @@
 						type="text" style="width: 200px;">
 						</Input>
 					</FormItem>
-					<FormItem label="协助成都">
+					<FormItem label="协助程度">
 						<Input v-model="resList.help" 
 						type="text" style="width: 200px;">
 						</Input>
@@ -160,6 +161,7 @@
 	import tableList from '@/components/tableList/table-list.vue'
 	import UEditor from '@/components/richTextEditor/UEditor.vue';//富文本编辑器
 	import fileManage from '@/components/fileManage/file-manage.vue'; //文件管理
+	import {bus} from '@/components/bus/event-bus.js'
 	export default {
 		name: '',
 		components: { //组件模板,
@@ -182,6 +184,9 @@
 						width:'100%',
 						height:'500px'
 				},
+				person:'张三',
+				work:'会长',
+				phone:'1189543448',
 				inter: true,
 				out: false,
 				res_s: [],
@@ -192,8 +197,8 @@
 					circle: '',
 					help: '',
 					title:'',
-					palce: '',
-					time: [],
+					place: '',
+					time: '',
 					num: '',
 					assure: ''
 				},
@@ -243,19 +248,7 @@
 				ruleValidate: {
 					time: [{
 						type: 'array',
-						required: true,
-						fields: {
-							0: {
-								type: 'date',
-								required: true,
-								message: '请输入起止日期'
-							},
-							1: {
-								type: 'date',
-								required: true,
-								message: '请输入起止日期'
-							}
-						}
+						required: true
 					}],
 					num: [{
 						required: true,
@@ -313,10 +306,22 @@
 				this.$refs[name].validate((valid) => {
 					if (valid) {
 						this.$Message.success('添加成功!');
+						this.addResource();
 					} else {
 						//this.$Message.error('添加失败!');
 					}
 				})
+			},
+			addResource(){
+				this.$set(this.resList,"cham",this.result);
+				this.$set(this.resList,'person',this.person);
+				this.$set(this.resList,'work',this.work);
+				this.$set(this.resList,'phone',this.phone);
+				bus.unitlist.push(this.resList);
+			},
+			formatTime(date){
+				this.resList.time = date;
+				console.log(this.resList.time)
 			},
 			closeTag(res,index){
 				//关闭标签触发

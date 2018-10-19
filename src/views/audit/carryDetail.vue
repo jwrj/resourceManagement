@@ -4,14 +4,14 @@
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p style="font-size: 26px;margin-bottom: 20px;color:#333333;" class="bold">
-				{{title}}
+				{{list.title}}
 			</p>
 			
 			<p style="padding: 15px 0;">
 				<h1>承接单位信息</h1>
 				<br>
-				<p>承接单位：广西建工集团</p>
-				<p>联系人：张三</p>
+				<p>承接单位：{{list.name}}</p>
+				<p>联系人：{{list.person}}</p>
 				<p>联系电话：0771-1234567</p>
 				<p>承接时间：2017-01-16</p>
 				<p>进度状况：已承接</p>
@@ -36,7 +36,7 @@
 		</Card>
 	</div>
 	 <div style="flex: 1;">
-		 <right-card :list="list" :showAudit="true" :showResource="true" @openDetail="openDetail"></right-card>
+		 <right-card :list="list" :showAudit="true" :showResource="true" ></right-card>
 	 </div>
 		
 	</div>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import {bus} from '@/components/bus/event-bus.js'
 import rightCard from '@/views/audit/component/rightCard.vue'
 export default {
 	name: '',
@@ -75,10 +76,14 @@ export default {
     	}
     },
     computed: {//计算属性
-        	
+  	currentResource() {
+		return bus.currentResource
+	}
     },
     watch: {//监测数据变化
-    	
+       currentResource(newValue,oldValue) {
+		   this.list=newValue;
+	   }
 	},
     
     //===================组件钩子===========================
@@ -88,8 +93,9 @@ export default {
 	},
     mounted () {//模板被渲染完毕之后执行
 		if(this.$route.params.list){
-			this.list.unit=this.$route.params.list.name;
-			this.title=this.$route.params.title;
+// 			this.list.unit=this.$route.params.list.name;
+// 			this.title=this.$route.params.title;
+			this.list=bus.currentResource;
 			console.log(this.list)
 		}
 	},
