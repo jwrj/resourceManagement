@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>会间资源</h1>
 			</div>
-			<img-text @search="searchList">
+			<img-text @search="searchList" @openview="getResDetail">
 				<div slot="header" style="margin-bottom: 50px;">
 					<Button type="primary" @click="showImport=true">
 						请选择商会
@@ -191,6 +191,10 @@
 						this.result.splice(i,1)
 					}
 				}
+			},
+			getResDetail(list){
+				this.$router.push({name:'chamDetail', params: {list: list}});
+	
 			}
 		},
 		computed: { //计算属性

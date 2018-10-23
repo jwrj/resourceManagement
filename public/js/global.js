@@ -3,7 +3,7 @@
  */
 window._HOST = {//主机域名
 	
-	BASE_URL: 'http://192.168.2.224/ucenter/public/',//基础请求地址
+	BASE_URL: 'http://192.168.2.251:8083/index.php/',//基础请求地址
 	
 }
 

@@ -4,16 +4,12 @@
 		<Card>
 			<h1 slot="title">资源审核</h1>
 	  <RadioGroup v-model="range" type="button" style="margin-bottom: 5px;">	
-			<Radio :label="item.label" 
-			v-for="item of List" 
-			:key="item.value"
-			style="margin-right: 5px;"
-			>
-			</Radio>
+			<Radio label="1" style="margin-right:5px;">会内资源</Radio>
+			<Radio label="2">会间资源</Radio>
       </RadioGroup>
 	  
-			<img-text @search="searchList"
-			 @openview="openDetail" :range="range">
+			<img-text :datalist="datalist" @search="searchList"
+			 @openDetail="openDetail" :range="range">
 			</img-text>
 		</Card>
 		
@@ -42,46 +38,46 @@ export default {
     data () {//数据
         return {
         	datalist:[],
-			range:'',
-			routeName:'chamDetail',
-			 List: [
-                    {
-                        value: '会内资源',
-                        label: '会内资源'
-                    },
-					{
-						value: '会外资源',
-						label: '会外资源'
-					},
-					{
-						value: '政府资源',
-						label: '政府资源'
-					}
-					]
+					range:'1',
+					routeName:'chamDetail',
+					searchlist:[]
         }
     },
     methods: {//方法
     	searchList(list) {
-    		this.datalist = list;
-    		console.log('接收到了' + this.datalist.word);
+				// this.$set(this.searchlist,"scope_release",this.range);
+				let objList=[];
+				let arr=list.check;
+				this.$set(objList,"title",list.word);
+				this.$set(objList,"status",arr.join());			
+				this.$set(objList,"start_time",list.time[0]);
+				this.$set(objList,"end_time",list.time[1]);
+				this.searchlist =Object.assign({},objList,{"scope_release":this.range});
+				$ax.getAjaxData('service/Resource/index',this.searchlist, (res) =>{
+					if(res.status == 200){
+						this.datalist=res.data;
+					}else if(res.status==300){
+						this.datalist=[];
+					}
+				});
     	},
-		openDetail(list){
-				this.$router.push({name: this.routeName, params: {list: list}});
+		openDetail(id){
+			 let detailList=[];
+			  $ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
+			  	if(res.status == 200){
+			  		detailList=res.data;
+						this.$router.push({name: 'chamDetail', params: {list: detailList}});
+			  	}else if(res.status==300){
+			  		detailList=[];
+			  	}
+			  });
+				
 		}
     },
     computed: {//计算属性
         	
     },
-    watch: {//监测数据变化,
-	range(){
-		if(this.range==='政府资源'){
-			this.routeName='govDetail';
-			bus.scopeRes=bus.govlist;
-		}else{
-			this.routeName='chamDetail';
-			bus.scopeRes=bus.unitlist;
-		}
-	}
+    watch: {//监测数据变化
 	},
     
     //===================组件钩子===========================
@@ -90,16 +86,13 @@ export default {
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-		  this.range='会内资源';
-    	this.routeName='chamDetail';
-    	bus.scopeRes=bus.unitlist;
 	},
 	
 	//=================组件路由勾子==============================
 	
 	beforeRouteEnter (to, from, next) {//在组件创建之前调用（放置页面加载时请求的Ajax）
 		
-		(async() => {//执行异步函数
+(async() => {//执行异步函数
 			
 			//async、await错误处理
 			try {
@@ -116,16 +109,21 @@ export default {
 				 * console.log(await abc);
 				 * ...
 				*/
-				next(vm => {
-					
-				});
+			   let resourceData = await $ax.getAsyncAjaxData('service/Resource/index',{});
+				   
+					next(vm => {
+							if(resourceData.status == 200){
+								vm.datalist=resourceData.data;
+							}
+					});
 				
 			} catch(err) {
 				console.log(err);
 			}
 			
+			next();
+			
 		})();
-		
 	},
 	
 }

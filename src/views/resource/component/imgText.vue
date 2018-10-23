@@ -14,30 +14,30 @@
 			<Input v-model="formInline.word" style="width: 200px;margin:0 5px;" />
 			<Button type="primary" @click.native="search">搜索</Button>
 			<p style="margin-top: 6px;">
-				<CheckboxGroup v-model="formInline.check">
-					<Checkbox label="等待审核"></Checkbox>
-					<Checkbox label="审核通过"></Checkbox>
-					<Checkbox label="审核不通过"></Checkbox>
+				<CheckboxGroup v-model="formInline.check" v-if="!hidecheck">
+					<Checkbox label="0">审核中</Checkbox>
+					<Checkbox label="1">审核通过</Checkbox>
+					<Checkbox label="2">审核不通过</Checkbox>
 				</CheckboxGroup>
 			</p>
 		</Form>
 		<div class="imgtext" style="margin: 15px;">
-			<div class="centent" v-for="(data,index) of unitlist" :key="index" @click="rowclick(data)">
+			<div class="centent" v-for="(data,index) of datalist" :key="index" @click="rowclick(data)">
 				<Icon type="md-image" size="120" />
 				<div class="middle" style="flex: 2;">
 						<Row :gutter="16">
 						<Col span="6">
 						<h1>{{data.title}}</h1>
 						</Col>
-						<Col span="6" style="color: #F43838;">{{data.num}}万</Col>
+						<Col span="6" style="color: #F43838;">132万</Col>
 					</Row>
 					<Row :gutter="8">
-						<Col span="6">发布：{{data.person}}</Col>
-						<Col span="6">职务：{{data.work}}</Col>
+						<Col span="6">发布：{{userlist.username}}</Col>
+						<Col span="6">职务：{{userlist.office}}</Col>
 					</Row>
 					<Row :gutter="16">
-						<Col span="6">发布时间：{{data.time[0]}}</Col>
-						<Col span="6">结束时间：{{data.time[1]}}</Col>
+						<Col span="6">发布时间：{{data.create_time}}</Col>
+						<Col span="6">公司：{{userlist.unit}}</Col>
 					</Row>
 							
 
@@ -65,39 +65,16 @@ import {bus} from '@/components/bus/event-bus.js'
 			 * 默认值 default: ''
 			 * 
 			 */
-// 			datalist: {
-// 				type: Array,
-// 				default: () => [{
-// 						title: '深圳宝安时尚创意云谷',
-// 						num: '132万',
-// 						person: '颜真卿',
-// 						cham:'广西湖北商会',
-// 						work: '名誉会长',
-// 						start: '2018-01-15',
-// 						end: '2018-09-18'
-// 					},
-// 					{
-// 						title: '广东宝安时尚创意云谷',
-// 						num: '132万',
-// 						person: '颜真卿2',
-// 						cham:'广西湖北商会1',
-// 						work: '名誉会长',
-// 						start: '2018-01-15',
-// 						end: '2018-09-18'
-// 					},
-// 					{
-// 						title:'中国(武汉·新洲)厨卫基地发展战略规划与招商策划案例',
-// 						num: '132万',
-// 						person: '张三丰',
-// 						cham:'广西湖北商会2',
-// 						work: '联系专员',
-// 						start: '2018-01-15',
-// 						end: '2018-09-18'
-// 					}
-// 				]
-// 			}
+			datalist: {
+				type: Array,
+				default: () => []
+			},
 			range:{
 				type:String
+			},
+			hidecheck:{
+				type:Boolean,
+				default:false
 			}
 		},
 		data() { //数据
@@ -105,8 +82,9 @@ import {bus} from '@/components/bus/event-bus.js'
 				formInline: {
 					check: [],
 					word: '',
-					time: []
-				}
+					time: ["",""]
+				},
+				userdata:[]
 			}
 		},
 		methods: { //方法
@@ -114,10 +92,10 @@ import {bus} from '@/components/bus/event-bus.js'
 				this.$emit('search',this.formInline);
 			},
 			rowclick(data){
-				if(this.range==='会内资源'){
-				bus.$emit('unitDetail',data.name);
-				this.$router.push({name:'chamDetail', params: {list:bus.currentResource}});
-				}else if (this.range==='政府资源'){
+				if(this.range!==3){
+				this.$emit('openDetail',data.id);
+				// this.$router.push({name:'chamDetail', params: {list:bus.currentResource}});
+				}else if (this.range===3){
 				bus.$emit('govDetail',data.name);	
 				this.$router.push({name:'govDetail', params: {list:bus.currentResource}});
 				}
@@ -130,7 +108,19 @@ import {bus} from '@/components/bus/event-bus.js'
 		computed: { //计算属性
 			unitlist(){
 				return bus.scopeRes;
-			}	
+			},
+			userlist(){
+						  // 取值时：把获取到的Json字符串转换回对象
+				
+				var userJsonStr = sessionStorage.getItem('user');
+				
+			var	userEntity = JSON.parse(userJsonStr);
+				this.$set(this.userdata,"unit",userEntity.unit);
+				this.$set(this.userdata,"department",userEntity.department);
+				this.$set(this.userdata,"username",userEntity.username);
+				this.$set(this.userdata,"office",userEntity.office);
+			  return this.userdata;	
+		}
 		},
 		watch: { //监测数据变化,
 		},

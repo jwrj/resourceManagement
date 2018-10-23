@@ -24,7 +24,7 @@ export default [
 	{
 		path: '/',
 		name: '_home',
-	    redirect: '/home',
+	    redirect: '/login',
 	    meta: {//里面的参数用来做各种显示效果的判断（关键字段）
 	    	hideMenu: true,
 	    },

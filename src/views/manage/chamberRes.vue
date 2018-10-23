@@ -7,10 +7,9 @@
 			</div>
 			<div class="news">
 				<span> <strong>发布人信息</strong></span>
-				<span>姓名：{{person}}</span>
-				<span>会内职务：{{work}}</span>
-				<span> 身份证号：450112345678123</span>
-				<span>联系电话：{{phone}}</span>
+				<span>姓名：{{userlist.username}}</span>
+				<span>公司：{{userlist.unit}}</span>
+				<span>会内职务：{{userlist.department}}{{userlist.office}}</span>
 				<span>手机：15612341234</span>
 			</div>
 			<br>
@@ -28,17 +27,11 @@
 					</FormItem>
 					
 			<FormItem label="发布范围">
-				<Button :type="inter==true ? 'error' : 'primary'" 
-				style="margin-right: 5px;"
-				 @click="inter=true,out=false">
-				 会内
-				 </Button>
-				<Button :type="out==true ? 'error' : 'primary'" 
-				@click="inter=false,out=true">
-				会外
-				</Button>
-			
-			<div v-if="out==true" style="margin-top: 30px;">
+			<RadioGroup v-model="resList.replease" type="button" @on-change="changeReplease">
+        <Radio label="1">会内</Radio>
+        <Radio label="2">会外</Radio>
+    </RadioGroup>
+			<div v-if="resList.replease=='2'" style="margin-top: 30px;">
 				<Button type="primary" @click="showImport=true">
 					请选择商会
 				</Button>
@@ -121,7 +114,7 @@
 		</Card>
 		<Card style="margin-top: 16px;">
 			<h1 slot="title">项目介绍</h1>
-		<UEditor :configs='editor_config'></UEditor>
+		<UEditor :configs='editor_config' @up_editor_content="upEditorContent"></UEditor>
 		</Card>
 		<Card style="margin-top: 16px;height: 600px;">
 		
@@ -184,10 +177,7 @@
 						width:'100%',
 						height:'500px'
 				},
-				person:'张三',
-				work:'会长',
-				phone:'1189543448',
-				inter: true,
+				userdata:[],
 				out: false,
 				res_s: [],
 				showImport: false,
@@ -197,10 +187,12 @@
 					circle: '',
 					help: '',
 					title:'',
+					replease:'1',
 					place: '',
-					time: '',
+					time: [],
 					num: '',
-					assure: ''
+					assure: '',
+					remark:''
 				},
 				tableColumns: [{
 						type: 'selection'
@@ -302,27 +294,50 @@
 				this.result = [];
 				this.$refs.selectCham.checkedData=[];
 			},
-			handleSubmit(name) {
+			upEditorContent(value){//获取富文本的数据
+				this.resList.remark = value;
+			},
+			handleSubmit(name) {					
+				var add={		
+							title:this.resList.title,
+							scope_release:this.resList.replease,
+							start_time:this.resList.time[0],
+							end_time:this.resList.time[1],
+							total_money:this.resList.num,
+							guaranty_money:this.resList.assure,
+							introduce_money:this.resList.price,
+							qualification:this.resList.need,
+							period:this.resList.circle,
+							delivery_point:this.resList.place,
+							provide:this.resList.help,
+							attach:[],
+							remark:this.resList.remark,
+							scope_select:this.selected
+							}
 				this.$refs[name].validate((valid) => {
+
 					if (valid) {
-						this.$Message.success('添加成功!');
-						this.addResource();
+						$ax.getAjaxData('service/Resource/society', Object.assign({}, add), res => {
+							
+							if(res.status == 200){
+								this.$Message.success('添加成功!');
+								this.resList={};
+							}
+						});
+						
+					
 					} else {
 						//this.$Message.error('添加失败!');
+						console.log(res)
 					}
 				})
 			},
-			addResource(){
-				this.$set(this.resList,"cham",this.result);
-				this.$set(this.resList,'person',this.person);
-				this.$set(this.resList,'work',this.work);
-				this.$set(this.resList,'phone',this.phone);
-				bus.unitlist.push(this.resList);
-			},
+			
 			formatTime(date){
 				this.resList.time = date;
-				console.log(this.resList.time)
+			//	console.log(this.resList.time)
 			},
+			
 			closeTag(res,index){
 				//关闭标签触发
 				for(let i=0;i<this.result.length;i++){
@@ -331,11 +346,39 @@
 						
 					}
 				}
+			},
+			
+			changeReplease(){
+				if(this.resList.replease==='1'){
+					this.result=[];
+				}
 			}
 		  
 		},
 		computed: { //计算属性
-
+			 selected(){
+				 let arr=[]
+				 for(let i of this.result){
+					 if(i.name){
+						 arr.push(i.id);
+					 }
+				 }
+				 arr=arr.join();
+				 console.log(arr);
+				 return arr;
+			 },
+			 	userlist(){
+			 					// 取值时：把获取到的Json字符串转换回对象
+			 		
+			 		var userJsonStr = sessionStorage.getItem('user');
+			 		
+			 	var	userEntity = JSON.parse(userJsonStr);
+			 		this.$set(this.userdata,"unit",userEntity.unit);
+			 		this.$set(this.userdata,"department",userEntity.department);
+			 		this.$set(this.userdata,"username",userEntity.username);
+			 		this.$set(this.userdata,"office",userEntity.office);
+			 		return this.userdata;	
+			 }
 		},
 		watch: { //监测数据变化
 		},

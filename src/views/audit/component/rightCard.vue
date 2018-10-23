@@ -44,7 +44,7 @@
 				
 				<div class="unit" v-for="(unit,index) of unitlist" :key="index" @click="rowclick(unit)">
 					<p style="font-size: 16px;color: black;" >{{unit.name}}</p>
-					<p class="gray">商会：{{unit.cham}}</p>
+					<p class="gray">商会：<span style="margin-right: 3px;" v-for="(ch,index) of unit.cham">{{ch.name}}</span></p>
 					<p class="gray">时间：{{unit.start}}</p>
 				</div>
 			</Card>

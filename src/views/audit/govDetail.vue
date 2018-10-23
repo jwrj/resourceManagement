@@ -8,29 +8,17 @@
 			</p>
   <div style="padding: 15px 0; border-bottom: 1px solid #C2CCD1;">
 	  <Row style="width: 75%;">
-	  	<Col span="5" >
-	  		<p>开始时间：</p>
-	  		<p>发布范围：</p>
-	  		<p>投资金额：</p>
-	  		<p>收益年限：</p>
+	  	<Col span="12" style="text-align: left;">
+	  		<p>开始时间：2018-01-17</p>
+	  		<p>发布范围：<span v-for="(data,index) of datalist.cham">{{data}}</span></p>
+	  		<p>投资金额：{{datalist.invest}}万</p>
+	  		<p>收益年限：{{datalist.year}}年</p>
 	  	</Col>
-	  	<Col span="5" style="text-align: left;">
-	  		<p>{{datalist.start}}</p>
-	  		<p><span v-for="(data,index) of datalist.cham">{{data}}</span></p>
-	  		<p>{{datalist.invest}}万</p>
-	  		<p>{{datalist.year}}年</p>
-	  	</Col>
-	  	<Col span="5" >
-	  		<p>结束时间：</p>
-	  		<p>合作方式：</p>
-	  		<p>预计收益：</p>
-	  		<p>联系人员：</p>
-	  	</Col>
-	  	<Col span="7" style="text-align: left;">
-	  		<p>{{datalist.end}}</p>
-	  		<p>政企合作</p>
-	  		<p>{{datalist.money}}万</p>
-			<div><p v-for="(u,index) of datalist.personList">{{u.name}}-{{u.phone}}</p></div>
+	  	<Col span="12" style="text-align: left;">
+	  		<p>结束时间：2018-09-14</p>
+	  		<p>合作方式：政企合作</p>
+	  		<p>预计收益：{{datalist.money}}万</p>
+	  		<p>联系人员：<p v-for="(u,index) of datalist.personList">{{u.name}}-{{u.phone}}</p></p>
 	  	</Col>
 	  </Row>
   </div>

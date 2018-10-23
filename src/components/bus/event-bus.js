@@ -13,7 +13,7 @@ export const bus = new Vue({
 							price:'12345',
 							need:'化工',
                 			person: '颜真卿',
-                			cham:'广西南宁商会',
+                			cham:[ { "id": 2, "name": "aa商会", "date": "2016-10-01", "_checked": true }, { "id": 3, "name": "bb商会", "date": "2016-10-02" } ],
                 			work: '名誉会长',
                 			time:["2018-11-01","2019-12-18"]
                 		},
@@ -28,7 +28,7 @@ export const bus = new Vue({
 							price:'12345',
 							need:'智能科技',
                 			person: '马杀鸡',
-                			cham:'广西桂林商会',
+                			cham:[ { "id": 4, "name": "cc商会", "date": "2016-10-01", "_checked": true }, { "id": 2, "name": "aa商会", "date": "2016-10-02" } ],
                 			work: '经理',
                 			time:["2017-11-11","2019-11-11"]
                 		},{
@@ -42,7 +42,7 @@ export const bus = new Vue({
 							price:'125',
 							need:'食品安全',
                 			person: '周大大',
-                			cham:'北京食品商会',
+                			cham:[ { "id": 2, "name": "aa商会", "date": "2016-10-01", "_checked": true }, { "id": 3, "name": "bb商会", "date": "2016-10-02" } ],
                 			work: '名誉会长',
                 			time:["2018-01-01","2019-04-18"]
                 		}

@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>政府资源</h1>
 			</div>
-			<img-text @search="searchList"></img-text>
+			<img-text @search="searchList" @openview="getResDetail"></img-text>
 		</Card>
 
 
@@ -38,7 +38,11 @@
       searchList(list){
 		  this.datalist=list;
 	   console.log('接收到了'+this.datalist.word);
-      }
+      },
+			getResDetail(list){
+				this.$router.push({name:'govDetail', params: {list: list}});
+	
+			}
 		},
 		computed: { //计算属性
 

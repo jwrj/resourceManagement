@@ -5,7 +5,7 @@
 		<div slot="title">
 			<h1>我承接的资源</h1>
 		</div>
-		<img-text @search="searchList" @openview="getResDetail"></img-text>
+		<img-text :hidecheck="true" :datalist="datalist" @search="searchList" @openview="getResDetail"></img-text>
 	</Card>	
 		
 		
@@ -31,16 +31,25 @@ export default {
 	},
     data () {//数据
         return {
-        	
+        	datalist:[],
+					searchlist:[]
         }
     },
     methods: {//方法
     	searchList(list){
-    	this.datalist=list;
-    	console.log('接收到了'+this.datalist.word);
-    	},
+			this.$set(this.searchlist,"title",list.word);
+			this.$set(this.searchlist,"start_time",list.time[0]);
+			this.$set(this.searchlist,"end_time",list.time[1]);
+			$ax.getAjaxData('service/Resource/icontract',Object.assign({}, this.searchlist), (res) =>{
+				if(res.status == 200){
+					this.datalist=res.data;
+				}else if(res.status==300){
+					this.datalist=[];
+				}
+			});
+		},
 		getResDetail(list){
-			this.$router.push({name:'carryDetail', params: {list: list}});
+			this.$router.push({name:'chamDetail', params: {list: list}});
 
 		}
     },
@@ -64,7 +73,7 @@ export default {
 	
 	beforeRouteEnter (to, from, next) {//在组件创建之前调用（放置页面加载时请求的Ajax）
 		
-		(async() => {//执行异步函数
+(async() => {//执行异步函数
 			
 			//async、await错误处理
 			try {
@@ -81,15 +90,22 @@ export default {
 				 * console.log(await abc);
 				 * ...
 				*/
-				next(vm => {
-					
-				});
+			   let myGetData = await $ax.getAsyncAjaxData('service/Resource/icontract',{});
+				   
+					next(vm => {
+							if(myGetData.status == 200){
+								vm.datalist=myGetData.data;
+							}
+					});
 				
 			} catch(err) {
 				console.log(err);
 			}
 			
+			next();
+			
 		})();
+
 		
 	},
 	
