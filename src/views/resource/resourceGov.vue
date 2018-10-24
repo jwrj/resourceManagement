@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>政府资源</h1>
 			</div>
-			<img-text @search="searchList" @openview="getResDetail"></img-text>
+			<img-text :hidecheck="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 		</Card>
 
 
@@ -31,19 +31,40 @@
 		},
 		data() { //数据
 			return {
-            datalist:[]
+            datalist:[],
+						searchlist:{}
 			}
 		},
-		methods: { //方法
-      searchList(list){
-		  this.datalist=list;
-	   console.log('接收到了'+this.datalist.word);
-      },
-			getResDetail(list){
-				this.$router.push({name:'govDetail', params: {list: list}});
+	methods: {//方法
+		searchList(list){
+		let arr=list.check;
+		this.$set(this.searchlist,"title",list.word);
+		this.$set(this.searchlist,"status",arr.join());
+		this.$set(this.searchlist,"start_time",list.time[0]);
+		this.$set(this.searchlist,"end_time",list.time[1]);
+		this.$set(this.searchlist,"scope_release",'3');
+		$ax.getAjaxData('service/Resource/index',Object.assign({}, this.searchlist), (res) =>{
+			if(res.status == 200){
+				this.datalist=res.data;
+			}else if(res.status==300){
+				this.datalist=[];
+			}
+		});
 	
-			}
 		},
+	openDetail(id){
+		let detailList=[];
+			$ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
+				if(res.status == 200){
+					detailList=res.data;
+					this.$router.push({name: 'chamDetail', params: {list: detailList}});
+				}else if(res.status==300){
+					detailList=[];
+				}
+			});
+			
+	}
+	},
 		computed: { //计算属性
 
 		},
@@ -57,39 +78,45 @@
 
 		},
 		mounted() { //模板被渲染完毕之后执行
-
+      console.log(this.$route.path)
 		},
 
 		//=================组件路由勾子==============================
 
 		beforeRouteEnter(to, from, next) { //在组件创建之前调用（放置页面加载时请求的Ajax）
 
-			(async () => { //执行异步函数
-
-				//async、await错误处理
-				try {
-
-					/*
-					 * 
-					 * ------串行执行---------
-					 * console.log(await getAjaxData());
-					 * ...
-					 * 
-					 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-					 * let abc = getAjaxData();//先执行promise函数
-					 * ...
-					 * console.log(await abc);
-					 * ...
-					 */
+		(async() => {//执行异步函数
+			
+			//async、await错误处理
+			try {
+				
+				/*
+				 * 
+				 * ------串行执行---------
+				 * console.log(await getAjaxData());
+				 * ...
+				 * 
+				 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+				 * let abc = getAjaxData();//先执行promise函数
+				 * ...
+				 * console.log(await abc);
+				 * ...
+				*/
+			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/index',{scope_release:"3"});
+				   
 					next(vm => {
-
+							if(myPostData.status == 200){
+								vm.datalist=myPostData.data;
+							}
 					});
-
-				} catch (err) {
-					console.log(err);
-				}
-
-			})();
+				
+			} catch(err) {
+				console.log(err);
+			}
+			
+			next();
+			
+		})();
 
 		},
 

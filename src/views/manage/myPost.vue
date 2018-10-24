@@ -4,9 +4,9 @@
 	<Card>
 		<div slot="title">
 			<h1>我发布的资源</h1>
-			<div v-for="(data,index) of datalist">{{datalist.title}}</div>
+			<!-- <div v-for="(data,index) of datalist">{{datalist.title}}</div> -->
 		</div>
-		<img-text :datalist="datalist"  @search="searchList" @openview="getResDetail"></img-text>
+		<img-text :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 	</Card>	
 		
 		
@@ -52,9 +52,17 @@ export default {
 			});
 		
     	},
-		getResDetail(list){
-			this.$router.push({name:'chamDetail', params: {list: list}});
-
+		openDetail(id){
+			 let detailList=[];
+			  $ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
+			  	if(res.status == 200){
+			  		detailList=res.data;
+						this.$router.push({name: 'chamDetail', params: {list: detailList}});
+			  	}else if(res.status==300){
+			  		detailList=[];
+			  	}
+			  });
+				
 		}
     },
     computed: {//计算属性
@@ -97,8 +105,6 @@ export default {
 			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/irelease',{});
 				   
 					next(vm => {
-// 						vm.datalist = res.data;
-// vm.datalist=myPostData.data;
 							if(myPostData.status == 200){
 								vm.datalist=myPostData.data;
 							}

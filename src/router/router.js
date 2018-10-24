@@ -171,7 +171,7 @@ export default [
 				path: 'govDetail',
 				name: 'govDetail',
 				meta: {
-					title: '政府资源审核详情',
+					title: '政府资源详情',
 					icon: 'md-alarm',
 				},
 				component: () => import('@/views/audit/govDetail.vue')

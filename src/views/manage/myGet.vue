@@ -5,7 +5,7 @@
 		<div slot="title">
 			<h1>我承接的资源</h1>
 		</div>
-		<img-text :hidecheck="true" :datalist="datalist" @search="searchList" @openview="getResDetail"></img-text>
+		<img-text :hidecheck="true" :datalist="datalist" @search="searchList" @openDetail="openDetail"></img-text>
 	</Card>	
 		
 		
@@ -48,9 +48,17 @@ export default {
 				}
 			});
 		},
-		getResDetail(list){
-			this.$router.push({name:'chamDetail', params: {list: list}});
-
+		openDetail(id){
+			 let detailList=[];
+			  $ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
+			  	if(res.status == 200){
+			  		detailList=res.data;
+						this.$router.push({name: 'chamDetail', params: {list: detailList}});
+			  	}else if(res.status==300){
+			  		detailList=[];
+			  	}
+			  });
+				
 		}
     },
     computed: {//计算属性
