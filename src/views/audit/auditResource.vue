@@ -3,13 +3,10 @@
 	<div>
 		<Card>
 			<h1 slot="title">资源审核</h1>
-	  <RadioGroup v-model="range" type="button" style="margin-bottom: 5px;">	
-			<Radio label="1" style="margin-right:5px;">会内资源</Radio>
-			<Radio label="2">会间资源</Radio>
-      </RadioGroup>
+
 	  
 			<img-text :datalist="datalist" @search="searchList"
-			 @openDetail="openDetail" :range="range">
+			 @openDetail="openDetail" >
 			</img-text>
 		</Card>
 		
@@ -38,7 +35,6 @@ export default {
     data () {//数据
         return {
         	datalist:[],
-					range:'1',
 					routeName:'chamDetail',
 					searchlist:[]
         }
@@ -52,7 +48,8 @@ export default {
 				this.$set(objList,"status",arr.join());			
 				this.$set(objList,"start_time",list.time[0]);
 				this.$set(objList,"end_time",list.time[1]);
-				this.searchlist =Object.assign({},objList,{"scope_release":this.range});
+				this.$set(objList,"scope_release",list.range);
+				this.searchlist =Object.assign({},objList);
 				$ax.getAjaxData('service/Resource/index',this.searchlist, (res) =>{
 					if(res.status == 200){
 						this.datalist=res.data;
@@ -109,7 +106,7 @@ export default {
 				 * console.log(await abc);
 				 * ...
 				*/
-			   let resourceData = await $ax.getAsyncAjaxData('service/Resource/index',{});
+			   let resourceData = await $ax.getAsyncAjaxData('service/Resource/index',{"scope_release":"1"});
 				   
 					next(vm => {
 							if(resourceData.status == 200){

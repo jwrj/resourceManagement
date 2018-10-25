@@ -78,7 +78,7 @@
 
 		},
 		mounted() { //模板被渲染完毕之后执行
-      console.log(this.$route.path)
+      console.log('地址是'+this.$route.path) //+'路由是'+this.$route.path
 		},
 
 		//=================组件路由勾子==============================

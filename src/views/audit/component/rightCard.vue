@@ -34,7 +34,18 @@
 				<p>审核状态：已通过</p>
 				<p>可见区域：会内可见</p>
 				<p>时限状态：未结束资源</p>
-				<Button type="primary" style="margin: 15px 0 0 15px;">我要承接</Button>
+				
+				        <Poptip  placement="left">
+           <Button type="primary" style="margin: 15px 0 0 15px;">我要承接</Button>
+					  <div class="api" slot="content">
+						   <table-list 
+						   :tableColumns="tableColumns" 
+						   ref="selectCham" 
+						   :tableData="tableData"
+						   >
+							</table-list>
+						</div>
+        </Poptip>
 			</Card>
 			
 			<Card style="margin-top: 5px;">
@@ -50,16 +61,17 @@
 			</Card>
 		</div>
 		
-		
 	</div>
 	
 </template>
 
 <script>
+import tableList from '@/components/tableList/table-list.vue'
 import {bus} from '@/components/bus/event-bus.js'
 export default {
 	name: 'rightCard',
 	components:{//组件模板
+	tableList
 	},
 	props:{//组件道具（参数）
 		/* ****属性用法*****
@@ -106,6 +118,7 @@ export default {
 						date:'2017-12-13'
 					}
 			]
+	
 		},
     list: {
       // 对象或数组默认值必须从一个工厂函数获取
@@ -114,7 +127,49 @@ export default {
 	},
     data () {//数据
         return {
-
+		tableColumns: [{
+					type: 'selection'
+				},
+				{
+					title: 'ID',
+					key: 'id'
+				},
+				{
+					title: '名称',
+					key: 'name'
+				},
+				{
+					title: '日期',
+					key: 'date'
+				}
+			],
+			tableData:[
+				{
+					id: 1,
+					name: '张三的商会',
+					date: '2016-10-03'
+				},
+				{
+					id: 2,
+					name: '李四的商会',
+					date: '2016-10-01'
+				},
+				{
+					id: 3,
+					name: '麻五的商会',
+					date: '2016-10-02'
+				},
+				{
+					id: 4,
+					name: '徐六的商会',
+					date: '2016-10-04'
+				},
+				{
+					id: 5,
+					name: '吴老七的商会',
+					date: '2016-10-04'
+				}
+			],
         }
     },
     methods: {//方法

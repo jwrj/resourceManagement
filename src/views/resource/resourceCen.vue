@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>会间资源</h1>
 			</div>
-			<img-text :datalist="datalist"  @search="searchList" @openDetail="openDetail">
+			<img-text :hideRadio="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail">
 <!-- 				<div slot="header" style="margin-bottom: 50px;">
 					<Button type="primary" @click="showImport=true">
 						请选择商会

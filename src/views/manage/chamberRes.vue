@@ -7,10 +7,8 @@
 			</div>
 			<div class="news">
 				<span> <strong>发布人信息</strong></span>
-				<span>姓名：{{userlist.username}}</span>
-				<span>公司：{{userlist.unit}}</span>
-				<span>会内职务：{{userlist.department}}{{userlist.office}}</span>
-				<span>手机：15612341234</span>
+				<span>姓名：{{userdata.name}}</span>
+				<span>手机：{{userdata.mobile}}</span>
 			</div>
 			<br>
 			
@@ -366,19 +364,20 @@
 				 arr=arr.join();
 				 console.log(arr);
 				 return arr;
-			 },
-			 	userlist(){
-			 					// 取值时：把获取到的Json字符串转换回对象
-			 		
-			 		var userJsonStr = sessionStorage.getItem('user');
-			 		
-			 	var	userEntity = JSON.parse(userJsonStr);
-			 		this.$set(this.userdata,"unit",userEntity.unit);
-			 		this.$set(this.userdata,"department",userEntity.department);
-			 		this.$set(this.userdata,"username",userEntity.username);
-			 		this.$set(this.userdata,"office",userEntity.office);
-			 		return this.userdata;	
 			 }
+// 			 	userlist(){
+// // 			 					// 取值时：把获取到的Json字符串转换回对象
+// // 			 		
+// // 			 		var userJsonStr = sessionStorage.getItem('user');
+// // 			 		
+// // 			 	var	userEntity = JSON.parse(userJsonStr);
+// // 			 		this.$set(this.userdata,"unit",userEntity.unit);
+// // 			 		this.$set(this.userdata,"department",userEntity.department);
+// // 			 		this.$set(this.userdata,"username",userEntity.username);
+// // 			 		this.$set(this.userdata,"office",userEntity.office);
+// // 			 		return this.userdata;	
+// 
+// 			 }
 		},
 		watch: { //监测数据变化
 		},
@@ -396,32 +395,41 @@
 
 		beforeRouteEnter(to, from, next) { //在组件创建之前调用（放置页面加载时请求的Ajax）
 
-			(async () => { //执行异步函数
-
-				//async、await错误处理
-				try {
-
-					/*
-					 * 
-					 * ------串行执行---------
-					 * console.log(await getAjaxData());
-					 * ...
-					 * 
-					 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-					 * let abc = getAjaxData();//先执行promise函数
-					 * ...
-					 * console.log(await abc);
-					 * ...
-					 */
-					next(vm => {
-
-					});
-
-				} catch (err) {
-					console.log(err);
-				}
-
-			})();
+		(async() => {//执行异步函数
+					
+					//async、await错误处理
+					try {
+						
+						/*
+						 * 
+						 * ------串行执行---------
+						 * console.log(await getAjaxData());
+						 * ...
+						 * 
+						 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+						 * let abc = getAjaxData();//先执行promise函数
+						 * ...
+						 * console.log(await abc);
+						 * ...
+						*/
+					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
+						   
+							next(vm => {
+									if(resourceData.status == 200){
+										vm.userdata=resourceData.data.user;
+									}else if(resourceData.status == 300){
+							    vm.userdata=[];
+										
+									}
+							});
+						
+					} catch(err) {
+						console.log(err);
+					}
+					
+					next();
+					
+				})();
 
 		},
 

@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>广西湖北商会的资源</h1>
 			</div>
-			<img-text :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
+			<img-text :hideRadio="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 		</Card>
 
 

@@ -7,11 +7,8 @@
 			</div>
 			<div class="news">
 				<span> <strong>发布人信息</strong></span>
-				<span>姓名：张三</span>
-				<span>会内职务：会长</span>
-				<span> 身份证号：450112345678123</span>
-				<span>联系电话：0771-1234567</span>
-				<span>手机：15612341234</span>
+				<span>姓名：{{userdata.name}}</span>
+				<span>手机：{{userdata.mobile}}</span>
 			</div>
 			<br>
 			
@@ -47,28 +44,34 @@
 				<Row>
 					<Col :lg="12" :md="16" :sm="24" :xs="24">
 					<FormItem label="起始时间" prop="time">
-						<DatePicker v-model="resList.time" type="daterange" split-panels placeholder="选择时间" style="width: 200px"></DatePicker>
+						<DatePicker 
+						v-model="resList.time" 
+						type="daterange" 
+						split-panels placeholder="选择时间" 
+						@on-change="formatTime"
+						style="width: 200px">
+						</DatePicker>
 					</FormItem>
 					
-					<FormItem label="预计收益" prop="money">
-						<Input v-model="resList.money" type="text" style="width: 200px;">
+					<FormItem label="预计收益" prop="profit">
+						<Input v-model="resList.profit" type="text" style="width: 200px;">
 						<span slot="append">万元</span>
 						</Input>
 					</FormItem>
-					<FormItem label="收益年限" prop="year">
-						<Input v-model="resList.year" type="text" style="width: 200px;">
+					<FormItem label="收益年限" prop="profit_limit">
+						<Input v-model="resList.profit_limit" type="text" style="width: 200px;">
 						<span slot="append">年</span>
 						</Input>
 					</FormItem>
 					</Col>
 					<Col :lg="12" :md="16" :sm="24" :xs="24">
-					<FormItem label="投资金额" prop="invest">
-						<Input v-model="resList.invest" type="text" style="width: 200px;">
+					<FormItem label="投资金额" prop="invest_money">
+						<Input v-model="resList.invest_money" type="text" style="width: 200px;">
 						<span slot="append">万元</span>
 						</Input>
 					</FormItem>
 					<FormItem label="资质需求">
-						<Input v-model="resList.need" type="text" style="width: 200px;">
+						<Input v-model="resList.qualification" type="text" style="width: 200px;">
 						</Input>
 					</FormItem>
 
@@ -81,8 +84,8 @@
                 :label="'联系人 ' + person.index">
             <Row>
 						<Col span="18">
-							<Input type="text" v-model="person.name" style="width: 200px;" placeholder="请输入姓名"></Input>——
-							<Input type="text" v-model="person.phone" style="width: 200px;" placeholder="请输入手机号码"></Input>
+							<Input type="text" v-model="person.title" style="width: 200px;" placeholder="请输入姓名"></Input>——
+							<Input type="text" v-model="person.contact" style="width: 200px;" placeholder="请输入手机号码"></Input>
 						</Col>
 						<Col span="4" offset="1">
 							<Button @click="handleRemove(index)">Delete</Button>
@@ -100,7 +103,7 @@
 		</Card>
 		<Card style="margin-top: 16px;">
 			<h1 slot="title">项目介绍</h1>
-		<UEditor :configs='editor_config'></UEditor>
+		<UEditor :configs='editor_config' @up_editor_content="upEditorContent"></UEditor>
 		</Card>
 		<Card style="margin-top: 16px;height: 600px;">
 		
@@ -118,10 +121,10 @@
 			<table-list 
 			:tableColumns="tableColumns" 
 			ref="selectCham" 
-			:tableData="tableData" 
+			:tableData="tableDa" 
 			:modalTitle="modalTitle"
-			@on-btn-click="btnClick"
 			>
+			<!--@on-btn-click="btnClick" -->
 				<div slot="header">
 					<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
 				</div>
@@ -158,26 +161,36 @@
 						width:'100%',
 						height:'500px'
 				},
-				inter: true,
-				out: false,
+				userdata:[],
+// 				inter: true,
+// 				out: false,
 				res_s: [],
 				modalTitle:'',
 				showImport: false,
 				result: [],
+				chamList:[],
 				resList: {
-					need: '',
-					circle: '',
-					help: '',
 					title:'',
-					palce: '',
+					replease:'3',
 					time: [],
-					num: '',
-					assure: '',
+					remark:'',
+					invest_money:'',
+					profit:'',
+					profit_limit:'',
+					qualification:'',
 					index: 1,
+// 					personList: [
+//                         {
+//                             name: '',
+// 							phone:'',
+//                             index: 1,
+//                             status: 1
+//                         }
+//                     ]
 					personList: [
                         {
-                            name: '',
-							phone:'',
+                            title: '',
+							contact:'',
                             index: 1,
                             status: 1
                         }
@@ -193,78 +206,19 @@
 					{
 						title: '名称',
 						key: 'name'
-					},
-					{
-						title: '日期',
-						key: 'date'
-					},
-					{
-						align: 'center',
-						width: 130,
-							title: '操作',
-							handle: [
-								{
-									name: '查看详情',
-									key: 0,
-									modalShow:true,
-									props: {
-										loading: false
-									}
-								},
-								],
-					}
-				],
-				tableData:[
-					{
-						id: 1,
-						name: '张三的商会',
-						date: '2016-10-03'
-					},
-					{
-						id: 2,
-						name: '李四的商会',
-						date: '2016-10-01'
-					},
-					{
-						id: 3,
-						name: '麻五的商会',
-						date: '2016-10-02'
-					},
-					{
-						id: 4,
-						name: '徐六的商会',
-						date: '2016-10-04'
-					},
-					{
-						id: 5,
-						name: '吴老七的商会',
-						date: '2016-10-04'
 					}
 				],
 				ruleValidate: {
 					time: [{
 						type: 'array',
-						required: true,
-						fields: {
-							0: {
-								type: 'date',
-								required: true,
-								message: '请输入起止日期'
-							},
-							1: {
-								type: 'date',
-								required: true,
-								message: '请输入起止日期'
-							}
-						}
+						required: true
 					}],
-					money: [{
-						type:'number',
+					profit: [{
 						required: true,
 						message: '请填写预计收益',
 						trigger: 'blur'
 					}],
-					year: [{
+					profit_limit: [{
 						required: true,
 						message: '请填写收益年限',
 						trigger: 'blur'
@@ -274,7 +228,7 @@
 						message: '标题不能为空',
 						trigger: 'blur'
 					}],
-					invest: [{
+					invest_money: [{
 						required: true,
 						message: '请填写投资金额',
 						trigger: 'blur'
@@ -311,10 +265,32 @@
 				this.result = [];
 				this.$refs.selectCham.checkedData=[];
 			},
-			handleSubmit(name) {
+			
+			handleSubmit(name) {//提交
+				var add={		
+							title:this.resList.title,
+							scope_release:this.resList.replease,
+							start_time:this.resList.time[0],
+							end_time:this.resList.time[1],
+							invest_money:this.resList.invest_money,
+							profit:this.resList.profit,
+							qualification:this.resList.qualification,
+							profit_limit:this.resList.profit_limit,
+							attach:[],
+							remark:this.resList.remark,
+							scope_select:this.selected,
+							contacts:this.resList.personList
+							}
+							console.log(add);
 				this.$refs[name].validate((valid) => {
 					if (valid) {
-						this.$Message.success('添加成功!');
+						$ax.getAjaxData('service/Resource/government', Object.assign({}, add), res => {
+							
+							if(res.status == 200){
+								this.$Message.success('添加成功!');
+								this.resList={};
+							}
+						});
 					} else {
 						//this.$Message.error('添加失败!');
 					}
@@ -324,8 +300,8 @@
                 this.resList.index++;
 				console.log( this.resList.personList)
                 this.resList.personList.push({
-                    value: '',
-					phone:'',
+                    title: '',
+					contact:'',
                     index:  this.resList.index,
                     status: 1
                 });
@@ -337,6 +313,10 @@
 				this.modalTitle=val.params.row.name;
 				console.log(val);
 			},
+			formatTime(date){
+				this.resList.time = date;
+			//	console.log(this.resList.time)
+			},
 			closeTag(res,index){
 				//关闭标签触发
 				for(let i=0;i<this.result.length;i++){
@@ -344,10 +324,30 @@
 						this.result.splice(i,1)
 					}
 				}
+			},
+			upEditorContent(value){//获取富文本的数据
+				this.resList.remark = value;
 			}
 		},
 		computed: { //计算属性
-
+			tableDa(){
+				let arr=this.chamList;
+				for(let i=0;i<arr.length;i++){
+					this.$set(arr[i],"id",i);
+				}
+				return arr;
+			},
+			selected(){
+				let arr=[]
+				for(let i of this.result){
+					if(i.name){
+						arr.push(i.name);
+					}
+				}
+				arr=arr.join();
+				console.log(arr);
+				return arr;
+			}
 		},
 		watch: { //监测数据变化,
 		},
@@ -358,39 +358,54 @@
 
 		},
 		mounted() { //模板被渲染完毕之后执行
-
+          $ax.getAjaxData('service/Oauth/getMyBelongOrgAction',{}, res => {
+          	
+          	if(res.code == 0){
+          		this.chamList=res.data;
+          	}
+          });
+		  
 		},
 
 		//=================组件路由勾子==============================
 
 		beforeRouteEnter(to, from, next) { //在组件创建之前调用（放置页面加载时请求的Ajax）
 
-			(async () => { //执行异步函数
-
-				//async、await错误处理
-				try {
-
-					/*
-					 * 
-					 * ------串行执行---------
-					 * console.log(await getAjaxData());
-					 * ...
-					 * 
-					 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-					 * let abc = getAjaxData();//先执行promise函数
-					 * ...
-					 * console.log(await abc);
-					 * ...
-					 */
-					next(vm => {
-
-					});
-
-				} catch (err) {
-					console.log(err);
-				}
-
-			})();
+		(async() => {//执行异步函数
+					
+					//async、await错误处理
+					try {
+						
+						/*
+						 * 
+						 * ------串行执行---------
+						 * console.log(await getAjaxData());
+						 * ...
+						 * 
+						 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+						 * let abc = getAjaxData();//先执行promise函数
+						 * ...
+						 * console.log(await abc);
+						 * ...
+						*/
+					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
+						   
+							next(vm => {
+									if(resourceData.status == 200){
+										vm.userdata=resourceData.data.user;
+									}else if(resourceData.status == 300){
+							    vm.userdata=[];
+										
+									}
+							});
+						
+					} catch(err) {
+						console.log(err);
+					}
+					
+					next();
+					
+				})();
 
 		},
 

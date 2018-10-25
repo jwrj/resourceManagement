@@ -2,6 +2,17 @@
 	<div>
 		<Form :model="formInline">
 			<slot name="header"></slot>
+			<p>
+				<RadioGroup 
+				v-model="formInline.range" 
+				type="button" 
+				style="margin-bottom: 5px;"
+				@on-change="search"
+				v-if="!hideRadio">	
+					<Radio label="1" style="margin-right:5px;">会内资源</Radio>
+					<Radio label="2">会间资源</Radio>
+					</RadioGroup>
+			</p>
 			<DatePicker 
 			:value="formInline.time" 
 			type="daterange" 
@@ -14,7 +25,7 @@
 			<Input v-model="formInline.word" style="width: 200px;margin:0 5px;" />
 			<Button type="primary" @click.native="search">搜索</Button>
 			<p style="margin-top: 6px;">
-				<CheckboxGroup v-model="formInline.check" v-if="!hidecheck">
+				<CheckboxGroup v-model="formInline.check" v-if="!hidecheck" @on-change="search">
 					<Checkbox label="0">审核中</Checkbox>
 					<Checkbox label="1">审核通过</Checkbox>
 					<Checkbox label="2">审核不通过</Checkbox>
@@ -69,8 +80,9 @@ import {bus} from '@/components/bus/event-bus.js'
 				type: Array,
 				default: () => []
 			},
-			range:{
-				type:String
+			hideRadio:{
+				type:Boolean,
+				default:false
 			},
 			hidecheck:{
 				type:Boolean,
@@ -82,7 +94,8 @@ import {bus} from '@/components/bus/event-bus.js'
 				formInline: {
 					check: [],
 					word: '',
-					time: ["",""]
+					time: ["",""],
+					range:'1'
 				},
 				userdata:[]
 			}
@@ -92,10 +105,10 @@ import {bus} from '@/components/bus/event-bus.js'
 				this.$emit('search',this.formInline);
 			},
 			rowclick(data){
-				if(this.range!==3){
+				if(this.formInline.range!==3){
 				this.$emit('openDetail',data.id);
 				// this.$router.push({name:'chamDetail', params: {list:bus.currentResource}});
-				}else if (this.range===3){
+				}else if (this.formInline.range===3){
 				bus.$emit('govDetail',data.name);	
 				this.$router.push({name:'govDetail', params: {list:bus.currentResource}});
 				}
@@ -106,14 +119,11 @@ import {bus} from '@/components/bus/event-bus.js'
 			}
 		},
 		computed: { //计算属性
-			unitlist(){
-				return bus.scopeRes;
-			},
 			userlist(){
 						  // 取值时：把获取到的Json字符串转换回对象
 				
 				var userJsonStr = sessionStorage.getItem('user');
-				
+			
 			var	userEntity = JSON.parse(userJsonStr);
 				this.$set(this.userdata,"unit",userEntity.unit);
 				this.$set(this.userdata,"department",userEntity.department);

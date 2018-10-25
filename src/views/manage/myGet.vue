@@ -5,7 +5,7 @@
 		<div slot="title">
 			<h1>我承接的资源</h1>
 		</div>
-		<img-text :hidecheck="true" :datalist="datalist" @search="searchList" @openDetail="openDetail"></img-text>
+		<img-text :hideRadio="true" :hidecheck="true" :datalist="datalist" @search="searchList" @openDetail="openDetail"></img-text>
 	</Card>	
 		
 		
