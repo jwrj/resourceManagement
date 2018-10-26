@@ -4,20 +4,24 @@
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p  class="bold top">
-				{{title?title:'政府资源标题1'}}
+				{{datalist.title?datalist.title:'政府资源标题1'}}
+				<p style="color:#ccc;">
+					<span style="margin-right:5px;">发布时间：{{datalist.release_time | formatDate}}</span>
+					<span>点击量：{{datalist.hits}}</span>
+				</p>
 			</p>
   <div style="padding: 15px 0; border-bottom: 1px solid #C2CCD1;">
 	  <Row style="width: 75%;">
 	  	<Col span="12" style="text-align: left;">
-	  		<p>开始时间：2018-01-17</p>
-	  		<p>发布范围：<span v-for="(data,index) of datalist.cham">{{data}}</span></p>
-	  		<p>投资金额：{{datalist.invest}}万</p>
-	  		<p>收益年限：{{datalist.year}}年</p>
+	  		<p>开始时间：{{datalist.start_time}}</p>
+	  		<p>发布范围：<span v-for="(data,index) of datalist.scope_select">{{data}}</span></p>
+	  		<p>投资金额：{{datalist.invest_money}}万</p>
+	  		<p>收益年限：{{datalist.profit_limit}}年</p>
 	  	</Col>
 	  	<Col span="12" style="text-align: left;">
-	  		<p>结束时间：2018-09-14</p>
+	  		<p>结束时间：{{datalist.end_time}}</p>
 	  		<p>合作方式：政企合作</p>
-	  		<p>预计收益：{{datalist.money}}万</p>
+	  		<p>预计收益：{{datalist.profit}}万</p>
 	  		<p>联系人员：<p v-for="(u,index) of datalist.personList">{{u.name}}-{{u.phone}}</p></p>
 	  	</Col>
 	  </Row>
@@ -26,15 +30,10 @@
    <div>
 	<p class="title">项目介绍</p> 
 	<Img :src="img" width="60%" style="margin-right: auto;"/>
-	<p class="text">项目简介：项目定位为国际时尚创意云谷，希望打造成为时尚人才聚集地、时尚文化体验区、时尚产业风向标，产业重点聚焦在时尚设计、时尚体验、时尚消费、时尚展示四大板块。</p>
-	<p class="text">项目方案：中投顾问项目组通过对深圳市的传统优势主导产业、现有的产业布局以及新兴产业聚集的调研分析，基于项目具备的区位、产业基础、开发商的资源等，设计了产业发展及产业资源导入方案。</p>
-	<p class="text">说明：中投顾问展示本文案例仅供您参考，关于您的区域产业规划问题，更多个性化的解决方案，请与我们的咨询顾问联络，我们的园区产业规划咨询顾问将与您一起来深入分析项目，并为您制定针对性的项目解决方案。</p>
+   <p style="margin: 10px 5px;" v-html="datalist.remark"></p>
    </div>
    
-   <div style="margin: 15px 0;">
-	   <h1>相关政策</h1>
-	   <p>项目简介：项目定位为国际时尚创意云谷，希望打造成为时尚人才聚集地、时尚文化体验区、时尚产业风向标，产业重点聚焦在时尚设计、时尚体验、时尚消费、时尚展示四大板块.</p>
-   </div>
+
    
 		</Card>
 		
@@ -63,6 +62,7 @@
 <script>
 import rightCard from '@/views/audit/component/rightCard.vue'
 import defaultImg from '@/assets/img/default-img/u2454.jpg'
+import {formatDate} from '../../../public/js/date.js'
 export default {
 	name: '',
 	components:{//组件模板
@@ -95,13 +95,17 @@ export default {
     watch: {//监测数据变化
     	
 	},
-    
+    filters: {
+    		formatDate(time) {
+    				var date = new Date(time*1000);
+    				return formatDate(date, 'yyyy-MM-dd hh:mm');
+    		}
+    },
     //===================组件钩子===========================
     
     created () {//实例被创建完毕之后执行
-   if(this.$route.params.list){
-		 this.title=this.$route.params.list.title;
-		 this.datalist=this.$route.params.list;
+	 if(this.$route.params.list){
+	 	this.datalist=this.$route.params.list;
 	 }
 	},
     mounted () {//模板被渲染完毕之后执行

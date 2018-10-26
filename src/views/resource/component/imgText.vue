@@ -40,15 +40,14 @@
 						<Col span="6">
 						<h1>{{data.title}}</h1>
 						</Col>
-						<Col span="6" style="color: #F43838;">132万</Col>
+						<Col span="6" style="color: #F43838;" v-if="data.invest_money">{{data.invest_money}}万</Col>
 					</Row>
 					<Row :gutter="8">
-						<Col span="6">发布：{{userlist.username}}</Col>
-						<Col span="6">职务：{{userlist.office}}</Col>
+						<Col span="6">发布：{{userdata.name}}</Col>
+						<Col span="6">职务：</Col>
 					</Row>
 					<Row :gutter="16">
-						<Col span="6">发布时间：{{data.create_time}}</Col>
-						<Col span="6">公司：{{userlist.unit}}</Col>
+						<Col span="12">发布时间：{{data.create_time}}</Col>
 					</Row>
 							
 
@@ -105,13 +104,14 @@ import {bus} from '@/components/bus/event-bus.js'
 				this.$emit('search',this.formInline);
 			},
 			rowclick(data){
-				if(this.formInline.range!==3){
+// 				if(this.formInline.range==1 || this.formInline.range ==2){
+// 				this.$emit('openDetail',data.id);
+// 				// this.$router.push({name:'chamDetail', params: {list:bus.currentResource}});
+// 				}else {
+// 				bus.$emit('govDetail',data.name);	
+// 				this.$router.push({name:'govDetail', params: {list:bus.currentResource}});
+// 				}
 				this.$emit('openDetail',data.id);
-				// this.$router.push({name:'chamDetail', params: {list:bus.currentResource}});
-				}else if (this.formInline.range===3){
-				bus.$emit('govDetail',data.name);	
-				this.$router.push({name:'govDetail', params: {list:bus.currentResource}});
-				}
 				
 			},
 			formatTime(date){
@@ -119,18 +119,7 @@ import {bus} from '@/components/bus/event-bus.js'
 			}
 		},
 		computed: { //计算属性
-			userlist(){
-						  // 取值时：把获取到的Json字符串转换回对象
-				
-				var userJsonStr = sessionStorage.getItem('user');
-			
-			var	userEntity = JSON.parse(userJsonStr);
-				this.$set(this.userdata,"unit",userEntity.unit);
-				this.$set(this.userdata,"department",userEntity.department);
-				this.$set(this.userdata,"username",userEntity.username);
-				this.$set(this.userdata,"office",userEntity.office);
-			  return this.userdata;	
-		}
+
 		},
 		watch: { //监测数据变化,
 		},
@@ -147,32 +136,41 @@ import {bus} from '@/components/bus/event-bus.js'
 
 		beforeRouteEnter(to, from, next) { //在组件创建之前调用（放置页面加载时请求的Ajax）
 
-			(async () => { //执行异步函数
-
-				//async、await错误处理
-				try {
-
-					/*
-					 * 
-					 * ------串行执行---------
-					 * console.log(await getAjaxData());
-					 * ...
-					 * 
-					 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-					 * let abc = getAjaxData();//先执行promise函数
-					 * ...
-					 * console.log(await abc);
-					 * ...
-					 */
-					next(vm => {
-
-					});
-
-				} catch (err) {
-					console.log(err);
-				}
-
-			})();
+		(async() => {//执行异步函数
+					
+					//async、await错误处理
+					try {
+						
+						/*
+						 * 
+						 * ------串行执行---------
+						 * console.log(await getAjaxData());
+						 * ...
+						 * 
+						 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+						 * let abc = getAjaxData();//先执行promise函数
+						 * ...
+						 * console.log(await abc);
+						 * ...
+						*/
+					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
+						   
+							next(vm => {
+									if(resourceData.status == 200){
+										vm.userdata=resourceData.data.user;
+									}else if(resourceData.status == 300){
+							    vm.userdata=[];
+										
+									}
+							});
+						
+					} catch(err) {
+						console.log(err);
+					}
+					
+					next();
+					
+				})();
 
 		},
 

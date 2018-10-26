@@ -7,8 +7,8 @@
 			</div>
 			<div class="news">
 				<span> <strong>发布人信息</strong></span>
-				<span>姓名：{{userdata.name}}</span>
-				<span>手机：{{userdata.mobile}}</span>
+				<span>用户名：{{userdata.username}}</span>
+				<span>单位：{{userdata.unit}}</span>
 			</div>
 			<br>
 			
@@ -130,7 +130,6 @@
 				</div>
 			</table-list>
 		</Modal>
-
 	</div>
 
 </template>
@@ -279,7 +278,7 @@
 							attach:[],
 							remark:this.resList.remark,
 							scope_select:this.selected,
-							contacts:this.resList.personList
+							contacts:this.contactList
 							}
 							console.log(add);
 				this.$refs[name].validate((valid) => {
@@ -347,6 +346,22 @@
 				arr=arr.join();
 				console.log(arr);
 				return arr;
+			},
+			contactList(){
+				let arr=[];
+				// return this.resList.personList.slice(0,1);
+				for (let i=0;i<this.resList.personList.length;i++ ){
+				let resl={
+					"title":'',
+					"contact":''
+				};
+				resl.title = this.resList.personList[i].title
+				resl.contact = this.resList.personList[i].contact
+				arr.push(resl)
+					
+					
+				}
+				return JSON.stringify(arr);
 			}
 		},
 		watch: { //监测数据变化,
@@ -388,14 +403,14 @@
 						 * console.log(await abc);
 						 * ...
 						*/
-					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
+					   let resourceData = await $ax.getAsyncAjaxData('service/User/detail',{});
 						   
 							next(vm => {
 									if(resourceData.status == 200){
-										vm.userdata=resourceData.data.user;
+										vm.userdata=resourceData.data;
 									}else if(resourceData.status == 300){
 							    vm.userdata=[];
-										
+										console.log('???')
 									}
 							});
 						

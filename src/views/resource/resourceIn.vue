@@ -102,11 +102,13 @@
 				 * console.log(await abc);
 				 * ...
 				*/
-			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/index',{scope_release:"1"});
+			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/internal_index',{});
 				   
 					next(vm => {
 							if(myPostData.status == 200){
 								vm.datalist=myPostData.data;
+							}else if(myPostData.status == 300){
+								alert(myPostData.message)
 							}
 					});
 				

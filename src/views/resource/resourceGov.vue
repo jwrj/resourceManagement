@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>政府资源</h1>
 			</div>
-			<img-text :hidecheck="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
+			<img-text :hideRadio="true" :hidecheck="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 		</Card>
 
 
@@ -57,7 +57,7 @@
 			$ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
 				if(res.status == 200){
 					detailList=res.data;
-					this.$router.push({name: 'chamDetail', params: {list: detailList}});
+					this.$router.push({name: 'govDetail', params: {list: detailList}});
 				}else if(res.status==300){
 					detailList=[];
 				}
@@ -78,7 +78,13 @@
 
 		},
 		mounted() { //模板被渲染完毕之后执行
-      console.log('地址是'+this.$route.path) //+'路由是'+this.$route.path
+//       $ax.getAjaxData('service/Resource/society', Object.assign({}, add), res => {
+//       	xianshi fabuzhe
+//       	if(res.status == 200){
+//       		this.$Message.success('添加成功!');
+//       		this.resList={};
+//       	}
+//       });
 		},
 
 		//=================组件路由勾子==============================
@@ -102,7 +108,7 @@
 				 * console.log(await abc);
 				 * ...
 				*/
-			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/index',{scope_release:"3"});
+			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/gov_index',{});
 				   
 					next(vm => {
 							if(myPostData.status == 200){

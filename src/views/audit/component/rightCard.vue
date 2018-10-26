@@ -35,19 +35,29 @@
 				<p>可见区域：会内可见</p>
 				<p>时限状态：未结束资源</p>
 				
-				        <Poptip  placement="left">
-           <Button type="primary" style="margin: 15px 0 0 15px;">我要承接</Button>
-					  <div class="api" slot="content">
-						   <table-list 
-						   :tableColumns="tableColumns" 
-						   ref="selectCham" 
-						   :tableData="tableData"
-						   >
-							</table-list>
-						</div>
-        </Poptip>
+				       
+           <Button type="primary" style="margin: 15px 0;" @click="choice=true">我要承接</Button>
+				<Modal
+        v-model="choice"
+        title="选择要承接的公司"
+				footer-hide
+				:mask-closable="false"
+				@on-cancel="cancel"
+        >
+				<p><span class="bold">已选公司</span>：{{company}}</p>
+				<Table :columns="tableColumns" :data="tableDa" @on-row-click="choiceCompany"></Table>
+				<br>
+				<Poptip
+        confirm
+        title="是否给该公司承接资源？"
+        @on-ok="getResource">
+        <Button type="primary">确定</Button>
+    </Poptip>
+				<Button @click="cancel" style="margin-left: 8px;">取消</Button>
+        </Modal>
+				
 			</Card>
-			
+
 			<Card style="margin-top: 5px;">
 				<div slot="title">
 					<h1>其他承接单位</h1>
@@ -127,9 +137,9 @@ export default {
 	},
     data () {//数据
         return {
-		tableColumns: [{
-					type: 'selection'
-				},
+					choice:false,
+					company:'',
+		tableColumns: [
 				{
 					title: 'ID',
 					key: 'id'
@@ -137,39 +147,9 @@ export default {
 				{
 					title: '名称',
 					key: 'name'
-				},
-				{
-					title: '日期',
-					key: 'date'
 				}
 			],
-			tableData:[
-				{
-					id: 1,
-					name: '张三的商会',
-					date: '2016-10-03'
-				},
-				{
-					id: 2,
-					name: '李四的商会',
-					date: '2016-10-01'
-				},
-				{
-					id: 3,
-					name: '麻五的商会',
-					date: '2016-10-02'
-				},
-				{
-					id: 4,
-					name: '徐六的商会',
-					date: '2016-10-04'
-				},
-				{
-					id: 5,
-					name: '吴老七的商会',
-					date: '2016-10-04'
-				}
-			],
+			chamList:[]
         }
     },
     methods: {//方法
@@ -177,12 +157,45 @@ export default {
 				console.log(unitData);
 			bus.$emit('unitDetail',unitData.name);
 			this.$router.push({name:'carryDetail', params: {list:bus.currentResource}});
+		},
+		choiceCompany(data,index){
+        // console.log(data);
+				this.company=data.name;
+		},
+		cancel(){
+			this.company='';
+			this.choice=false;
+		},
+		getResource(){
+			for(let item of this.chamList){
+				if(item.name == this.company){
+					console.log('heshi');
+					let add={
+						id:this.list.id,
+						company_id:item.company_id
+					}
+					$ax.getAjaxData('service/ResourceUser/add',Object.assign({}, add), res => {
+						
+						if(res.status == 200){
+							this.$Message('成功');
+							this.choice=false;
+						}
+					});
+				}
+			}
 		}
     },
     computed: {//计算属性
         unitlist(){
 					return bus.unitlist;
-				}	
+				},
+					tableDa(){
+						let arr=this.chamList;
+						for(let i=0;i<arr.length;i++){
+							this.$set(arr[i],"id",i);
+						}
+						return arr;
+					}
     },
     watch: {//监测数据变化
     	
@@ -194,7 +207,12 @@ export default {
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+    	$ax.getAjaxData('service/Oauth/get_center_info',{}, res => {
+    		
+    		if(res.status == 200){
+    			this.chamList=res.data.company;
+    		}
+    	});
 	},
 	
 	//=================组件路由勾子==============================

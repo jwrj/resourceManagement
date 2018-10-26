@@ -22,6 +22,14 @@ export default [
 	    component: () => import('@/views/login/login.vue')
 	},
 	{
+			path: '/edit',
+			name: 'edit',
+			meta: {
+				hideMenu: true,
+			},
+			component: () => import('@/views/login/edit.vue')
+	},
+	{
 		path: '/',
 		name: '_home',
 	    redirect: '/login',
