@@ -197,10 +197,10 @@ export default {
 						return arr;
 					},
 					showGetButton(){
-						var userJsonStr = sessionStorage.getItem('user');
-						let userEntity = JSON.parse(userJsonStr);
+						var userJsonStr = sessionStorage.user_type;
+
 						let arr=[];
-						arr.push(userEntity.user_type);
+						arr.push(userJsonStr);
 						if(arr[0] == '1'){
 							return true;
 						}

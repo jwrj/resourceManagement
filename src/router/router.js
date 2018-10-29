@@ -30,9 +30,25 @@ export default [
 			component: () => import('@/views/login/edit.vue')
 	},
 	{
+			path: '/admin',
+			name: 'admin',
+			meta: {
+				hideMenu: true,
+			},
+			component: () => import('@/views/login/admin.vue')
+	},
+	{
+			path: '/mainLogin',
+			name: 'mainLogin',
+			meta: {
+				hideMenu: true,
+			},
+			component: () => import('@/views/login/mainLogin.vue')
+	},
+	{
 		path: '/',
 		name: '_home',
-	    redirect: '/login',
+	    redirect: '/mainLogin',
 	    meta: {//里面的参数用来做各种显示效果的判断（关键字段）
 	    	hideMenu: true,
 	    },
@@ -56,7 +72,8 @@ export default [
 		meta: {
 			title: '查看资源',
 			icon: 'md-alarm',
-			showAlways: true
+			showAlways: true,
+			access:[1,2]
 		},
 		component: Main,
 		children: [
@@ -99,7 +116,8 @@ export default [
 		meta: {
 			title: '资源管理',
 			icon: 'md-alarm',
-			showAlways: true
+			showAlways: true,
+			access:[1,2]
 		},
 		component: Main,
 		children: [
@@ -129,6 +147,7 @@ export default [
 				meta: {
 					title: '我发布的资源',
 					icon: 'md-alarm',
+					access:[1,2]
 				},
 				component: () => import('@/views/manage/myPost.vue')
 			},
@@ -185,6 +204,7 @@ export default [
 					title: '会间资源审核详情',
 					hideMenu: true,
 					icon: 'md-alarm',
+					access:[1,3]
 				},
 				component: () => import('@/views/audit/chamDetail.vue')
 			},

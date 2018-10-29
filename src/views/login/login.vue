@@ -185,6 +185,7 @@ export default {
 						 * console.log(await abc);
 						 * ...
 						*/
+
 					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
 						   
 							next(vm => {
@@ -194,10 +195,7 @@ export default {
 											if(res.status == 200){
 												$ax.getAjaxData('service/User/detail',{}, (res) =>{
 													if(res.status == 200){
-														let user={
-															user_type:res.data.user_type
-														}
-														sessionStorage.setItem('user', JSON.stringify(user));
+														sessionStorage.user_type=res.data.user_type;
 													}
 												});
 												vm.$router.replace({name: 'home'});
@@ -210,7 +208,8 @@ export default {
 										$ax.getAjaxData('service/Oauth/get_jump_addr',{}, (res) =>{
 											if(res.status == 200){
 												loginUrl=res.data;
-												window.location.href=loginUrl;
+												 window.location.href=loginUrl;
+												
 											}else if(res.status==300){
 												console.log('没有获取到链接');
 											}

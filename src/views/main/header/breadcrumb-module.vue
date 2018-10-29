@@ -16,7 +16,6 @@
 		    </Breadcrumb>
 	
 		</div>
-		
 		<div style="margin: 0 46px 0 auto;flex-shrink: 0;">
 			<Dropdown placement="bottom-end" @on-click="clickDrop">
 		        <a style="display: inline-block;">
@@ -63,18 +62,6 @@ export default {
 		
 		collapsedSider() {
 			this.$emit('clickIcon');
-		},
-		toEdit(){		
-			let list=[];
-// 			$ax.getAjaxData('service/User/detail',{}, (res) =>{
-// 				if(res.status == 200){
-// 					list=res.data;
-// 					this.$router.push({name: 'edit', params: {list: list}});
-// 				}else if(res.status==300){
-// 					
-// 				}
-// 			});
-				
 		},
 		clickDrop(name){
 			if(name =='exit'){

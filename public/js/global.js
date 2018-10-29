@@ -8,10 +8,11 @@ window._HOST = {//主机域名
 }
 
 
-    
+//     
 // 	var userJsonStr = sessionStorage.getItem('user');
 // 	let userEntity = JSON.parse(userJsonStr);
 // 	let arr=[];
-	// arr.push(userEntity.user_type);
-
-window.USE_RACCESS = [2];//用户权限
+// 	arr.push(userEntity.user_type);
+   let arr=[];
+   arr.push(parseInt(sessionStorage.user_type))
+   window.USE_RACCESS = arr;//用户权限

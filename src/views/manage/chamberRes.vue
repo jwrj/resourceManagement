@@ -401,25 +401,24 @@
 					try {
 						
 						/*
-						 * 
-						 * ------串行执行---------
-						 * console.log(await getAjaxData());
-						 * ...
-						 * 
-						 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-						 * let abc = getAjaxData();//先执行promise函数
-						 * ...
-						 * console.log(await abc);
-						 * ...
+						* 
+						* ------串行执行---------
+						* console.log(await getAjaxData());
+						* ...
+						* 
+						* ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+						* let abc = getAjaxData();//先执行promise函数
+						* ...
+						* console.log(await abc);
+						* ...
 						*/
-					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
-						   
+						let resourceData = await $ax.getAsyncAjaxData('service/User/detail',{});
+							
 							next(vm => {
 									if(resourceData.status == 200){
-										vm.userdata=resourceData.data.user;
+										vm.userdata=resourceData.data;
 									}else if(resourceData.status == 300){
-							    vm.userdata=[];
-										
+									vm.userdata=[];
 									}
 							});
 						
