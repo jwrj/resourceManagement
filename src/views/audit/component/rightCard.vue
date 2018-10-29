@@ -36,7 +36,7 @@
 				<p>时限状态：未结束资源</p>
 				
 				       
-           <Button type="primary" style="margin: 15px 0;" @click="choice=true">我要承接</Button>
+           <Button v-show="showGetButton" type="primary" style="margin: 15px 0;" @click="choice=true">我要承接</Button>
 				<Modal
         v-model="choice"
         title="选择要承接的公司"
@@ -195,6 +195,15 @@ export default {
 							this.$set(arr[i],"id",i);
 						}
 						return arr;
+					},
+					showGetButton(){
+						var userJsonStr = sessionStorage.getItem('user');
+						let userEntity = JSON.parse(userJsonStr);
+						let arr=[];
+						arr.push(userEntity.user_type);
+						if(arr[0] == '1'){
+							return true;
+						}
 					}
     },
     watch: {//监测数据变化

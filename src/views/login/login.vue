@@ -99,30 +99,7 @@ export default {
         }
     },
     methods: {//方法
-//     	
-//     	login(){
-// 			let u={
-// 				username:'13544552432',
-// 				password:'123456'
-// 			}
-//     		$ax.getAjaxData('service/User/login',Object.assign({}, u), (res) =>{
-//     			if(res.status == 200){
-//     			this.$Message.success('登陆成功!');
-// 				var user={
-// 					username:res.data.username,
-// 					unit:res.data.unit,
-// 					department:res.data.department,
-// 					office:res.data.office
-// 				}
-// 				sessionStorage.setItem('user', JSON.stringify(user));
-// 
-// 				this.$router.push({name:'home'});
-//     			}
-//     		});
-//     	},
-//     	tologin(){
-// 				window.location.href=this.loginUrl;
-// 			}
+
 				uploadLicense(res,file,filelist){ 
 					let arr=[];
 					filelist.forEach(item =>{
@@ -158,7 +135,7 @@ export default {
 						$ax.getAjaxData('service/User/edit',Object.assign({}, this.datalist), (res) =>{
 							if(res.status == 200){
 								console.log('成功')
-								 this.$router.push({name: 'home'});
+								 this.$router.replace({name: 'home'});
 							}else if(res.status==300){
 								console.log(res)
 							}
@@ -212,14 +189,19 @@ export default {
 						   
 							next(vm => {
 									if(resourceData.status == 200){
-										// vm.$router.push({name: 'home', params: {list: resourceData.data}});
-										 console.log(resourceData.data);
 										 vm.userlist=resourceData.data.user;										
-										$ax.getAjaxData('/service/User/is_perfect',{}, (res) =>{
+										$ax.getAjaxData('service/User/is_perfect',{}, (res) =>{
 											if(res.status == 200){
-												vm.$router.push({name: 'home'});
+												$ax.getAjaxData('service/User/detail',{}, (res) =>{
+													if(res.status == 200){
+														let user={
+															user_type:res.data.user_type
+														}
+														sessionStorage.setItem('user', JSON.stringify(user));
+													}
+												});
+												vm.$router.replace({name: 'home'});
 											}else if(res.status==300){
-												console.log('需要完善资料');
 												vm.show=true;
 											}
 										});

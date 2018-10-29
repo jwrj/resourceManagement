@@ -53,7 +53,7 @@ export default {
 			  $ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
 			  	if(res.status == 200){
 			  		detailList=res.data;
-						this.$router.push({name: 'chamDetail', params: {list: detailList}});
+						this.$router.replace({name: 'chamDetail', params: {list: detailList}});
 			  	}else if(res.status==300){
 			  		detailList=[];
 			  	}

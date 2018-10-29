@@ -16,16 +16,17 @@
 		    </Breadcrumb>
 	
 		</div>
-		<Button @click="toEdit()">修改账户信息</Button>
+		
 		<div style="margin: 0 46px 0 auto;flex-shrink: 0;">
-			<Dropdown placement="bottom-end">
+			<Dropdown placement="bottom-end" @on-click="clickDrop">
 		        <a style="display: inline-block;">
 	           		<Avatar icon="ios-person" />
 	           		<Icon size="20" type="md-arrow-dropdown" />
 		        </a>
 		        <DropdownMenu slot="list">
+					<DropdownItem name="editUser">修改账户信息</DropdownItem>
 		            <DropdownItem>设置</DropdownItem>
-		            <DropdownItem>退出登录</DropdownItem>
+		            <DropdownItem  name="exit">退出登录</DropdownItem>
 		        </DropdownMenu>
 		    </Dropdown>
         </div>
@@ -73,7 +74,14 @@ export default {
 // 					
 // 				}
 // 			});
-				this.$router.push('/edit');
+				
+		},
+		clickDrop(name){
+			if(name =='exit'){
+				this.$router.replace('/login')
+			}else if(name == 'editUser'){
+				this.$router.replace('/edit');
+			}
 		}
 	},
 	computed: { //计算属性

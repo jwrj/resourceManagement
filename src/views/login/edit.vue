@@ -26,7 +26,7 @@
 				 									</Upload>
 
 									 
-								<img :src="imglist">
+								<!-- <img :src="imglist"> -->
 
 				 				</FormItem>
 				 				<FormItem label="单位证明:">
@@ -135,7 +135,7 @@ export default {
 						$ax.getAjaxData('service/User/edit',Object.assign({}, this.datalist), (res) =>{
 							if(res.status == 200){
 								console.log('成功')
-								 this.$router.push({name: 'home'});
+								 this.$router.replace({name: 'home'});
 							}else if(res.status==300){
 								console.log(res)
 							}
@@ -143,20 +143,14 @@ export default {
 									}
     },
     computed: {//计算属性
-// 				 GovShow(){
-// 								if(this.datalist.user_type==2){
-// 									return true;
-// 								}else{
-// 									return false;
-// 								}
-// 							}
-     imglist(){
-			 let arr="";			
-			 arr="http://192.168.2.251:8083/";
-			 arr+=this.beforelist;
-			 // for(let i=0;i<this.beforelist)
-			 return arr;
-		 }
+
+//      imglist(){
+// 			 let arr="";			
+// 			 arr="http://192.168.2.251:8083/";
+// 			 arr+=this.beforelist;
+// 			 // for(let i=0;i<this.beforelist)
+// 			 return arr;
+// 		 }
     },
     watch: {//监测数据变化
 			
@@ -199,7 +193,7 @@ export default {
 										// vm.$router.push({name: 'home', params: {list: resourceData.data}});
 										 console.log(resourceData.data);
 										 vm.datalist=resourceData.data;
-										 vm.beforelist=resourceData.data.unit_license;
+										 // vm.beforelist=resourceData.data.unit_license;
 									}
 							});
 						

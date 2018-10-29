@@ -7,4 +7,11 @@ window._HOST = {//主机域名
 	
 }
 
-window.USE_RACCESS = [4,'admin'];//用户权限
+
+    
+// 	var userJsonStr = sessionStorage.getItem('user');
+// 	let userEntity = JSON.parse(userJsonStr);
+// 	let arr=[];
+	// arr.push(userEntity.user_type);
+
+window.USE_RACCESS = [2];//用户权限

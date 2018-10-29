@@ -43,7 +43,7 @@
 				<Header class="layout-header-bar">
 					<div style="height: 100%;">
 						<!--面包屑导航-->
-						<breadcrumb-module :breadCrumbList="breadCrumbList" :isCollapsed="isCollapsed" @clickIcon="collapsedSider"></breadcrumb-module>
+						<breadcrumb-module :breadCrumbList="breadCrumbList" :isCollapsed="isCollapsed" @clickIcon="collapsedSider" @exit="exit"></breadcrumb-module>
 						<!--tag标签导航-->
 						<tag-module :tagList="tagNavList"></tag-module>
 					</div>
@@ -110,7 +110,9 @@ export default {
 		collapsedSider() {//展开或收起左侧菜单
 			this.$refs.siderInstance.toggleCollapse();
 		},
-		
+		exit(){
+			this.$router.push('/login')
+		}
 	},
 	computed: { //计算属性
 		
