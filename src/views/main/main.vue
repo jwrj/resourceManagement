@@ -111,7 +111,9 @@ export default {
 			this.$refs.siderInstance.toggleCollapse();
 		},
 		exit(){
-			this.$router.push('/login')
+			sessionStorage.removeItem('type')
+			sessionStorage.removeItem('user_type')
+			this.$router.push('/mainLogin')
 		}
 	},
 	computed: { //计算属性

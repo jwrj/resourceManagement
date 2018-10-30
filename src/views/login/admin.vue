@@ -1,14 +1,15 @@
 <template>
 	
-	<div>
-		<div style="height: 100%;background: #001529;display: flex;">
-				<Card style="width: 400px;margin: auto;" >
+
+	<div style="height: 100%;background: #001529;display: flex;">
+			 <Card style="width: 400px;margin: auto;">
+				 <h1 slot="title">超级管理员登陆</h1>
 					<Form :model="adminlist">
 			 				<FormItem label="用户名:" >
 				 						<Input type="text" v-model="adminlist.title"> </Input>
 				 				</FormItem>
 								<FormItem label="密码:" >
-										<Input type="text" v-model="adminlist.password"> </Input>
+										<Input type="password" v-model="adminlist.password"> </Input>
 								</FormItem>
 								<FormItem>
 									<Button type="primary" @click="adminlogin">登陆</Button>
@@ -16,7 +17,6 @@
 					</Form>
 				</Card>
 		</div>
-	</div>
 	
 </template>
 
@@ -49,6 +49,9 @@ export default {
 				
 				if(res.status == 200){
 					sessionStorage.user_type=3;
+					let arr=[];
+					arr.push(parseInt(sessionStorage.user_type))
+					window.USE_RACCESS = arr;//用户权限
 					this.$router.push('/home');
 				}
 			});
@@ -91,6 +94,7 @@ export default {
 				 * console.log(await abc);
 				 * ...
 				*/
+	
 				next(vm => {
 					
 				});

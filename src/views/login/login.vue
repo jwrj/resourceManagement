@@ -94,7 +94,8 @@ export default {
 					 unit_contact:'',
 					 unit_telphone:''
 				 },
-				 show:false
+				 show:false,
+				 user_t:999
       	       	
         }
     },
@@ -185,25 +186,25 @@ export default {
 						 * console.log(await abc);
 						 * ...
 						*/
-
-					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
+							
+					   let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{}); //获取用户中心数据
 						   
 							next(vm => {
-									if(resourceData.status == 200){
+									if(resourceData.status == 200){ //已登陆用户中心
 										 vm.userlist=resourceData.data.user;										
-										$ax.getAjaxData('service/User/is_perfect',{}, (res) =>{
-											if(res.status == 200){
-												$ax.getAjaxData('service/User/detail',{}, (res) =>{
+										$ax.getAjaxData('service/User/is_perfect',{}, (res) =>{  //判断用户是否完善信息
+											if(res.status == 200){ //已完善信息
+												$ax.getAjaxData('service/User/detail',{}, (res) =>{  //获取填写的资料
 													if(res.status == 200){
-														sessionStorage.user_type=res.data.user_type;
+													vm.$router.replace({name: 'home'});
 													}
 												});
-												vm.$router.replace({name: 'home'});
-											}else if(res.status==300){
+												// vm.$router.replace({name: 'home'});
+											}else if(res.status==300){  //未完善信息 显示表单
 												vm.show=true;
 											}
 										});
-									}else if(resourceData.status == 300){
+									}else if(resourceData.status == 300){  //未登陆用户中心
 										let loginUrl="";
 										$ax.getAjaxData('service/Oauth/get_jump_addr',{}, (res) =>{
 											if(res.status == 200){
@@ -226,9 +227,10 @@ export default {
 					
 				})();
 		
-	},
+	}
 	
 }
+
 </script>
 
 <style scoped lang="less">

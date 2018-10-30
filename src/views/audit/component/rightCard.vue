@@ -20,8 +20,8 @@
 						<h1>审核选项</h1>
 						<br>
 					<p>
-						<Button type="primary" style="margin-left: 15px;">通过审核</Button>
-						<Button style="margin-left: 15px;">未通过审核</Button>
+						<Button type="primary" style="margin-left: 15px;" @click="audit(1)">通过审核</Button>
+						<Button style="margin-left: 15px;" @click="audit(2)">未通过审核</Button>
 					</p>
 				</div>
 			</Card>
@@ -31,7 +31,7 @@
 					<h1>资源状态</h1>
 				</div>
 				<p>开放承接：正在开放</p>
-				<p>审核状态：已通过</p>
+				<p>审核状态：{{list.status == 1?'已通过':'未通过'}}</p>
 				<p>可见区域：会内可见</p>
 				<p>时限状态：未结束资源</p>
 				
@@ -183,6 +183,9 @@ export default {
 					});
 				}
 			}
+		},
+		audit(auditFlag){
+			this.$emit('adminAudit',auditFlag);
 		}
     },
     computed: {//计算属性

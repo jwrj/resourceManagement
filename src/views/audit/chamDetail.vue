@@ -52,7 +52,7 @@
 	 </Card>
 
 	</div>
-   <right-card :list="datalist" :showAudit="true" :showResource="true">
+   <right-card :list="datalist" :showAudit="!auditSuc" :showResource="true"  @adminAudit="audit">
 	 </right-card>
 	</div>
   
@@ -81,13 +81,26 @@ export default {
         return {
 			title:'',
 			datalist:[],
-			img:defaultImg		
+			auditSuc:false,
+			img:defaultImg
+			
         }
     },
     methods: {//方法
-//     	openDetail(detailData){
-// 			this.$router.push({name:'carryDetail', params: {list:detailData ,title:this.title}});
-// 			}
+		audit(auditFlag){
+			let adt ={
+				id:this.datalist.id,
+				status:auditFlag
+			}
+			$ax.getAjaxData('service/Resource/preview',Object.assign({}, adt), res => {
+				
+				if(res.status == 200){
+					this.$Message.success('审核成功');
+					this.auditSuc = true;
+					
+				}
+			});
+		}
     },
     computed: {//计算属性
   

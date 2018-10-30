@@ -33,13 +33,13 @@ export default {
     },
     methods: {//方法
     	tologin(){
-			sessionStorage.type='login';
-			if(this.user_type == 3){
-
+			if(this.user_type == 3){		 
+				sessionStorage.type='admin'
 				this.$router.push('/admin')
 			}else if(this.user_type == 1){
-
+				sessionStorage.type='login'
 				this.$router.push('login')
+				
 			}
 		}
     },
@@ -63,32 +63,45 @@ export default {
 	
 	beforeRouteEnter (to, from, next) {//在组件创建之前调用（放置页面加载时请求的Ajax）
 		
-		(async() => {//执行异步函数
-			
-			//async、await错误处理
-			try {
-				
-				/*
-				 * 
-				 * ------串行执行---------
-				 * console.log(await getAjaxData());
-				 * ...
-				 * 
-				 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-				 * let abc = getAjaxData();//先执行promise函数
-				 * ...
-				 * console.log(await abc);
-				 * ...
-				*/
-				next(vm => {
-					
-				});
-				
-			} catch(err) {
-				console.log(err);
-			}
-			
-		})();
+			(async() => {//执行异步函数
+						
+						//async、await错误处理
+						try {
+							
+							/*
+							* 
+							* ------串行执行---------
+							* console.log(await getAjaxData());
+							* ...
+							* 
+							* ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+							* let abc = getAjaxData();//先执行promise函数
+							* ...
+							* console.log(await abc);
+							* ...
+							*/
+								
+							let resourceData = await $ax.getAsyncAjaxData('service/User/detail',{});
+								
+								next(vm => {
+										if(resourceData.status == 200){
+											sessionStorage.type='login';
+										sessionStorage.user_type=resourceData.data.user_type;
+											let arr=[];
+											arr.push(parseInt(sessionStorage.user_type))
+											window.USE_RACCESS = arr;//用户权限
+											vm.$router.push('/home')
+										}
+										
+								});
+							
+						} catch(err) {
+							console.log(err);
+						}
+						
+						next();
+						
+					})();
 		
 	},
 	

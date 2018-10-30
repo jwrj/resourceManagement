@@ -48,7 +48,7 @@ export default [
 	{
 		path: '/',
 		name: '_home',
-	    redirect: '/mainLogin',
+	    redirect: '/home',
 	    meta: {//里面的参数用来做各种显示效果的判断（关键字段）
 	    	hideMenu: true,
 	    },
@@ -202,7 +202,7 @@ export default [
 				name: 'chamDetail',
 				meta: {
 					title: '会间资源审核详情',
-					hideMenu: true,
+
 					icon: 'md-alarm',
 					access:[1,3]
 				},
@@ -236,6 +236,7 @@ export default [
 				meta: {
 					title: '资源承接单位详情页',
 					icon: 'md-alarm',
+					hideMenu:true
 				},
 				component: () => import('@/views/audit/carryDetail.vue')
 			}
