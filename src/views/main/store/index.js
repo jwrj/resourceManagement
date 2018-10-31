@@ -13,7 +13,7 @@ const mainFrame = {
 		
 		breadCrumbList: [],//面包屑导航列表
 
-		
+		menuList: [],//菜单列表
 		
 	},
 	
@@ -69,11 +69,16 @@ const mainFrame = {
 			
 		},
 		
+		getMenuList(state){//获取菜单列表
+			let userAccess = sessionStorage.userAccess;
+			state.menuList = getMenuByRouter(routers, (userAccess ? userAccess.split(',') : false));
+		},
+		
 	},
 	
 	getters: {//计算属性
 		
-		menuList: (state, getters) => getMenuByRouter(routers, window.USE_RACCESS),//获取菜单列表
+		//menuList: (state, getters) => getMenuByRouter(routers, window.USE_RACCESS),//获取菜单列表
 		
 	},
 	

@@ -72,7 +72,8 @@ if(to.meta.auth == false){
 	
 		}else {
 		//检测页面权限
-		if(canTurnTo(routers, window.USE_RACCESS, to.name)){
+		let userAccess = sessionStorage.userAccess;
+		if(canTurnTo(routers, (userAccess ? userAccess.split(',') : false), to.name)){
 			
 			if(pathImperfect(routers, to.name)){
 				next({
