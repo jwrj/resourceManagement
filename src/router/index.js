@@ -61,37 +61,43 @@ export const router = new Router({
 router.beforeEach((to, from, next) => {//路由跳转前
 
 
-
-	// 检测系统内部登录
-	if(!sessionStorage.type &&to.name !== 'mainLogin'){//用户中心未登录
-		console.log('没登陆')
-		next({
-			name: 'mainLogin'
-		});
-	}else {
-
-	//检测页面权限
-	if(canTurnTo(routers, window.USE_RACCESS, to.name)){
-		
-		if(pathImperfect(routers, to.name)){
+if(to.meta.auth == false){
+	
+		// 检测系统内部登录
+		if(!sessionStorage.user_type &&to.name !== 'mainLogin'){//用户中心未登录
+			console.log('没登陆')
+			next({
+				name: 'mainLogin'
+			});
+	
+		}else {
+		//检测页面权限
+		if(canTurnTo(routers, window.USE_RACCESS, to.name)){
+			
+			if(pathImperfect(routers, to.name)){
+				next({
+					replace: true,
+					name: 'error-401'
+				});
+			}else{
+				next()
+			}
+			
+		}else{
+			
 			next({
 				replace: true,
-				name: 'error-401'
+				name: 'error-403'
 			});
-		}else{
-			next()
+			
 		}
-		
-	}else{
-		
-		next({
-			replace: true,
-			name: 'error-403'
-		});
-		
-	}
-		
-		
-	}
+			
+			
+		}
+	
+	
+}else {
+	next()
+}
 	
 });

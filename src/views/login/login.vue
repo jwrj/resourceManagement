@@ -2,8 +2,7 @@
 	
 	<div style="height: 100%;background: #001529;display: flex;">
 			 <Card style="width: 400px;margin: auto;" v-if="show">
-				 <h1 slot="title">欢迎您！{{userlist.name}}</h1>
-				 			<!-- <Button @click="login">登陆</Button> -->									
+				 <h1 slot="title">欢迎您！{{userlist.name}}</h1>								
 							<span style="font-size: 12px;" class="bold">请选择用户类型：</span>
 							<RadioGroup v-model="datalist.user_type">
 											<Radio label="1">普通用户</Radio>
@@ -196,6 +195,10 @@ export default {
 											if(res.status == 200){ //已完善信息
 												$ax.getAjaxData('service/User/detail',{}, (res) =>{  //获取填写的资料
 													if(res.status == 200){
+													sessionStorage.user_type=res.data.user_type;
+													let arr=[];
+													arr.push(parseInt(sessionStorage.user_type))
+													window.USE_RACCESS = arr;//用户权限	
 													vm.$router.replace({name: 'home'});
 													}
 												});
@@ -210,7 +213,6 @@ export default {
 											if(res.status == 200){
 												loginUrl=res.data;
 												 window.location.href=loginUrl;
-												
 											}else if(res.status==300){
 												console.log('没有获取到链接');
 											}
@@ -228,7 +230,6 @@ export default {
 				})();
 		
 	}
-	
 }
 
 </script>

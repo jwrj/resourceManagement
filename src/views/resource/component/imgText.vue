@@ -42,10 +42,10 @@
 						</Col>
 						<Col span="6" style="color: #F43838;" v-if="data.invest_money">{{data.invest_money}}万</Col>
 					</Row>
-					<Row :gutter="8">
+<!-- 					<Row :gutter="8">
 						<Col span="6">发布：{{userdata.name}}</Col>
 						<Col span="6">职务：</Col>
-					</Row>
+					</Row> -->
 					<Row :gutter="16">
 						<Col span="12">发布时间：{{data.create_time}}</Col>
 					</Row>

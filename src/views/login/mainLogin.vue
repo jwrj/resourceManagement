@@ -1,11 +1,14 @@
 <template>
 	
-	<div>
+	<div style="height: 100%;background: #001529;padding-top: 20%;">
+  <Card style="width: 400px;margin: auto;">
+		<h1 slot="title">请选择进入的身份</h1>
 		<RadioGroup v-model="user_type">
 						<Radio label="1">普通/政府用户登陆</Radio>
 						<Radio label="3">超级管理员登陆</Radio>
 					</RadioGroup>
-		      <Button type="primary" @click="tologin">确定进入</Button>
+					<p style="margin:15px 0;"><Button type="primary" @click="tologin">确定进入</Button></p>
+	</Card>
 		
 	</div>
 	
@@ -33,11 +36,9 @@ export default {
     },
     methods: {//方法
     	tologin(){
-			if(this.user_type == 3){		 
-				sessionStorage.type='admin'
+			if(this.user_type == 3){
 				this.$router.push('/admin')
 			}else if(this.user_type == 1){
-				sessionStorage.type='login'
 				this.$router.push('login')
 				
 			}
@@ -80,20 +81,8 @@ export default {
 							* console.log(await abc);
 							* ...
 							*/
+
 								
-							let resourceData = await $ax.getAsyncAjaxData('service/User/detail',{});
-								
-								next(vm => {
-										if(resourceData.status == 200){
-											sessionStorage.type='login';
-										sessionStorage.user_type=resourceData.data.user_type;
-											let arr=[];
-											arr.push(parseInt(sessionStorage.user_type))
-											window.USE_RACCESS = arr;//用户权限
-											vm.$router.push('/home')
-										}
-										
-								});
 							
 						} catch(err) {
 							console.log(err);

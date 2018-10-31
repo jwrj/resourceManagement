@@ -6,7 +6,7 @@
 
 	  
 			<img-text :datalist="datalist" @search="searchList"
-			 @openDetail="openDetail" >
+			 @openDetail="openDetail" :hideRadio="true" :hidecheck="true">
 			</img-text>
 		</Card>
 		
@@ -43,20 +43,20 @@ export default {
     	searchList(list) {
 				// this.$set(this.searchlist,"scope_release",this.range);
 				let objList=[];
-				let arr=list.check;
-				let servlet='';
+				// let arr=list.check;
+				// let servlet='';
 				this.$set(objList,"title",list.word);
-				this.$set(objList,"status",arr.join());			
+				// this.$set(objList,"status",arr.join());			
 				this.$set(objList,"start_time",list.time[0]);
 				this.$set(objList,"end_time",list.time[1]);
 				// this.$set(objList,"scope_release",);
 				this.searchlist =Object.assign({},objList);
-				if(list.range =="1"){
-					servlet='service/Resource/internal_index';
-				}else if(list.range == "2"){
-					servlet='service/Resource/internal_index'   //因该是会间接口
-				}
-				$ax.getAjaxData(servlet,this.searchlist, (res) =>{
+// 				if(list.range =="1"){
+// 					servlet='service/Resource/internal_index';
+// 				}else if(list.range == "2"){
+// 					servlet='service/Resource/internal_index'   //因该是会间接口
+// 				}
+				$ax.getAjaxData('service/Resource/preview_index',this.searchlist, (res) =>{
 					if(res.status == 200){
 						this.datalist=res.data;
 					}else if(res.status==300){
@@ -112,11 +112,11 @@ export default {
 				 * console.log(await abc);
 				 * ...
 				*/
-			   let resourceData = await $ax.getAsyncAjaxData('service/Resource/internal_index',{});
+			   let resourceData = await $ax.getAsyncAjaxData('service/Resource/preview_index',{});
 				   
 					next(vm => {
 							if(resourceData.status == 200){
-								vm.datalist=resourceData.data;
+								vm.datalist=resourceData.data;		 
 							}
 					});
 				

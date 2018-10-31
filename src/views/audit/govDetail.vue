@@ -22,7 +22,7 @@
 	  		<p>结束时间：{{datalist.end_time}}</p>
 	  		<p>合作方式：政企合作</p>
 	  		<p>预计收益：{{datalist.profit}}万</p>
-	  		<p>联系人员：<p v-for="(u,index) of datalist.personList">{{u.name}}-{{u.phone}}</p></p>
+	  		<p>联系人员：<p v-for="(u,index) of datalist.contacts">{{u.name}}-{{u.phone}}</p></p>
 	  	</Col>
 	  </Row>
   </div>

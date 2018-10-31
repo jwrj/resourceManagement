@@ -93,7 +93,7 @@ export const bus = new Vue({
 						],
 					currentResource:{},
 					scopeRes:[],
-					session:''
+					session:'dsd'
                 
     }
   },

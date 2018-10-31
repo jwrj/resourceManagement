@@ -18,6 +18,7 @@ export default [
 	    name: 'login',
 	    meta: {
 	      hideMenu: true,
+				auth:true
 	    },
 	    component: () => import('@/views/login/login.vue')
 	},
@@ -26,6 +27,7 @@ export default [
 			name: 'edit',
 			meta: {
 				hideMenu: true,
+				auth:false
 			},
 			component: () => import('@/views/login/edit.vue')
 	},
@@ -34,6 +36,7 @@ export default [
 			name: 'admin',
 			meta: {
 				hideMenu: true,
+				auth:true
 			},
 			component: () => import('@/views/login/admin.vue')
 	},
@@ -42,6 +45,7 @@ export default [
 			name: 'mainLogin',
 			meta: {
 				hideMenu: true,
+				auth:true
 			},
 			component: () => import('@/views/login/mainLogin.vue')
 	},
@@ -51,6 +55,7 @@ export default [
 	    redirect: '/home',
 	    meta: {//里面的参数用来做各种显示效果的判断（关键字段）
 	    	hideMenu: true,
+				auth:false
 	    },
 	    component: Main,
 	    children: [
@@ -61,6 +66,7 @@ export default [
 	            	title: '首页',
 	            	hideMenu: true,
 	            	icon: 'ios-paper',
+								auth:false
 			    },
 	            component: () => import('@/views/home.vue')
 		    }
@@ -73,7 +79,8 @@ export default [
 			title: '查看资源',
 			icon: 'md-alarm',
 			showAlways: true,
-			access:[1,2]
+			access:[1,2],
+			auth:false
 		},
 		component: Main,
 		children: [
@@ -83,7 +90,8 @@ export default [
 				meta: {
 					title: '会内资源',
 					icon: 'md-alarm',
-					access:[1]
+					access:[1],
+					auth:false
 				},
 				component: () => import('@/views/resource/resourceIn.vue')
 			},
@@ -93,7 +101,8 @@ export default [
 				meta: {
 					title: '会间资源',
 					icon: 'md-alarm',
-					access:[1]
+					access:[1],
+					auth:false
 				},
 				component: () => import('@/views/resource/resourceCen.vue')
 		  },
@@ -103,7 +112,8 @@ export default [
 			meta: {
 				title: '政府资源',
 				icon: 'md-alarm',
-				access:[2]
+				access:[2],
+				auth:false
 			},
 			component: () => import('@/views/resource/resourceGov.vue')	
 			}
@@ -117,7 +127,8 @@ export default [
 			title: '资源管理',
 			icon: 'md-alarm',
 			showAlways: true,
-			access:[1,2]
+			access:[1,2],
+			auth:false
 		},
 		component: Main,
 		children: [
@@ -127,7 +138,8 @@ export default [
 				meta: {
 					title: '商会资源发布',
 					icon: 'md-alarm',
-					access:[1]
+					access:[1],
+					auth:false
 				},
 				component: () => import('@/views/manage/chamberRes.vue')
 			},
@@ -137,7 +149,8 @@ export default [
 				meta: {
 					title: '政府资源发布',
 					icon: 'md-alarm',
-					access:[2]
+					access:[2],
+					auth:false
 				},
 				component: () => import('@/views/manage/govRes.vue')
 			},
@@ -147,7 +160,8 @@ export default [
 				meta: {
 					title: '我发布的资源',
 					icon: 'md-alarm',
-					access:[1,2]
+					access:[1,2],
+					auth:false
 				},
 				component: () => import('@/views/manage/myPost.vue')
 			},
@@ -157,7 +171,8 @@ export default [
 				meta: {
 					title: '我承接的资源',
 					icon: 'md-alarm',
-					access:[1]
+					access:[1],
+					auth:false
 				},
 				component: () => import('@/views/manage/myGet.vue')
 		  }
@@ -170,7 +185,8 @@ export default [
 			title: '审核',
 			icon: 'md-alarm',
 			showAlways: true,
-			access:[3]
+			access:[3],
+			auth:false
 
 		},
 		component: Main,
@@ -181,7 +197,8 @@ export default [
 				meta: {
 					title: '资源审核',
 					icon: 'md-alarm',
-					access:[3]
+					access:[3],
+					auth:false
 
 				},
 				component: () => import('@/views/audit/auditResource.vue')
@@ -192,7 +209,8 @@ export default [
 				meta: {
 					title: '账户审核',
 					icon: 'md-alarm',
-					access:[3]
+					access:[3],
+					auth:false
 
 				},
 				component: () => import('@/views/audit/auditAccount.vue')
@@ -202,9 +220,10 @@ export default [
 				name: 'chamDetail',
 				meta: {
 					title: '会间资源审核详情',
-
+					hideMenu:true,
 					icon: 'md-alarm',
-					access:[1,3]
+					access:[1,3],
+					auth:false
 				},
 				component: () => import('@/views/audit/chamDetail.vue')
 			},
@@ -215,6 +234,7 @@ export default [
 					title: '政府资源详情',
 					hideMenu: true,
 					icon: 'md-alarm',
+					auth:false
 				},
 				component: () => import('@/views/audit/govDetail.vue')
 			},
@@ -225,7 +245,8 @@ export default [
 					title: '账户审核详情',
 					hideMenu: true,
 					icon: 'md-alarm',
-					access:[3]
+					access:[3],
+					auth:false
 
 				},
 				component: () => import('@/views/audit/accountDetail.vue')
@@ -236,7 +257,8 @@ export default [
 				meta: {
 					title: '资源承接单位详情页',
 					icon: 'md-alarm',
-					hideMenu:true
+					hideMenu:true,
+					auth:false
 				},
 				component: () => import('@/views/audit/carryDetail.vue')
 			}

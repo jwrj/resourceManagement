@@ -373,7 +373,7 @@
 
 		},
 		mounted() { //模板被渲染完毕之后执行
-          $ax.getAjaxData('service/Oauth/getMyBelongOrgAction',{}, res => {
+          $ax.getAjaxData('service/Oauth/allOrgList',{}, res => {
           	
           	if(res.code == 0){
           		this.chamList=res.data;

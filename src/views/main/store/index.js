@@ -12,6 +12,8 @@ const mainFrame = {
 		homeRoute: getHomeRoute(routers),//name属性等于home路由数据
 		
 		breadCrumbList: [],//面包屑导航列表
+
+		
 		
 	},
 	
