@@ -49,9 +49,6 @@ export default {
 				
 				if(res.status == 200){
 					sessionStorage.user_type=3;
-					let arr=[];
-					arr.push(parseInt(sessionStorage.user_type))
-					window.USE_RACCESS = arr;//用户权限	
 					this.$router.push('/home');
 				}
 			});

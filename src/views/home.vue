@@ -72,9 +72,7 @@ export default {
 					
 								
 								next(vm => {
-								let arr=[];
-								arr.push(parseInt(sessionStorage.user_type))
-								window.USE_RACCESS = arr;//用户权限	
+
 									
 								});
 							

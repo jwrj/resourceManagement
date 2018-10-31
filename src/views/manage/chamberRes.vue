@@ -11,7 +11,7 @@
 				<span>手机：{{userdata.mobile}}</span>
 			</div>
 			<br>
-			
+
 		<Form :model="resList" 
 		:rules="ruleValidate" 
 		label-position="right"
@@ -350,6 +350,11 @@
 				if(this.resList.replease==='1'){
 					this.result=[];
 				}
+			},
+			
+			change(value,selectedData){
+				console.log(selectedData)
+				
 			}
 		  
 		},
@@ -364,22 +369,55 @@
 				 arr=arr.join();
 				 console.log(arr);
 				 return arr;
-			 }
-// 			 	userlist(){
-// // 			 					// 取值时：把获取到的Json字符串转换回对象
-// // 			 		
-// // 			 		var userJsonStr = sessionStorage.getItem('user');
-// // 			 		
-// // 			 	var	userEntity = JSON.parse(userJsonStr);
-// // 			 		this.$set(this.userdata,"unit",userEntity.unit);
-// // 			 		this.$set(this.userdata,"department",userEntity.department);
-// // 			 		this.$set(this.userdata,"username",userEntity.username);
-// // 			 		this.$set(this.userdata,"office",userEntity.office);
-// // 			 		return this.userdata;	
-// 
-// 			 }
+			 },
+			 
+			 companyData(){
+			 	let arr=this.chamList;
+			 	for(let i=0;i<arr.length;i++){
+			 		this.$set(arr[i],"id",i);
+			 	}
+				console.log(arr)
+			 	return arr;
+			 },
+
 		},
 		watch: { //监测数据变化
+// 		  com(){
+// 				let Casc=[];
+// 				this.companyList = this.com;
+// 				for(let i=0;i< this.companyList.length;i++){
+// 					let par={ 
+// 						label:'',
+// 						value:'',
+// 						children:[]
+// 					}
+// 					par.label = this.companyList[i].name;
+// 					par. value= this.companyList[i].company_unid;
+// 					
+// 					$ax.getAjaxData('service/Oauth/getMyBelongOrgAction',{company_unid:this.companyList[i].company_unid}, res => {  //公司				
+// 					if(res.code == 0){
+// 						for(let j=0;j<res.data.length;j++){
+// 							let child = {
+// 								label:'',
+// 								value:''
+// 							}
+// 							child.label = res.data[j].name;
+// 							child.value = res.data[j].org_unid;
+// 							par.children.push(child);
+// 						}
+// 						
+// 					}
+// 					});
+// 					
+// 
+// 						Casc.push(par)
+// 				}
+// 				
+// 				
+// 				this.companyList = Casc;
+// 				
+// 				
+// 			}
 		},
 
 		//===================组件钩子===========================
@@ -412,11 +450,11 @@
 						* console.log(await abc);
 						* ...
 						*/
-						let resourceData = await $ax.getAsyncAjaxData('service/User/detail',{});
+						let resourceData = await $ax.getAsyncAjaxData('service/Oauth/get_center_info',{});
 							
 							next(vm => {
 									if(resourceData.status == 200){
-										vm.userdata=resourceData.data;
+										vm.userdata = resourceData.data.user;
 									}else if(resourceData.status == 300){
 									vm.userdata=[];
 									}

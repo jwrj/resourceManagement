@@ -47,7 +47,7 @@
 				 		</Form>
 						
 						<p>
-							<Button type="primary" @click="submit" style="margin: 10px 0;">确定提交</Button>
+							<Button type="primary" @click="submit(datalist.user_type)" style="margin: 10px 0;">确定提交</Button>
 						</p>
 			 </Card>
 
@@ -130,17 +130,23 @@ export default {
 					})
 					this.datalist.unit_prove=arr;
 				},
-				submit(){
-
+				submit(type){
+					if(type == 2){
 						$ax.getAjaxData('service/User/edit',Object.assign({}, this.datalist), (res) =>{
 							if(res.status == 200){
 								console.log('成功')
-								 this.$router.replace({name: 'home'});
+								sessionStorage.user_type=res.data.user_type;	
+								this.$router.replace({name: 'home'});
 							}else if(res.status==300){
 								console.log(res)
 							}
-						});		 
-									}
+						});	
+					}else if(type ==1){
+						sessionStorage.user_type=1;
+							this.$router.replace({name: 'home'});
+					}
+	 
+				}
     },
     computed: {//计算属性
 				 GovShow(){
@@ -195,10 +201,7 @@ export default {
 											if(res.status == 200){ //已完善信息
 												$ax.getAjaxData('service/User/detail',{}, (res) =>{  //获取填写的资料
 													if(res.status == 200){
-													sessionStorage.user_type=res.data.user_type;
-													let arr=[];
-													arr.push(parseInt(sessionStorage.user_type))
-													window.USE_RACCESS = arr;//用户权限	
+													sessionStorage.user_type=res.data.user_type;	
 													vm.$router.replace({name: 'home'});
 													}
 												});

@@ -65,9 +65,11 @@ export default {
 		},
 		clickDrop(name){
 			if(name =='exit'){
-			  sessionStorage.removeItem('user_type');
-				// sessionStorage.clear()
-			  this.$router.replace('/mainLogin');
+			  // sessionStorage.removeItem('user_type');
+								sessionStorage.clear()
+								this.$router.replace('/mainLogin');
+
+
 			}else if(name == 'editUser'){
 				this.$router.replace('/edit');
 			}

@@ -71,9 +71,9 @@ if(to.meta.auth == false){
 			});
 	
 		}else {
-		//检测页面权限
-		let userAccess = sessionStorage.userAccess;
-		if(canTurnTo(routers, (userAccess ? userAccess.split(',') : false), to.name)){
+		//检测页面权限 [2]
+		let userAccess = sessionStorage.user_type;
+		if(canTurnTo(routers, (userAccess ? [Number(userAccess)] : false), to.name)){
 			
 			if(pathImperfect(routers, to.name)){
 				next({
