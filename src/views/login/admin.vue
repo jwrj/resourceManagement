@@ -50,6 +50,8 @@ export default {
 				if(res.status == 200){
 					sessionStorage.user_type=3;
 					this.$router.push('/home');
+				}else{
+					 this.$Message.error('用户名或密码错误');
 				}
 			});
 		}

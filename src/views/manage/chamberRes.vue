@@ -54,6 +54,14 @@
 				</p>
 			</div>
 			</FormItem>
+			
+			<FormItem label="承接需求">
+				<Select v-model="resList.is_company" style="width:200px">
+						<Option value="0">个人/公司</Option>
+						<Option value="1">仅由公司</Option>
+				</Select>
+			</FormItem>
+			
 				<Row>
 					<Col :lg="12" :md="16" :sm="24" :xs="24">
 					<FormItem label="起始时间" prop="time">
@@ -136,11 +144,8 @@
 			:tableColumns="tableColumns" 
 			ref="selectCham" 
 			:chamber="result"
-			:tableData="tableData"
+			:tableData="tableDa"
 			>
-				<div slot="header">
-					<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
-				</div>
 			</table-list>
 		</Modal>
 
@@ -186,6 +191,7 @@
 					help: '',
 					title:'',
 					replease:'1',
+					is_company:'0',
 					place: '',
 					time: [],
 					num: '',
@@ -202,39 +208,9 @@
 					{
 						title: '名称',
 						key: 'name'
-					},
-					{
-						title: '日期',
-						key: 'date'
 					}
 				],
-				tableData:[
-					{
-						id: 1,
-						name: '张三的商会',
-						date: '2016-10-03'
-					},
-					{
-						id: 2,
-						name: '李四的商会',
-						date: '2016-10-01'
-					},
-					{
-						id: 3,
-						name: '麻五的商会',
-						date: '2016-10-02'
-					},
-					{
-						id: 4,
-						name: '徐六的商会',
-						date: '2016-10-04'
-					},
-					{
-						id: 5,
-						name: '吴老七的商会',
-						date: '2016-10-04'
-					}
-				],
+				tableData:{},
 				ruleValidate: {
 					time: [{
 						type: 'array',
@@ -310,7 +286,8 @@
 							provide:this.resList.help,
 							attach:[],
 							remark:this.resList.remark,
-							scope_select:this.selected
+							scope_select:this.selected,
+							is_company:this.resList.is_company
 							}
 				this.$refs[name].validate((valid) => {
 
@@ -363,14 +340,29 @@
 				 let arr=[]
 				 for(let i of this.result){
 					 if(i.name){
-						 arr.push(i.id);
+						 arr.push(i.org_unid);
 					 }
 				 }
 				 arr=arr.join();
 				 console.log(arr);
 				 return arr;
 			 },
-			 
+			 tableDa(){
+					let arr =[];
+					for(let i in this.tableData){
+						  let obj ={
+								id:'',
+								name:'',
+								org_unid:''
+							}
+							obj.id = i;
+							obj.name = this.tableData[i].name;
+							obj.org_unid = this.tableData[i].org_unid;
+							arr.push(obj)
+					}
+					return arr;
+		
+			 },
 			 companyData(){
 			 	let arr=this.chamList;
 			 	for(let i=0;i<arr.length;i++){
@@ -382,42 +374,7 @@
 
 		},
 		watch: { //监测数据变化
-// 		  com(){
-// 				let Casc=[];
-// 				this.companyList = this.com;
-// 				for(let i=0;i< this.companyList.length;i++){
-// 					let par={ 
-// 						label:'',
-// 						value:'',
-// 						children:[]
-// 					}
-// 					par.label = this.companyList[i].name;
-// 					par. value= this.companyList[i].company_unid;
-// 					
-// 					$ax.getAjaxData('service/Oauth/getMyBelongOrgAction',{company_unid:this.companyList[i].company_unid}, res => {  //公司				
-// 					if(res.code == 0){
-// 						for(let j=0;j<res.data.length;j++){
-// 							let child = {
-// 								label:'',
-// 								value:''
-// 							}
-// 							child.label = res.data[j].name;
-// 							child.value = res.data[j].org_unid;
-// 							par.children.push(child);
-// 						}
-// 						
-// 					}
-// 					});
-// 					
-// 
-// 						Casc.push(par)
-// 				}
-// 				
-// 				
-// 				this.companyList = Casc;
-// 				
-// 				
-// 			}
+  
 		},
 
 		//===================组件钩子===========================
@@ -426,7 +383,11 @@
 
 		},
 		mounted() { //模板被渲染完毕之后执行
-
+			$ax.getAjaxData('service/Oauth/allOrgList',{}, res => {				
+				if(res.status == 200){
+					this.tableData = res.data;
+				}
+			});
 		},
 
 		//=================组件路由勾子==============================

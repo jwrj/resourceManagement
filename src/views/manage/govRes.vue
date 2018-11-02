@@ -161,8 +161,6 @@
 						height:'500px'
 				},
 				userdata:[],
-// 				inter: true,
-// 				out: false,
 				res_s: [],
 				modalTitle:'',
 				showImport: false,
@@ -178,14 +176,6 @@
 					profit_limit:'',
 					qualification:'',
 					index: 1,
-// 					personList: [
-//                         {
-//                             name: '',
-// 							phone:'',
-//                             index: 1,
-//                             status: 1
-//                         }
-//                     ]
 					personList: [
                         {
                             title: '',

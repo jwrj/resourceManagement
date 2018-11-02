@@ -112,7 +112,7 @@ export default [
 			meta: {
 				title: '政府资源',
 				icon: 'md-alarm',
-				access:[2],
+				access:[1,2],
 				auth:false
 			},
 			component: () => import('@/views/resource/resourceGov.vue')	

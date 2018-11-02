@@ -66,8 +66,19 @@ export default {
 		clickDrop(name){
 			if(name =='exit'){
 			  // sessionStorage.removeItem('user_type');
-								sessionStorage.clear()
-								this.$router.replace('/mainLogin');
+                  if(sessionStorage.user_type ==3){
+					  $ax.getAjaxData('/service/User/loginout',{}, (res) =>{  //获取填写的资料
+					  	if(res.status == 200){
+					  	sessionStorage.clear();	
+					  	this.$router.replace('/mainLogin');
+					  	}
+					  });
+				  }else{
+					  sessionStorage.clear();	
+					  this.$router.replace('/mainLogin');
+				  }												
+
+								
 
 
 			}else if(name == 'editUser'){
