@@ -7,7 +7,7 @@
 			</div>
 			<div class="news">
 				<span> <strong>发布人信息</strong></span>
-				<span>用户名：{{userdata.username}}</span>
+				<span>用户名：{{person.truest_name}}</span>
 				<span>单位：{{userdata.unit}}</span>
 			</div>
 			<br>
@@ -55,7 +55,7 @@
 					
 					<FormItem label="预计收益" prop="profit">
 						<Input v-model="resList.profit" type="text" style="width: 200px;">
-						<span slot="append">万元</span>
+						<span slot="append">元</span>
 						</Input>
 					</FormItem>
 					<FormItem label="收益年限" prop="profit_limit">
@@ -67,7 +67,7 @@
 					<Col :lg="12" :md="16" :sm="24" :xs="24">
 					<FormItem label="投资金额" prop="invest_money">
 						<Input v-model="resList.invest_money" type="text" style="width: 200px;">
-						<span slot="append">万元</span>
+						<span slot="append">元</span>
 						</Input>
 					</FormItem>
 					<FormItem label="资质需求">
@@ -161,6 +161,7 @@
 						height:'500px'
 				},
 				userdata:[],
+				person:{},
 				res_s: [],
 				modalTitle:'',
 				showImport: false,
@@ -277,11 +278,15 @@
 							
 							if(res.status == 200){
 								this.$Message.success('添加成功!');
-								this.resList={};
+								this.resList=[];
+							}else if(res.status ==300){
+								this.$Modal.confirm({
+									title: '错误',
+									content: '<p>用户资料未完善或者账户未通过审核</p>'
+								});
 							}
 						});
-					} else {
-						//this.$Message.error('添加失败!');
+					} else {             
 					}
 				})
 			},
@@ -365,7 +370,7 @@
 		mounted() { //模板被渲染完毕之后执行
           $ax.getAjaxData('service/Oauth/allOrgList',{}, res => {
           	
-          	if(res.code == 0){
+          	if(res.status == 200){
           		this.chamList=res.data;
           	}
           });
@@ -398,6 +403,7 @@
 							next(vm => {
 									if(resourceData.status == 200){
 										vm.userdata=resourceData.data;
+										vm.person = resourceData.data.person;
 									}else if(resourceData.status == 300){
 							    vm.userdata=[];
 										console.log('???')

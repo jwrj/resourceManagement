@@ -52,20 +52,12 @@ export default {
 			});
 		
     	},
-		openDetail(id){
-			 let detailList=[];
-			  $ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
-			  	if(res.status == 200){
-			  		detailList=res.data;
-						if(detailList.scope_release == 3){
-							this.$router.push({name: 'govDetail', params: {list: detailList}});
-						}else{
-							this.$router.push({name: 'chamDetail', params: {list: detailList}});
-						}
-			  	}else if(res.status==300){
-			  		detailList=[];
-			  	}
-			  });
+		openDetail(data){
+			if(data.scope_release ==3){
+				this.$router.push({ path: '/audit/govDetail', query: { id:data.id}});
+			}else{
+				this.$router.push({ path: '/audit/chamDetail', query: { id:data.id}});
+			}
 				
 		}
     },

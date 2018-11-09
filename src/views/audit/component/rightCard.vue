@@ -9,10 +9,9 @@
 				<div class="centent">
 								<Icon type="md-image" size="120" />
 								<div class="middle">
-								<h1>{{list.person}}</h1>
-								<p>所属单位：{{list.name}}</p>
-								<p>所属职务：{{list.work}}</p>
-								<p>商会实名认证</p>
+								<h1>{{person.center_name}}</h1>
+								<p>所属单位：{{person.unit}}</p>
+								<p>手机号码：{{person.work_phone}}</p>
 								</div>
 				</div>
 				
@@ -31,25 +30,31 @@
 					<h1>资源状态</h1>
 				</div>
 				<p>开放承接：正在开放</p>
-				<p>审核状态：{{list.status == 1?'已通过':'未通过'}}</p>
+				<p>审核状态：<Tag :color="list.status ==1?'blue':'red'">{{list.status == 1?'已通过':'未通过'}}</Tag></p>
 				<p>可见区域：{{list.scope_release ==3 ?'政府资源':'会内会外'}}</p>
+				<p>承接需求：<Tag color="blue">公司</Tag><Tag color="pink" v-if="list.is_company ==0">个人</Tag></p>
 				<p>时限状态：未结束资源</p>
 				
 				       
            <Button v-show="showGetButton" type="primary" style="margin: 15px 0;" @click="choice=true">我要承接</Button>
 				<Modal
         v-model="choice"
-        title="选择要承接的公司"
+        title="承接资源"
 				footer-hide
 				:mask-closable="false"
 				@on-cancel="cancel"
         >
-				<p><span class="bold">已选公司</span>：{{company}}</p>
-				<Table :columns="tableColumns" :data="tableDa" @on-row-click="choiceCompany"></Table>
+				<p> 
+					<Tag color="volcano">
+					{{list.is_company ==0?'tips:请选择一个公司承接，或者不选以个人身份承接资源':'tips:该资源不可个人承接，请选择一个公司'}}
+					</Tag>
+				</p>
+				<p style="margin: 5px 0;"><span class="bold">已选公司：</span><Tag color="magenta">{{company?company:'未选择'}}</Tag></p>
+				<Table :columns="tableColumns" :data="tableDa" @on-row-click="choiceCompany" :highlight-row="true"></Table>
 				<br>
 				<Poptip
         confirm
-        title="是否给该公司承接资源？"
+        :title="company == ''?'未选择公司,是否以个人身份承接该资源？':'是否给该公司承接资源？'"
         @on-ok="getResource">
         <Button type="primary">确定</Button>
     </Poptip>
@@ -63,10 +68,9 @@
 					<h1>其他承接单位</h1>
 				</div>
 				
-				<div class="unit" v-for="(unit,index) of unitlist" :key="index" @click="rowclick(unit)">
-					<p style="font-size: 16px;color: black;" >{{unit.name}}</p>
-					<p class="gray">商会：<span style="margin-right: 3px;" v-for="(ch,index) of unit.cham">{{ch.name}}</span></p>
-					<p class="gray">时间：{{unit.start}}</p>
+				<div class="unit" v-for="(unit,index) of list.user" :key="index" @click="rowclick(unit)" v-if="unit.pivot.company_id">
+					<p style="font-size: 16px;color: black;" >{{unit.company_name}}</p>
+					<p class="gray">创建时间：{{unit.pivot.create_time}}</p>
 				</div>
 			</Card>
 		</div>
@@ -77,7 +81,6 @@
 
 <script>
 import tableList from '@/components/tableList/table-list.vue'
-import {bus} from '@/components/bus/event-bus.js'
 export default {
 	name: 'rightCard',
 	components:{//组件模板
@@ -95,93 +98,75 @@ export default {
 			type:Boolean,
 			default:false
 		},
-		showAudit:{
-			type:Boolean,
-			default:false
+		list:{
+			default: () => []
 		},
-		units:{
-			type:Array,
-			default:() =>[
-					{
-						name:'深圳市中投顾问股份有限公司',
-						cham:'广西湖北商会',
-						date:'2017-01-01'
-					},
-					{
-						name:'南宁市高新顾问股份有限公司',
-						cham:'广西湖北商会',
-						date:'2017-08-01'
-					},
-					{
-						name:'中山市石头信息科技有限公司',
-						cham:'广西湖北商会',
-						date:'2017-07-21'
-					},
-					{
-						name:'桂林市大富翁股份有限公司',
-						cham:'广西湖北商会',
-						date:'2017-11-09'
-					},
-					{
-						name:'北京市豆浆油条有限公司',
-						cham:'广西湖北商会',
-						date:'2017-12-13'
-					}
-			]
-	
-		},
-    list: {
-      // 对象或数组默认值必须从一个工厂函数获取
-      default:() =>[]
-	  }
+		person:{
+			default: () => []
+		}
 	},
     data () {//数据
         return {
 					choice:false,
 					company:'',
-		tableColumns: [
-				{
-					title: 'ID',
-					key: 'id'
-				},
-				{
-					title: '名称',
-					key: 'name'
-				}
-			],
+					tableColumns: [
+							{
+								title: 'ID',
+								key: 'id'
+							},
+							{
+								title: '名称',
+								key: 'name'
+							}
+						],
 			chamList:[]
         }
     },
     methods: {//方法
     	rowclick(unitData){
-				console.log(unitData);
-			bus.$emit('unitDetail',unitData.name);
-			this.$router.push({name:'carryDetail', params: {list:bus.currentResource}});
+			this.$router.push({ path: '/audit/carryDetail', query: { id:unitData.id}});
 		},
-		choiceCompany(data,index){
-        // console.log(data);
+		choiceCompany(data,index){//选择公司
 				this.company=data.name;
 		},
-		cancel(){
+		cancel(){ //取消选择
 			this.company='';
 			this.choice=false;
 		},
-		getResource(){
-			for(let item of this.chamList){
-				if(item.name == this.company){
-					console.log('heshi');
-					let add={
-						id:this.list.id,
-						company_id:item.company_id
-					}
-					$ax.getAjaxData('service/ResourceUser/add',Object.assign({}, add), res => {
-						
-						if(res.status == 200){
-							this.$Message('成功');
-							this.choice=false;
-						}
+		getResource(){ //请求承接资源 判断是否能以个人承接 => 公司是否选择
+     if(this.list.is_company == 1){
+        if(this.company == ''){
+					this.$Message.error({
+						    content: '该资源不可个人承接！请选择一个公司！',
+                duration: 10
 					});
+				}else{
+					this.carryOut();
 				}
+		 }else if(this.list.is_company == 0){
+			 this.carryOut();
+		 }
+		},
+		carryOut(){  //承接资源的Main方法
+			for(let item of this.chamList){
+			if(item.name == this.company){
+				let add={
+					id:this.list.id,
+					company_id:item.company_id
+				}
+				$ax.getAjaxData('service/ResourceUser/add',Object.assign({}, add), res => {
+					
+					if(res.status == 200){
+						this.$Message.info('成功');
+						this.choice=false;
+					}else if(res.status == 300){
+						this.$Message.error({
+							  content: res.message,
+                duration: 7
+						});
+					}
+				});
+			}
 			}
 		},
 		audit(auditFlag){
@@ -189,9 +174,6 @@ export default {
 		}
     },
     computed: {//计算属性
-        unitlist(){
-					return bus.unitlist;
-				},
 					tableDa(){
 						let arr=this.chamList;
 						for(let i=0;i<arr.length;i++){
@@ -207,17 +189,32 @@ export default {
 						if(arr[0] == '1'){
 							return true;
 						}
+					},
+					showAudit(){
+						if(sessionStorage.user_type ==3){
+							if(this.list.status ==1){
+								return false
+							}else if(this.list.status ==0){
+								return true
+								}
+						}else{
+							return false
+						}
 					}
+					
+
+
     },
     watch: {//监测数据变化
-    	
+
 	},
     
     //===================组件钩子===========================
     
     created () {//实例被创建完毕之后执行
-    	
+			
 	},
+
     mounted () {//模板被渲染完毕之后执行
     	$ax.getAjaxData('service/Oauth/get_center_info',{}, res => {
     		
@@ -225,6 +222,8 @@ export default {
     			this.chamList=res.data.company;
     		}
     	});
+			
+			
 	},
 	
 	//=================组件路由勾子==============================
@@ -276,7 +275,7 @@ export default {
 		padding: 8px 2px;
 	}
 	.audit{
-		border-top: 1px solid #C2CCD1;
+		// border-top: 1px solid #C2CCD1;
 		margin: 10px 0;
 		padding-top: 10px;
 	}

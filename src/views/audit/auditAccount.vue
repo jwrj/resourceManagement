@@ -19,9 +19,9 @@
 						<Button type="primary" @click.native="search">搜索</Button>
 						<p style="margin-top: 6px;">
 							<CheckboxGroup v-model="formInline.check">
-								<Checkbox label="等待审核"></Checkbox>
-								<Checkbox label="审核通过"></Checkbox>
-								<Checkbox label="审核不通过"></Checkbox>
+								<Checkbox label="0">审核中</Checkbox>
+								<Checkbox label="1">审核通过</Checkbox>
+								<Checkbox label="2">审核不通过</Checkbox>
 							</CheckboxGroup>
 						</p>
 					</Form>
@@ -30,8 +30,8 @@
 							<Icon type="md-image" size="180" />
 							<div class="middle">
 						<p>
-							<div class="user">{{data.name}}</div>
-						<span style="color: #AAAAAA;">注册时间：2018-01-18</span>
+							<div class="user">{{data.person.truest_name}}</div>
+						<span style="color: #AAAAAA;">注册时间：{{data.person.addtime | formatDate}}</span>
 						</p>
 				
 				<Row type="flex" justify="start" align="top" >
@@ -45,8 +45,8 @@
 							</div>
 							<div>
 								<p>：{{data.unit}}</p>
-								<p>：{{data.job}}</p>
-								<p>：{{data.addr}}</p>
+								<p>：{{data.office}}</p>
+								<p>：{{data.person.hometown}}</p>
 							</div>
 						</div>
 					</Col>
@@ -59,9 +59,9 @@
 							<p>单位证明</p>
 						</div>
 						<div>
-							<p >：{{data.unitLicense | flag}}</p>
-							<p>：{{data.card | flag}}</p>
-							<p>：{{data.prove | flag}}</p>
+							<p >：{{data.unit_license | flag}}</p>
+							<p>：{{data.person.card_img | flag}}</p>
+							<p>：{{data.unit_prove | flag}}</p>
 						</div>
 					</div>
 					</Col>
@@ -73,8 +73,8 @@
 								<p>审核时间</p>
 							</div>
 							<div>
-								<p>：{{data.unitAudit}}</p>
-								<p>：{{data.unitTime}}</p>
+								<p>：{{data.reg_time}}</p>
+								<p>：{{data.last_time}}</p>
 							</div>
 						</div>
 					</Col>
@@ -83,17 +83,18 @@
 							<hr>
 
 						</div>
+						 <Page :total="100" show-total  style="margin-top: 10px;margin-left: 30px;"/>
 					</div>
 					
 				</div>
 		</Card>
-		
+
 	</div>
 	
 </template>
 
 <script>
-
+import {formatDate} from '../../../public/js/date.js'
 export default {
 	name: '',
 	components:{//组件模板
@@ -115,30 +116,8 @@ export default {
         		time: []
         	},
 			pageShow:true,
-			datalist:[
-				{
-					name:'张三丰',
-					unit:'某某机关单位',
-					unitLicense:['http://yuanxing.bzttech.com/cocsys/coc_resourceSystem/images/%E5%8F%91%E5%B8%83%E8%B5%84%E6%BA%90-%E4%BC%9A%E5%86%85%E4%BC%9A%E9%97%B4/u708.png'],
-					prove:[],
-					job:'联系专员',
-					addr:'南宁市',
-					card:'45080957864058',
-					unitAudit:'广西湖北商会',
-					unitTime:'2018-01-09'
-				},
-				{
-					name:'白展堂',
-					unit:'同福客栈文艺酒店',
-					unitLicense:[],
-					prove:['链接1'],
-					job:'联系专员',
-					addr:'南宁市',
-					card:'',
-					unitAudit:'广西湖北商会',
-					unitTime:'2018-11-15'
-				}
-			]
+			datalist:[]
+
         }
     },
     methods: {//方法
@@ -146,32 +125,25 @@ export default {
     		console.log('搜索')
     	},
     	rowclick(data){
-    		this.$router.push({name: 'accountDetail', params: {datalist: data}});
+    		this.$router.push({ path: '/audit/accountDetail', query: { id:data.id}});
     	},
     	formatTime(date){
     		this.formInline.time = date;
     	}
     },
     computed: {//计算属性
-	
-// 		text(){
-// 			
-// 			let txt = '未上传';
-// 			
-// 			if(JSON.stringify(value) === '[]'||JSON.stringify(value)===''){
-// 				txt = '';
-// 			}else{
-// 				txt = '';
-// 			}
-// 			
-// 			return txt;
-// 			
-// 		}
-		
+
 		
     },
-    watch: {//监测数据变化
 
+    watch: {//监测数据变化
+//        formInline:{
+//            handler(curVal,oldVal){
+//                 console.log(curVal);
+//             },
+//             deep: true,
+// 	   }
+	   
 	},
     filters:{
 		
@@ -182,7 +154,12 @@ export default {
 			}else{
 				return '未上传'
 			}
-		}
+		},
+				formatDate(time) {
+						var date = new Date(time*1000);
+						return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+				}
+
 		
 	},
     //===================组件钩子===========================
@@ -199,31 +176,37 @@ export default {
 	beforeRouteEnter (to, from, next) {//在组件创建之前调用（放置页面加载时请求的Ajax）
 		
 		(async() => {//执行异步函数
-			
-			//async、await错误处理
-			try {
-				
-				/*
-				 * 
-				 * ------串行执行---------
-				 * console.log(await getAjaxData());
-				 * ...
-				 * 
-				 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-				 * let abc = getAjaxData();//先执行promise函数
-				 * ...
-				 * console.log(await abc);
-				 * ...
-				*/
-				next(vm => {
 					
-				});
-				
-			} catch(err) {
-				console.log(err);
-			}
-			
-		})();
+					//async、await错误处理
+					try {
+						
+						/*
+						 * 
+						 * ------串行执行---------
+						 * console.log(await getAjaxData());
+						 * ...
+						 * 
+						 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+						 * let abc = getAjaxData();//先执行promise函数
+						 * ...
+						 * console.log(await abc);
+						 * ...
+						*/
+					   let resourceData = await $ax.getAsyncAjaxData('service/User/gov_user',{});
+						   
+							next(vm => {
+									if(resourceData.status == 200){
+										vm.datalist=resourceData.data;		 
+									}
+							});
+						
+					} catch(err) {
+						console.log(err);
+					}
+					
+					next();
+					
+				})();
 		
 	},
 	

@@ -4,7 +4,7 @@
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p  class="bold top">
-				{{datalist.title?datalist.title:'政府资源标题1'}}
+				{{datalist.title}}
 				<p style="color:#ccc;">
 					<span style="margin-right:5px;">发布时间：{{datalist.release_time | formatDate}}</span>
 					<span>点击量：{{datalist.hits}}</span>
@@ -15,13 +15,13 @@
 	  	<Col span="12" style="text-align: left;">
 	  		<p>开始时间：{{datalist.start_time}}</p>
 	  		<p>发布范围：<span v-for="(data,index) of datalist.scope_select">{{data}}</span></p>
-	  		<p>投资金额：{{datalist.invest_money}}万</p>
+	  		<p>投资金额：{{datalist.invest_money |Trans}}</p>
 	  		<p>收益年限：{{datalist.profit_limit}}年</p>
 	  	</Col>
 	  	<Col span="12" style="text-align: left;">
 	  		<p>结束时间：{{datalist.end_time}}</p>
 	  		<p>合作方式：政企合作</p>
-	  		<p>预计收益：{{datalist.profit}}万</p>
+	  		<p>预计收益：{{datalist.profit |Trans}}</p>
 	  		<p>联系人员：<p v-for="(u,index) of datalist.contacts">{{u.name}}-{{u.phone}}</p></p>
 	  	</Col>
 	  </Row>
@@ -99,17 +99,17 @@ export default {
     		formatDate(time) {
     				var date = new Date(time*1000);
     				return formatDate(date, 'yyyy-MM-dd hh:mm');
-    		}
+    		},
+				Trans(num){
+					 return `${num/100}元`;
+				}
     },
     //===================组件钩子===========================
     
     created () {//实例被创建完毕之后执行
-	 if(this.$route.params.list){
-	 	this.datalist=this.$route.params.list;
-	 }
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+						  
 	},
 	
 	//=================组件路由勾子==============================
@@ -122,24 +122,32 @@ export default {
 			try {
 				
 				/*
-				 * 
-				 * ------串行执行---------
-				 * console.log(await getAjaxData());
-				 * ...
-				 * 
-				 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-				 * let abc = getAjaxData();//先执行promise函数
-				 * ...
-				 * console.log(await abc);
-				 * ...
+				* 
+				* ------串行执行---------
+				* console.log(await getAjaxData());
+				* ...
+				* 
+				* ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+				* let abc = getAjaxData();//先执行promise函数
+				* ...
+				* console.log(await abc);
+				* ...
 				*/
-				next(vm => {
-					
-				});
+					next(vm => {
+							$ax.getAjaxData('service/Resource/detail',{id:to.query.id}, (res) =>{
+								if(res.status == 200){
+									vm.datalist = res.data;
+								}else if(res.status==300){
+									vm.datalist = [];
+								}
+							});
+					});
 				
 			} catch(err) {
 				console.log(err);
 			}
+			
+			next();
 			
 		})();
 		

@@ -38,8 +38,8 @@ export default {
     data () {//数据
         return {
         	adminlist:{
-				title:'',
-				password:''
+				title:'admin',
+				password:'admin888'
 			}
         }
     },

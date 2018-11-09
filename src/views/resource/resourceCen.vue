@@ -5,34 +5,7 @@
 			<div slot="title">
 				<h1>会间资源</h1>
 			</div>
-			<img-text :hideRadio="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail">
-<!-- 				<div slot="header" style="margin-bottom: 50px;">
-					<Button type="primary" @click="showImport=true">
-						请选择商会
-					</Button>
-					<p style="margin-top: 5px;">
-						已选商会:
-					<Tag 
-					color="primary"
-					type="border"
-					closable
-					:name="res.id"
-					v-for="(res,index) in result" 
-					:key="index"
-					@on-close="closeTag(res,index)"
-					>{{res.name}}
-					</Tag>
-					</p>
-					
-					<p>
-						<Button 
-						@click="resetResult" 
-						v-if="result.length !== 0" 
-						type="primary">清空
-						</Button>
-					</p>
-				</div> -->
-			</img-text>
+			<img-text :resIn="true" :hideRadio="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 		</Card>
 
 
@@ -42,12 +15,10 @@
 
 <script>
 	import imgText from '@/views/resource/component/imgText.vue'
-	import tableList from '@/components/tableList/table-list.vue'
 	export default {
 		name: '',
 		components: { //组件模板,
-			imgText,
-			tableList
+			imgText
 		},
 		props: { //组件道具（参数）
 			/* ****属性用法*****
@@ -60,71 +31,8 @@
 		},
 		data() { //数据
 			return {
-				datalist: [],
-				modalTitle:'',
-				res_s: [],
-				showImport: false,
-				result: [],
-				searchlist:{},
-				tableColumns: [{
-						type: 'selection'
-					},
-					{
-						title: 'ID',
-						key: 'id'
-					},
-					{
-						title: '名称',
-						key: 'name'
-					},
-					{
-						title: '日期',
-						key: 'date'
-					},
-					{
-						align: 'center',
-						width: 130,
-							title: '操作',
-							handle: [
-								{
-									name: '查看详情',
-									key: 0,
-									modalShow:false,
-									props: {
-										loading: false
-									}
-								},
-								],
-					}
-				],
-				tableData:[
-					{
-						id: 1,
-						name: '张三',
-						date: '2016-10-03'
-					},
-					{
-						id: 2,
-						name: '李四',
-						date: '2016-10-01'
-					},
-					{
-						id: 3,
-						name: '麻五',
-						date: '2016-10-02'
-					},
-					{
-						id: 4,
-						name: '徐六',
-						date: '2016-10-04'
-					},
-					{
-						id: 5,
-						name: '吴老七',
-						date: '2016-10-04'
-					}
-				]
-
+            datalist:[],
+						searchlist:{}
 			}
 		},
 	methods: {//方法
@@ -134,8 +42,7 @@
 		this.$set(this.searchlist,"status",arr.join());
 		this.$set(this.searchlist,"start_time",list.time[0]);
 		this.$set(this.searchlist,"end_time",list.time[1]);
-		this.$set(this.searchlist,"scope_release",'2');
-		$ax.getAjaxData('service/Resource/index',Object.assign({}, this.searchlist), (res) =>{
+		$ax.getAjaxData('service/Resource/external_index',Object.assign({}, this.searchlist), (res) =>{
 			if(res.status == 200){
 				this.datalist=res.data;
 			}else if(res.status==300){
@@ -144,23 +51,16 @@
 		});
 	
 		},
-	openDetail(id){
-		let detailList=[];
-			$ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
-				if(res.status == 200){
-					detailList=res.data;
-					this.$router.push({name: 'chamDetail', params: {list: detailList}});
-				}else if(res.status==300){
-					detailList=[];
-				}
-			});
-			
-	}
-	},
+			openDetail(data){
+						this.$router.push({ path: '/audit/chamDetail', query: { id:data.id}});
+			}
+			},
+
 		computed: { //计算属性
 
 		},
 		watch: { //监测数据变化
+
 		},
 
 		//===================组件钩子===========================
@@ -193,11 +93,13 @@
 				 * console.log(await abc);
 				 * ...
 				*/
-			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/index',{scope_release:"2"});
+			   let myPostData = await $ax.getAsyncAjaxData('service/Resource/external_index',{});
 				   
 					next(vm => {
 							if(myPostData.status == 200){
 								vm.datalist=myPostData.data;
+							}else if(myPostData.status == 300){
+								alert(myPostData.message)
 							}
 					});
 				

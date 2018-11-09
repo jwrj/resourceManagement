@@ -119,7 +119,7 @@ export default {
 				 * let abc = getAjaxData();//先执行promise函数
 				 * ...
 				 * console.log(await abc);
-				 * ...
+				 * ...beforeRouteUpdate：在当前路由改变，但是该组件被复用时调用
 				*/
 				next(vm => {
 					

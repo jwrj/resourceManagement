@@ -4,9 +4,10 @@
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p style="font-size: 26px;margin-bottom: 20px;color:#333333;" class="bold">
-				{{datalist.title?datalist.title:'湖南老白干酒业'}}
+			 {{datalist.title}}
 				<p style="color:#ccc;">
-					<span style="margin-right:5px;">发布时间：{{datalist.release_time | formatDate}}</span>
+					<span style="margin-right:5px;" v-if="!datalist.release_time ==0">发布时间：{{datalist.release_time | formatDate}}</span>
+					<span v-else="datalist.release_time ==0" style="margin-right:15px;" >等待审核，未发布</span>
 					<span>点击量：{{datalist.hits}}</span>
 				</p>
 			</p>
@@ -16,14 +17,14 @@
 	  		<p>开始时间：{{datalist.start_time}}</p>
 	  		<p>发布范围：{{datalist.scope_release==1?'会内':'会外'}}</p>
 	  		<p>协助程度：{{datalist.provide}}</p>
-	  		<p>介绍费用：{{datalist.introduce_money}}万</p>
+	  		<p>介绍费用：{{datalist.introduce_money |Trans}}</p>
 	  		<p>项目周期：{{datalist.period}}</p>
 	  	</Col>
 
 	  	<Col span="12" style="text-align: left;">
 	  		<p>结束时间：{{datalist.end_time}}</p>
-	  		<p>项目总额：{{datalist.total_money}}万</p>
-	  		<p>担保金额：{{datalist.guaranty_money}}万</p>
+	  		<p>项目总额：{{datalist.total_money |Trans}}</p>
+	  		<p>担保金额：{{datalist.guaranty_money |Trans}}</p>
 	  		<p>需求资质：{{datalist.qualification}}</p>
 	  		<p>交付地点：{{datalist.delivery_point}}</p>
 	  	</Col>
@@ -52,7 +53,7 @@
 	 </Card>
 
 	</div>
-   <right-card :list="datalist" :showAudit="!auditSuc" :showResource="true"  @adminAudit="audit">
+   <right-card  :list="datalist" :person="person"  :showResource="true"  @adminAudit="audit">
 	 </right-card>
 	</div>
   
@@ -81,8 +82,8 @@ export default {
         return {
 			title:'',
 			datalist:[],
-			auditSuc:false,
-			img:defaultImg
+			img:defaultImg,
+			person:[]
 			
         }
     },
@@ -96,33 +97,36 @@ export default {
 				
 				if(res.status == 200){
 					this.$Message.success('审核成功');
-					this.auditSuc = true;
-					
+					this.datalist.status =1;
 				}
 			});
 		}
     },
     computed: {//计算属性
-  
+
     },
     watch: {//监测数据变化
-    	
+      datalist(){
+				this.$set(this.person,'center_name',this.datalist.release_people.center_name);
+				this.$set(this.person,'work_phone',this.datalist.release_people.work_phone);
+				this.$set(this.person,'unit',this.datalist.release_people.unit);
+			}
 	},
     filters: {
         formatDate(time) {
             var date = new Date(time*1000);
             return formatDate(date, 'yyyy-MM-dd hh:mm');
-        }
+        },
+				Trans(num){
+					return `${num/100}元`;
+				}
     },
     //===================组件钩子===========================
     
     created () {//实例被创建完毕之后执行
-   if(this.$route.params.list){
-		 this.datalist=this.$route.params.list;
-	 }
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+
 	},
 	
 	//=================组件路由勾子==============================
@@ -145,10 +149,29 @@ export default {
 				 * ...
 				 * console.log(await abc);
 				 * ...
+				 * 						
 				*/
-			  
 				next(vm => {
-				
+					let id =''; //有id就请求  没id就读取session
+         if(to.query.id || to.query.source_id){
+					 if(to.query.source_id){
+					 	id = to.query.source_id;
+					 }else if(to.query.id){
+					 	id = to.query.id;						
+					 }
+					 
+					 $ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
+					 	if(res.status == 200){
+					 		vm.datalist = res.data;
+					 		sessionStorage.setItem('current', JSON.stringify(res.data));
+					 	}else if(res.status==300){
+					 		vm.datalist = []
+					 	}
+					 });
+				 }else{
+					 const userJsonStr = sessionStorage.getItem('current');
+					 	vm.datalist = JSON.parse(userJsonStr);
+				 }
 				});
 				
 			} catch(err) {

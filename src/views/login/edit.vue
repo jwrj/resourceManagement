@@ -20,13 +20,28 @@
 				 									:multiple="true"
 				 									name="image"
 				 									:on-success="uploadLicense"
-				 									:on-remove='upremoveLicense'
+													:show-upload-list="false"
+													:format="['jpg','jpeg','png']"
+													:on-format-error="handleFormatError"
 				 									action="http://192.168.2.251:8083/index.php/service/Uploadfile/simple_itf">
-				 										<Button icon="ios-cloud-upload-outline">选择文件</Button>
+				 										<Button icon="ios-cloud-upload-outline">选择图片</Button>
 				 									</Upload>
-
+           <div class="api">
+           							<span style="width: 60px;height: 70px;" 
+           							v-for="(ig,index) of licenselist" v-if="ig">
+           
+           										<div @mouseover="show('license',index)" @mouseout="hide('license',index)"
+           										:style="{backgroundImage: 'url('+ host + ig + ')', backgroundSize:'cover',height:'79px',width:'59px',border:'2px solid white'}">
+           												
+																			<div v-if="index == Lshow" class="Showfile">
+																			<Icon type="ios-search" @click="look(ig)" color= "white" size="25"/>
+																			<Icon type="ios-trash" @click="remove('license',ig)"  color= "white" size="25" />
+																			</div>
+															</div>
+           							</span>
+           												 
+           </div>
 									 
-								<!-- <img :src="imglist"> -->
 
 				 				</FormItem>
 				 				<FormItem label="单位证明:">
@@ -34,10 +49,30 @@
 				 								:multiple="true"
 				 								name="image"
 				 								:on-success="uploadProve"
-				 								:on-remove='upremoveProve'
+												:show-upload-list="false"
+												:format="['jpg','jpeg','png']"
+												:on-format-error="handleFormatError"
 				 								action="http://192.168.2.251:8083/index.php/service/Uploadfile/simple_itf">
-				 									<Button icon="ios-cloud-upload-outline">选择文件</Button>
+				 									<Button icon="ios-cloud-upload-outline">选择图片</Button>
 				 								</Upload>
+
+													<div class="api"  >
+												<span style="width: 60px;height: 70px;" 
+												v-for="(ig,index) of provelist" v-if="ig" >
+
+												<div @mouseover="show('prove',index)" @mouseout="hide('prove',index)"
+												:style="{backgroundImage: 'url('+ host + ig + ')', backgroundSize:'cover',height:'79px',width:'59px',border:'2px solid white'}">
+												
+												<div v-if="index == Pshow" class="Showfile">
+												<Icon type="ios-search" @click="look(ig)" color= "white" size="25"/>
+												<Icon type="ios-trash" @click="remove('prove',ig)"  color= "white" size="25" />
+												</div>
+												
+												</div>
+												</span>
+												 
+														</div>
+
 				 				</FormItem>
 				 				<FormItem label="单位联系人:" >
 				 						<Input type="text" v-model="datalist.unit_contact"> </Input>
@@ -49,9 +84,16 @@
 						
 						<p>
 							<Button type="primary" @click="submit" style="margin: 10px 0;">确定提交</Button>
+							<router-link to="/home"><Button type="primary" ghost style="margin-left: 5px;">返回主页</Button></router-link>
 						</p>
 			 </Card>
-
+          <Modal
+        v-model="lookImg"
+        title="查看图片"
+				footer-hide
+				>
+        <img :src="lookImage" >
+    </Modal>
 	</div>
 	
 </template>
@@ -83,77 +125,131 @@ export default {
     data () {//数据
         return {
 					userlist:{},
-					// GovShow:false,
          datalist:{
 					 unit:'',
 					 department:'',
 					 office:'',
-					 user_type:"1",
 					 unit_license:[],
 					 unit_prove:[],
 					 unit_contact:'',
-					 unit_telphone:''
+					 unit_telphone:'',
+					 delete_files:""
 				 },
-				 beforelist:[]
+				 beforelist:{},
+				 provelist:[],
+				 lookImg:false,
+				 lookImage:"",
+				 host:'http://192.168.2.251:8083/',
+				 Pshow:99999,
+				 Lshow:99999,
+				 beforeLicense:{},
+				 licenselist:[],
+				 delLic:[],
+				 delPro:[]
       	       	
         }
     },
     methods: {//方法
 
 				uploadLicense(res,file,filelist){ 
-					let arr=[];
-					filelist.forEach(item =>{
-						arr.push(item.response.data);
-					})
-					this.datalist.unit_license=arr;
-					console.log(this.datalist.unit_license)
-				},
-				upremoveLicense(file,filelist){
-         let arr=[];
-         filelist.forEach(item =>{
-         	arr.push(item.response.data);
-         })
-         this.datalist.unit_license=arr;
+						this.licenselist.push(res.data);
+						
 				},
 				uploadProve(res,file,filelist){
-					let arr=[];
-					filelist.forEach(item =>{
-						arr.push(item.response.data);
-					})
-					this.datalist.unit_prove=arr;
-					// console.log(this.datalist.unit_prove)
-				},
-				upremoveProve(file,filelist){
-					let arr=[];
-					filelist.forEach(item =>{
-						arr.push(item.response.data);
-					})
-					this.datalist.unit_prove=arr;
+					this.provelist.push(res.data)
+					
 				},
 				submit(){
-
-						$ax.getAjaxData('service/User/edit',Object.assign({}, this.datalist), (res) =>{
+						let del = this.delPro.concat(this.delLic);
+						let str = del.join()
+						this.datalist.unit_license = this.licenselist.join()
+						this.datalist.unit_prove = this.provelist.join()
+						this.datalist.delete_files = str;
+						let postData = {
+							unit:this.datalist.unit,
+							department:this.datalist.department,
+							office:this.datalist.office,
+							unit_license:this.datalist.unit_license,
+							unit_prove:this.datalist.unit_prove,
+							unit_contact:this.datalist.unit_contact,
+							unit_telphone:this.datalist.unit_telphone,
+							delete_files:this.datalist.delete_files
+							
+						}
+						$ax.getAjaxData('service/User/edit',postData, (res) =>{
 							if(res.status == 200){
-								console.log('成功')
 								 this.$router.replace({name: 'home'});
 							}else if(res.status==300){
 								console.log(res)
 							}
 						});		 
-									}
+				},
+				look(imgurl){
+					this.lookImg = true;
+					let url ="http://192.168.2.251:8083/";
+					this.lookImage = url+imgurl;
+				},
+				show(kind,index){			
+					if(kind == 'prove'){
+						this.Pshow = index;
+					}else if(kind == 'license'){
+						this.Lshow = index;
+					}
+				},
+				hide(kind,index){
+					if(kind == 'prove'){
+						this.Pshow = 99999;
+					}else if(kind == 'license'){
+						this.Lshow = 99999;
+					}
+				},
+				remove (kind,imgUrl) {
+					this.$Modal.confirm({
+															title: '删除图片',
+															content: '<p>确定删除该图片吗？</p>',
+															onOk: () => {
+																if(kind == 'prove'){
+																	this.provelist.splice(this.provelist.indexOf(imgUrl), 1,'');
+																	this.delPro.push(imgUrl);
+																}else if(kind == 'license'){
+																	this.licenselist.splice(this.licenselist.indexOf(imgUrl), 1);																		
+																	this.delLic.push(imgUrl);
+
+																	
+																}
+																	this.$Message.info('Clicked ok');
+															},
+															onCancel: () => {
+																	this.$Message.info('Clicked cancel');
+															}
+													});
+        },
+            handleFormatError (file) {
+                this.$Notice.warning({
+                    title: '该文件格式不可上传',
+                    desc:  file.name + ' 不是图片, 请选择jpg、png或者jpeg格式！'
+                });
+            },
     },
     computed: {//计算属性
-
-//      imglist(){
-// 			 let arr="";			
-// 			 arr="http://192.168.2.251:8083/";
-// 			 arr+=this.beforelist;
-// 			 // for(let i=0;i<this.beforelist)
-// 			 return arr;
-// 		 }
     },
     watch: {//监测数据变化
-			
+			beforelist(){
+				let list=[];
+				var arr = this.beforelist.split(",");
+				  for(let i of arr){
+						 list.push(i)
+					}
+					this.provelist = list;
+			},
+			beforeLicense(){
+				let list =[];
+				var arr = this.beforeLicense.split(",");
+					for(let i of arr){
+						list.push(i)
+					}
+					this.licenselist = list;
+			}
 	},
     
     //===================组件钩子===========================
@@ -162,7 +258,7 @@ export default {
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+     
 	},
 	
 	//=================组件路由勾子==============================
@@ -190,10 +286,9 @@ export default {
 						   
 							next(vm => {
 									if(resourceData.status == 200){
-										// vm.$router.push({name: 'home', params: {list: resourceData.data}});
-										 console.log(resourceData.data);
 										 vm.datalist=resourceData.data;
-										 // vm.beforelist=resourceData.data.unit_license;
+										 vm.beforelist=resourceData.data.unit_prove;//2
+										 vm.beforeLicense = resourceData.data.unit_license;//1
 									}
 							});
 						
@@ -211,5 +306,22 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+.api{
+	display:flex;
+	flex-direction: row;
+	flex-wrap: wrap; 
+	padding:15px;
+	justify-content: flex-start;
+	align-items: center;
+}
+.Showfile{
+	z-index: 20;
+	display: flex;
+	flex-direction:column;
+	padding-top: 5px;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0,0,0,0.2);
+	height: 100%;
+}
 </style>

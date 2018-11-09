@@ -7,8 +7,8 @@
 			</div>
 			<div class="news">
 				<span> <strong>发布人信息</strong></span>
-				<span>姓名：{{userdata.name}}</span>
-				<span>手机：{{userdata.mobile}}</span>
+				<span>姓名：{{userdata.truest_name}}</span>
+				<span>手机：{{userdata.touch_phone}}</span>
 			</div>
 			<br>
 
@@ -28,7 +28,7 @@
 			<RadioGroup v-model="resList.replease" type="button" @on-change="changeReplease">
         <Radio label="1">会内</Radio>
         <Radio label="2">会外</Radio>
-    </RadioGroup>
+			</RadioGroup>
 			<div v-if="resList.replease=='2'" style="margin-top: 30px;">
 				<Button type="primary" @click="showImport=true">
 					请选择商会
@@ -77,19 +77,19 @@
 						<Input v-model="resList.num" 
 						type="text" 
 						style="width: 200px;">
-						<span slot="append">万元</span>
+						<span slot="append">元</span>
 						</Input>
 					</FormItem>
 					<FormItem label="担保金额" prop="assure">
 						<Input v-model="resList.assure" 
 						type="text" style="width: 200px;">
-						<span slot="append">万元</span>
+						<span slot="append">元</span>
 						</Input>
 					</FormItem>
 					<FormItem label="介绍费用" prop="price">
 						<Input v-model="resList.price" 
 						type="text" style="width: 200px;">
-						<span slot="append">万元</span>
+						<span slot="append">元</span>
 						</Input>
 					</FormItem>
 					</Col>
@@ -140,13 +140,13 @@
 		title="请选择商会"
 		@on-ok="getData" 
 		:width="800">
-			<table-list 
+			<xw-table
 			:tableColumns="tableColumns" 
 			ref="selectCham" 
 			:chamber="result"
 			:tableData="tableDa"
 			>
-			</table-list>
+			</xw-table>
 		</Modal>
 
 	</div>
@@ -198,6 +198,7 @@
 					assure: '',
 					remark:''
 				},
+				count:0, //数据总条数
 				tableColumns: [{
 						type: 'selection'
 					},
@@ -297,6 +298,11 @@
 							if(res.status == 200){
 								this.$Message.success('添加成功!');
 								this.resList={};
+							}else if(res.status ==300){
+								this.$Message.error({
+										content: res.message,
+										duration: 7
+								});
 							}
 						});
 						
@@ -333,7 +339,6 @@
 				console.log(selectedData)
 				
 			}
-		  
 		},
 		computed: { //计算属性
 			 selected(){
@@ -344,7 +349,6 @@
 					 }
 				 }
 				 arr=arr.join();
-				 console.log(arr);
 				 return arr;
 			 },
 			 tableDa(){
@@ -368,10 +372,8 @@
 			 	for(let i=0;i<arr.length;i++){
 			 		this.$set(arr[i],"id",i);
 			 	}
-				console.log(arr)
 			 	return arr;
-			 },
-
+			 }
 		},
 		watch: { //监测数据变化
   
@@ -386,6 +388,7 @@
 			$ax.getAjaxData('service/Oauth/allOrgList',{}, res => {				
 				if(res.status == 200){
 					this.tableData = res.data;
+					this.count = res.data.length; //数据总条数
 				}
 			});
 		},
@@ -415,7 +418,7 @@
 							
 							next(vm => {
 									if(resourceData.status == 200){
-										vm.userdata = resourceData.data.user;
+										vm.userdata = resourceData.data.person;
 									}else if(resourceData.status == 300){
 									vm.userdata=[];
 									}

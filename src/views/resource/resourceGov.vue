@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>政府资源</h1>
 			</div>
-			<img-text :hideRadio="true" :hidecheck="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
+			<img-text :resIn="true" :hideRadio="true" :hidecheck="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 		</Card>
 
 
@@ -37,13 +37,11 @@
 		},
 	methods: {//方法
 		searchList(list){
-		let arr=list.check;
+		// let arr=list.check;
 		this.$set(this.searchlist,"title",list.word);
-		this.$set(this.searchlist,"status",arr.join());
 		this.$set(this.searchlist,"start_time",list.time[0]);
 		this.$set(this.searchlist,"end_time",list.time[1]);
-		this.$set(this.searchlist,"scope_release",'3');
-		$ax.getAjaxData('service/Resource/index',Object.assign({}, this.searchlist), (res) =>{
+		$ax.getAjaxData('service/Resource/gov_index',Object.assign({}, this.searchlist), (res) =>{
 			if(res.status == 200){
 				this.datalist=res.data;
 			}else if(res.status==300){
@@ -52,17 +50,8 @@
 		});
 	
 		},
-	openDetail(id){
-		let detailList=[];
-			$ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
-				if(res.status == 200){
-					detailList=res.data;
-					this.$router.push({name: 'govDetail', params: {list: detailList}});
-				}else if(res.status==300){
-					detailList=[];
-				}
-			});
-			
+	openDetail(data){
+				this.$router.push({ path: '/audit/govDetail', query: { id:data.id}});
 	}
 	},
 		computed: { //计算属性
@@ -115,6 +104,8 @@
 					next(vm => {
 							if(myPostData.status == 200){
 								vm.datalist=myPostData.data;
+							}else if(myPostData.status == 300){
+								alert(myPostData.message)
 							}
 					});
 				

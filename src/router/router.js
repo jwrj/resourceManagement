@@ -27,7 +27,8 @@ export default [
 			name: 'edit',
 			meta: {
 				hideMenu: true,
-				auth:false
+				auth:false,
+				access:[2]
 			},
 			component: () => import('@/views/login/edit.vue')
 	},
@@ -79,7 +80,7 @@ export default [
 			title: '查看资源',
 			icon: 'md-alarm',
 			showAlways: true,
-			access:[1,2],
+			access:[1,2,3],
 			auth:false
 		},
 		component: Main,
@@ -101,7 +102,7 @@ export default [
 				meta: {
 					title: '会间资源',
 					icon: 'md-alarm',
-					access:[1],
+					access:[3],
 					auth:false
 				},
 				component: () => import('@/views/resource/resourceCen.vue')
@@ -112,7 +113,7 @@ export default [
 			meta: {
 				title: '政府资源',
 				icon: 'md-alarm',
-				access:[1,2],
+				access:[1,2,3],
 				auth:false
 			},
 			component: () => import('@/views/resource/resourceGov.vue')	
@@ -219,7 +220,7 @@ export default [
 				path: 'chamDetail',
 				name: 'chamDetail',
 				meta: {
-					title: '会间资源审核详情',
+					title: '会间资源审核',
 					hideMenu:true,
 					icon: 'md-alarm',
 					access:[1,3],
@@ -255,7 +256,7 @@ export default [
 				path: 'carryDetail',
 				name: 'carryDetail',
 				meta: {
-					title: '资源承接单位详情页',
+					title: '资源承接单位详情',
 					icon: 'md-alarm',
 					hideMenu:true,
 					auth:false

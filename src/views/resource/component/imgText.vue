@@ -37,20 +37,25 @@
 				<Icon type="md-image" size="120" />
 				<div class="middle" style="flex: 2;">
 						<Row :gutter="16">
-						<Col span="6">
-						<h1>{{data.title}}</h1>
+						<Col span="10">
+						<h1 class="title">{{data.title}}</h1>
 						</Col>
-						<Col span="6" style="color: #F43838;" v-if="data.invest_money">{{data.invest_money}}万</Col>
+						<Col span="6" style="color: #F43838;" v-if="data.invest_money">{{data.invest_money |Trans}}</Col>
+						<Col span="6" style="color: #F43838;" v-if="data.total_money">{{data.total_money |Trans}}</Col>
 					</Row>
-<!-- 					<Row :gutter="8">
-						<Col span="6">发布：{{userdata.name}}</Col>
-						<Col span="6">职务：</Col>
-					</Row> -->
+					
 					<Row :gutter="16">
-						<Col span="12">发布时间：{{data.create_time}}</Col>
+						<Col span="12"  v-if="data.release_people.center_name || data.center_name">发布者  &nbsp;&nbsp;：{{data.release_people.center_name || data.center_name}}</Col>
+						<Col span="12" >发布时间：{{data.release_time |formatDate}}</Col>	
 					</Row>
-							
-
+					<Row :gutter="16" v-if="gettime">
+						<Col span="12" >{{data.contract_people==''?'承接身份：个人':`承接身份：${data.contract_people}`}}</Col>
+						<Col span="12" >承接时间：{{data.create_time |formatDate}}</Col>	
+					</Row>							
+					<Row :gutter="16" v-if="resIn">
+						<Col span="12" >访问次数：{{data.hits?data.hits:0}}</Col>
+						<Col span="12" >结束时间：{{data.end_time}}</Col>	
+					</Row>	
 				</div>
 				<hr>
 
@@ -62,7 +67,7 @@
 </template>
 
 <script>
-import {bus} from '@/components/bus/event-bus.js'
+import {formatDate} from '../../../../public/js/date.js'
 	export default {
 		name: '',
 		components: { //组件模板
@@ -86,6 +91,14 @@ import {bus} from '@/components/bus/event-bus.js'
 			hidecheck:{
 				type:Boolean,
 				default:false
+			},
+			gettime:{
+				type:Boolean,
+				default:false
+			},
+			resIn:{
+				type:Boolean,
+				default:false
 			}
 		},
 		data() { //数据
@@ -104,14 +117,7 @@ import {bus} from '@/components/bus/event-bus.js'
 				this.$emit('search',this.formInline);
 			},
 			rowclick(data){
-// 				if(this.formInline.range==1 || this.formInline.range ==2){
-// 				this.$emit('openDetail',data.id);
-// 				// this.$router.push({name:'chamDetail', params: {list:bus.currentResource}});
-// 				}else {
-// 				bus.$emit('govDetail',data.name);	
-// 				this.$router.push({name:'govDetail', params: {list:bus.currentResource}});
-// 				}
-				this.$emit('openDetail',data.id);
+				this.$emit('openDetail',data);
 				
 			},
 			formatTime(date){
@@ -119,11 +125,23 @@ import {bus} from '@/components/bus/event-bus.js'
 			}
 		},
 		computed: { //计算属性
-
 		},
 		watch: { //监测数据变化,
 		},
+		filters: {
+				formatDate(time) {
+					  if(!time==0){
+						var date = new Date(time*1000);
+						return formatDate(date, 'yyyy-MM-dd');
+						}else{
+							return '等待审核，未发布'
+						}
+				},
+				Trans(num){
+					return `${num/100}元`;
+				}
 
+		},
 		//===================组件钩子===========================
 
 		created() { //实例被创建完毕之后执行
@@ -182,5 +200,11 @@ import {bus} from '@/components/bus/event-bus.js'
 		display: flex;
 		align-items: center;
 		border-bottom: 1px solid #BBBBBB;
+	}
+	.title{
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
 	}
 </style>

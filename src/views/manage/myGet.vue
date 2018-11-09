@@ -5,7 +5,7 @@
 		<div slot="title">
 			<h1>我承接的资源</h1>
 		</div>
-		<img-text :hideRadio="true" :hidecheck="true" :datalist="datalist" @search="searchList" @openDetail="openDetail"></img-text>
+		<img-text :gettime="true" :hideRadio="true" :hidecheck="true" :datalist="datalist" @search="searchList" @openDetail="openDetail"></img-text>
 	</Card>	
 		
 		
@@ -48,16 +48,12 @@ export default {
 				}
 			});
 		},
-		openDetail(id){
-			 let detailList=[];
-			  $ax.getAjaxData('service/Resource/detail',{id:id}, (res) =>{
-			  	if(res.status == 200){
-			  		detailList=res.data;
-						this.$router.replace({name: 'chamDetail', params: {list: detailList}});
-			  	}else if(res.status==300){
-			  		detailList=[];
-			  	}
-			  });
+		openDetail(data){
+			 if(data.scope_release ==3){
+			 	this.$router.push({ path: '/audit/govDetail', query: { id:data.source_id}});
+			 }else{
+			 	this.$router.push({ path: '/audit/chamDetail', query: { id:data.source_id}});
+			 }
 				
 		}
     },

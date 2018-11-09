@@ -8,7 +8,9 @@ import './less/main.less'
 import './less/basics.less'
 import '../public/js/global.js'
 import iviewArea from 'iview-area';
+import xwTable from 'xw-table';
 
+Vue.use(xwTable);
 
 Vue.use(iviewArea);
 Vue.use(iView);
