@@ -157,12 +157,19 @@ export default {
 			
 			openNamesArr.splice(openNamesArr.length-1,1);
 			
-			this.$nextTick(() => {
-				this.$refs.menuInstance.updateOpened();
-				this.$refs.menuInstance.updateActiveName();
-			});
+//			this.$nextTick(() => {
+//				this.$refs.menuInstance.updateOpened();
+//				this.$refs.menuInstance.updateActiveName();
+//			});
 			
-			return openNamesArr;
+			//全部展开
+			let arr = [];
+			this.menuList.forEach(item => {
+				arr.push(item.name);
+			});
+			return arr
+			
+//			return openNamesArr;
 			
 		},
 		
