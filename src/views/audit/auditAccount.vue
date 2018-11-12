@@ -18,7 +18,7 @@
 						<Input v-model="formInline.word" style="width: 200px;margin:0 5px;" />
 						<Button type="primary" @click.native="search">搜索</Button>
 						<p style="margin-top: 6px;">
-							<CheckboxGroup v-model="formInline.check">
+							<CheckboxGroup v-model="formInline.check" @on-change="search">
 								<Checkbox label="0">审核中</Checkbox>
 								<Checkbox label="1">审核通过</Checkbox>
 								<Checkbox label="2">审核不通过</Checkbox>
@@ -122,7 +122,22 @@ export default {
     },
     methods: {//方法
     	search() {
-    		console.log('搜索')
+//     		let objList=[];
+//     		let arr=formInline.check;  		
+//     		this.$set(objList,"title",list.word);
+//     		this.$set(objList,"status",arr.join());			
+//     		this.$set(objList,"start_time",list.time[0]);
+//     		this.$set(objList,"end_time",list.time[1]);
+//     		this.$set(objList,"society",list.society);
+//     		// this.$set(objList,"scope_release",);
+//     		this.searchlist =Object.assign({},objList);
+//     		$ax.getAjaxData('service/Resource/preview_index',this.searchlist, (res) =>{
+//     			if(res.status == 200){
+//     				this.datalist=res.data;
+//     			}else if(res.status==300){
+//     				this.datalist=[];
+//     			}
+//     		});
     	},
     	rowclick(data){
     		this.$router.push({ path: '/audit/accountDetail', query: { id:data.id}});

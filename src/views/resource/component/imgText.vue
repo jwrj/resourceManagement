@@ -1,18 +1,31 @@
 <template>
 	<div>
-		<Form :model="formInline">
+		<Form :model="formInline" >
 			<slot name="header"></slot>
-			<p>
-				<RadioGroup 
-				v-model="formInline.range" 
-				type="button" 
-				style="margin-bottom: 5px;"
-				@on-change="search"
-				v-if="!hideRadio">	
-					<Radio label="1" style="margin-right:5px;">会内资源</Radio>
-					<Radio label="2">会间资源</Radio>
-					</RadioGroup>
-			</p>
+<div v-if="showSelected">
+	<Button type="primary" @click="showImport=true">
+						请选择商会
+					</Button>
+					<p style="margin-top: 5px;">
+						已选商会:
+						<Tag 
+						color="primary"
+						type="border"
+						closable
+						:name="res.id"
+						v-for="(res,index) in result" 
+						:key="index"
+						@on-close="closeTag(res,index)"
+						>{{res.name}}
+						</Tag>
+					</p>
+					<p>
+						<Button @click="resetResult" 
+						v-if="result.length !== 0" 
+						type="primary">清空
+						</Button>
+					</p>
+				</div>
 			<DatePicker 
 			:value="formInline.time" 
 			type="daterange" 
@@ -45,7 +58,7 @@
 					</Row>
 					
 					<Row :gutter="16">
-						<Col span="12"  v-if="data.release_people.center_name || data.center_name">发布者  &nbsp;&nbsp;：{{data.release_people.center_name || data.center_name}}</Col>
+						<Col span="12"  v-if="defaultShow">发布者  &nbsp;&nbsp;：{{data.release_people.center_name || data.center_name}}</Col>
 						<Col span="12" >发布时间：{{data.release_time |formatDate}}</Col>	
 					</Row>
 					<Row :gutter="16" v-if="gettime">
@@ -61,7 +74,20 @@
 
 			</div>
 		</div>
-		
+		<Modal 
+		v-model="showImport" 
+		:mask-closable="false" 
+		title="请选择商会"
+		@on-ok="getData" 
+		:width="800">
+			<xw-table
+			:tableColumns="tableColumns" 
+			ref="selectCham" 
+			:chamber="result"
+			:tableData="tableDa"
+			>
+			</xw-table>
+		</Modal>
 	</div>
 
 </template>
@@ -84,10 +110,6 @@ import {formatDate} from '../../../../public/js/date.js'
 				type: Array,
 				default: () => []
 			},
-			hideRadio:{
-				type:Boolean,
-				default:false
-			},
 			hidecheck:{
 				type:Boolean,
 				default:false
@@ -99,6 +121,18 @@ import {formatDate} from '../../../../public/js/date.js'
 			resIn:{
 				type:Boolean,
 				default:false
+			},
+			showChoice:{
+				type:Boolean,
+				default:false
+			},
+			showSelected:{
+				type:Boolean,
+				default:false
+			},
+			defaultShow:{
+				type:Boolean,
+				default:true
 			}
 		},
 		data() { //数据
@@ -107,14 +141,31 @@ import {formatDate} from '../../../../public/js/date.js'
 					check: [],
 					word: '',
 					time: ["",""],
-					range:'1'
+					range:'1',
+					society:[]
 				},
-				userdata:[]
+				userdata:[],
+				result:[],
+				tableData:[],
+				showImport: false,
+				tableColumns: [{
+						type: 'selection'
+					},
+					{
+						title: 'ID',
+						key: 'id'
+					},
+					{
+						title: '名称',
+						key: 'name'
+					}
+				]
 			}
 		},
 		methods: { //方法
 			search() {
 				this.$emit('search',this.formInline);
+
 			},
 			rowclick(data){
 				this.$emit('openDetail',data);
@@ -122,11 +173,77 @@ import {formatDate} from '../../../../public/js/date.js'
 			},
 			formatTime(date){
 				this.formInline.time = date;
+			},
+			closeTag(res,index){
+			//关闭标签触发
+			for(let i=0;i<this.result.length;i++){
+				if(this.result[i].name==res.name){
+					this.result.splice(i,1)
+					
+				}
 			}
 		},
+		resetResult() {//清空
+			this.result = [];
+			this.formInline.society = [];
+			this.$refs.selectCham.checkedData=[];
+		},
+		getData() {//获取选中的数据并去重 去重待改进
+			let sk = this.$refs.selectCham.checkedData;
+		// this.result = this.result.concat(sk);			
+			let res = sk;
+		for(let i = 0; i < this.result.length; i++){
+				let item = this.result[i];
+				var repeat = false;
+				for (let j = 0; j < res.length; j++) {
+						if (item.id == res[j].id) {
+								repeat = true;
+								break;
+						}
+				}
+				if (!repeat) {
+						res.push(item);
+				}
+		}
+		this.result=res;
+		this.formInline.society = this.selected;
+		this.search();//提交一次
+		this.$refs.selectCham.tableData.forEach(item => { //去掉默认选中
+		this.$set(item, '_checked', false);
+		});
+		
+		}
+		},
 		computed: { //计算属性
+			selected(){
+				let arr=[]
+				for(let i of this.result){
+					if(i.name){
+						arr.push(i.org_unid);
+					}
+				}
+				arr=arr.join();
+				return arr;
+			},
+			tableDa(){
+					let arr =[];
+					for(let i in this.tableData){
+							let obj ={
+								id:'',
+								name:'',
+								org_unid:''
+							}
+							obj.id = i;
+							obj.name = this.tableData[i].name;
+							obj.org_unid = this.tableData[i].org_unid;
+							arr.push(obj)
+					}
+					return arr;
+		
+			}	
 		},
 		watch: { //监测数据变化,
+	
 		},
 		filters: {
 				formatDate(time) {
@@ -148,6 +265,11 @@ import {formatDate} from '../../../../public/js/date.js'
 
 		},
 		mounted() { //模板被渲染完毕之后执行	
+			 $ax.getAjaxData('service/Oauth/allOrgList',{}, res => {				
+			 	if(res.status == 200){
+			 		this.tableData = res.data;
+			 	}
+			 });
 		},
 
 		//=================组件路由勾子==============================

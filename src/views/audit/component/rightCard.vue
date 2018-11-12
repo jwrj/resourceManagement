@@ -31,9 +31,9 @@
 				</div>
 				<p>开放承接：正在开放</p>
 				<p>审核状态：<Tag :color="list.status ==1?'blue':'red'">{{list.status == 1?'已通过':'未通过'}}</Tag></p>
-				<p>可见区域：{{list.scope_release ==3 ?'政府资源':'会内会外'}}</p>
+				<p>可见区域：{{list.scope_release ==3 ?'政府资源':'会内会间'}}</p>
 				<p>承接需求：<Tag color="blue">公司</Tag><Tag color="pink" v-if="list.is_company ==0">个人</Tag></p>
-				<p>时限状态：未结束资源</p>
+				<p>时限状态：未过期</p>
 				
 				       
            <Button v-show="showGetButton" type="primary" style="margin: 15px 0;" @click="choice=true">我要承接</Button>
@@ -69,7 +69,7 @@
 				</div>
 				
 				<div class="unit" v-for="(unit,index) of list.user" :key="index" @click="rowclick(unit)" v-if="unit.pivot.company_id">
-					<p style="font-size: 16px;color: black;" >{{unit.company_name}}</p>
+					<p style="font-size: 16px;color: black;" >{{unit.company_name?unit.company_name:'个人承接'}}</p>
 					<p class="gray">创建时间：{{unit.pivot.create_time}}</p>
 				</div>
 			</Card>
@@ -123,8 +123,19 @@ export default {
         }
     },
     methods: {//方法
-    	rowclick(unitData){
-			this.$router.push({ path: '/audit/carryDetail', query: { id:unitData.id}});
+    	rowclick(unitData){  //后台验证用户是超管或者这是用户在查看自己发布的资源的承接者时跳转
+			$ax.getAjaxData('service/ResourceUser/detail',{id:unitData.pivot.id}, res => {				
+				if(res.status == 200){
+						this.$router.push({ path: '/audit/carryDetail', query: { id:unitData.pivot.id}});
+				}else if(res.status == 300){
+					this.$Message.error({
+							content: res.message,
+							duration: 7
+					});
+				}
+			});
+			
+			
 		},
 		choiceCompany(data,index){//选择公司
 				this.company=data.name;
@@ -201,7 +212,6 @@ export default {
 							return false
 						}
 					}
-					
 
 
     },

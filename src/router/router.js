@@ -102,7 +102,7 @@ export default [
 				meta: {
 					title: '会间资源',
 					icon: 'md-alarm',
-					access:[3],
+					access:[1],
 					auth:false
 				},
 				component: () => import('@/views/resource/resourceCen.vue')

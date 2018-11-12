@@ -4,16 +4,19 @@
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p style="font-size: 26px;margin-bottom: 20px;color:#333333;" class="bold">
-				{{list.title}}
+				{{resource.title}}
 			</p>
-			
+			<p style="color:#ccc;">
+				<span style="margin-right:5px;" v-if="!resource.release_time ==0">发布时间：{{resource.release_time | formatDate}}</span>
+				<span>点击量：{{resource.hits}}</span>
+			</p>
 			<p style="padding: 15px 0;">
 				<h1>承接单位信息</h1>
 				<br>
-				<p>承接单位：{{list.name}}</p>
-				<p>联系人：{{list.person}}</p>
-				<p>联系电话：0771-1234567</p>
-				<p>承接时间：2017-01-16</p>
+				<p>承接单位：{{datalist.company_name}}</p>
+				<p>联系人：{{people.center_name}}</p>
+				<p>联系电话：{{people.work_phone}}</p>
+				<p>承接时间：{{datalist.create_time}}</p>
 				<p>进度状况：已承接</p>
 				<p>交付时间：2019-02-01</p>
 				<div>
@@ -36,7 +39,29 @@
 		</Card>
 	</div>
 	 <div style="flex: 1;">
-		 <right-card :list="list" :showAudit="true" :showResource="true" ></right-card>
+		 <Card>
+		 	<div slot="title">
+		 		<h1>发布人信息</h1>
+		 	</div>
+		 	<div class="centent">
+		 					<Icon type="md-image" size="120" />
+		 					<div class="middle">
+		 					<h1></h1>
+		 					<p>所属单位：</p>
+		 					<p>手机号码：</p>
+		 					</div>
+		 	</div>
+		 </Card>
+		 <Card style="margin-top: 5px;">
+		 	<div slot="title">
+		 		<h1>其他承接单位</h1>
+		 	</div>
+		 	
+		 	<div class="unit" v-for="(unit,index) of datalist.relation" :key="index" @click="rowclick(unit)" v-if="unit.company_id">
+		 		<p style="font-size: 16px;color: black;" >{{unit.company_name?unit.company_name:'个人承接'}}</p>
+		 		<p class="gray">创建时间：{{unit.create_time | formatDate}}</p>
+		 	</div>
+		 </Card>
 	 </div>
 		
 	</div>
@@ -44,12 +69,11 @@
 </template>
 
 <script>
-import {bus} from '@/components/bus/event-bus.js'
-import rightCard from '@/views/audit/component/rightCard.vue'
+	import {formatDate} from '../../../public/js/date.js'
 export default {
 	name: '',
 	components:{//组件模板
-	rightCard
+	
 	},
 	props:{//组件道具（参数）
 		/* ****属性用法*****
@@ -67,23 +91,48 @@ export default {
 				work:'职务',
 				person:'user'
 			},
+			datalist:[],
+			people:[],
+			resource:[],
 			title:'标题',
         }
     },
     methods: {//方法
     	openDetail(detailData){
     	this.list=detailData.unit;
-    	}
+    	},
+			rowclick(unitData){  //后台验证用户是超管或者这是用户在查看自己发布的资源的承接者时跳转
+				$ax.getAjaxData('service/ResourceUser/detail',{id:unitData.id}, res => {				
+					if(res.status == 200){
+							this.datalist = res.data;
+							this.person = res.data.contract_person;
+							this.resource = res.data.resource;
+					}else if(res.status == 300){
+						this.$Message.error({
+								content: res.message,
+								duration: 7
+						});
+					}
+				});
+				
+				
+			},
     },
     computed: {//计算属性
-  	currentResource() {
-		return bus.currentResource
-	}
     },
     watch: {//监测数据变化
        currentResource(newValue,oldValue) {
 		   this.list=newValue;
 	   }
+	},
+	filters: {
+			formatDate(time) {
+					var date = new Date(time*1000);
+					return formatDate(date, 'yyyy-MM-dd hh:mm');
+			},
+			Trans(num){
+				return `${num/100}元`;
+			}
 	},
     
     //===================组件钩子===========================
@@ -92,12 +141,7 @@ export default {
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-		if(this.$route.params.list){
-// 			this.list.unit=this.$route.params.list.name;
-// 			this.title=this.$route.params.title;
-			this.list=bus.currentResource;
-			console.log(this.list)
-		}
+
 	},
 	
 	//=================组件路由勾子==============================
@@ -121,8 +165,13 @@ export default {
 				 * console.log(await abc);
 				 * ...beforeRouteUpdate：在当前路由改变，但是该组件被复用时调用
 				*/
+			 let resourceData = await $ax.getAsyncAjaxData('service/ResourceUser/detail',{id:to.query.id});
 				next(vm => {
-					
+					 if(resourceData.status == 200){
+					 	vm.datalist=resourceData.data;
+								 vm.people = resourceData.data.contract_people;
+								 vm.resource = resourceData.data.resource;
+					 }
 				});
 				
 			} catch(err) {
@@ -137,5 +186,20 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+	.centent {
+		display: flex;
+		align-items: center;
+	}
+	.gray{
+		font-size: 12px;
+	}
+	.unit{
+		border-bottom: 1px solid #C2CCD1;
+		padding: 8px 2px;
+	}
+	.audit{
+		// border-top: 1px solid #C2CCD1;
+		margin: 10px 0;
+		padding-top: 10px;
+	}
 </style>

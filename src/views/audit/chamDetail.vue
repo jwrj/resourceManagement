@@ -37,7 +37,7 @@
    </div>
 		</Card>
 		
-	 <Card style="margin-top: 5px;padding-left: 15px;">
+	 <!-- <Card style="margin-top: 5px;padding-left: 15px;">
 		<h1 slot="title">审核单位信息</h1>
      <div class="cham">
 		 <p>审核单位：<span style="margin-right: 3px;" v-for="(ch,index) of datalist.cham">{{ch.name}}</span></p>
@@ -50,7 +50,7 @@
 		 </p>
 		 <p>附件下载：项目审核所需要的word文档</p>
 	 </div>
-	 </Card>
+	 </Card> -->
 
 	</div>
    <right-card  :list="datalist" :person="person"  :showResource="true"  @adminAudit="audit">

@@ -52,6 +52,7 @@ import routers from './router.js'; //调用路由表
 import { pathImperfect, canTurnTo } from '@/toolBox'; //调用工具
 
 
+
 Vue.use(Router)
 
 export const router = new Router({
@@ -59,8 +60,6 @@ export const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {//路由跳转前
-
-
 if(to.meta.auth == false){
 	
 		// 检测系统内部登录
@@ -85,7 +84,6 @@ if(to.meta.auth == false){
 			}
 			
 		}else{
-			
 			next({
 				replace: true,
 				name: 'error-403'
