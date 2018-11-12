@@ -66,15 +66,19 @@ export default {
 		clickDrop(name){
 			if(name =='exit'){
          if(sessionStorage.user_type ==3){
-					  $ax.getAjaxData('/service/User/loginout',{}, (res) =>{  //获取填写的资料
+					  $ax.getAjaxData('service/Role/logout_admin',{}, (res) =>{ //管理员退出
 					  	if(res.status == 200){
 					  	sessionStorage.clear();	
 					  	this.$router.replace('/mainLogin');
 					  	}
 					  });
-				  }else{
-					  sessionStorage.clear();	
-					  this.$router.replace('/mainLogin');
+				  }else {
+						$ax.getAjaxData('service/User/loginout',{}, (res) =>{ //普通退出
+					  	if(res.status == 200){
+					  	sessionStorage.clear();	
+					  	this.$router.replace('/mainLogin');
+					  	}
+					  });
 				  }												
 
 								

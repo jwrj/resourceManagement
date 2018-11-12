@@ -6,7 +6,7 @@
 			<h1>我发布的资源</h1>
 			<!-- <div v-for="(data,index) of datalist">{{datalist.title}}</div> -->
 		</div>
-		<img-text :hideRadio="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
+		<img-text :defaultShow="false" :hideRadio="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 	</Card>	
 		
 		
