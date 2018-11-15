@@ -107,9 +107,8 @@
 		</Card>
 		<Card style="margin-top: 16px;height: 600px;">
 		
-					<h1 slot="title">附件文件夹</h1>
-		
-					<file-manage currentRouteName="createActivity"></file-manage>
+					<h1 slot="title">附件上传</h1>
+						<file @uploadFile="uploadFile"></file>
 		<p style="margin-top: 15px;text-align: center;width: 100%;">
 			<Button type="primary" @click="handleSubmit('link')">立即创建</Button>
 		</p>
@@ -118,17 +117,24 @@
 		:mask-closable="false" 
 		title="请选择商会"
 		@on-ok="getData" :width="800">
-			<table-list 
+<!-- 			<table-list 
 			:tableColumns="tableColumns" 
 			ref="selectCham" 
 			:tableData="tableDa" 
 			:modalTitle="modalTitle"
 			>
-			<!--@on-btn-click="btnClick" -->
+
 				<div slot="header">
 					<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
 				</div>
-			</table-list>
+			</table-list> -->
+			<xw-table :tableColumns="tableColumns" 
+			ref="selectCham" 
+			:tableData="tableDa" >
+			<div slot="header">
+				<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
+			</div>
+			</xw-table>
 		</Modal>
 	</div>
 
@@ -137,13 +143,13 @@
 <script>
 	import tableList from '@/components/tableList/table-list.vue'
 	import UEditor from '@/components/richTextEditor/UEditor.vue';//富文本编辑器
-	import fileManage from '@/components/fileManage/file-manage.vue'; //文件管理
+	import file from '@/views/manage/detail/file.vue' //附件
 	export default {
 		name: '',
 		components: { //组件模板,
 			tableList,
 			UEditor,
-			fileManage
+			file
 		},
 		props: { //组件道具（参数）
 			/* ****属性用法*****
@@ -167,6 +173,7 @@
 				showImport: false,
 				result: [],
 				chamList:[],
+				uploadCloud:[],
 				resList: {
 					title:'',
 					replease:'3',
@@ -271,6 +278,11 @@
 							scope_select:this.selected,
 							contacts:this.contactList
 							}
+							for(let i =0;i<this.uploadCloud.length;i++){
+								let str =this.uploadCloud[i].attch_id.join();
+								this.uploadCloud[i].attch_id = str;
+							}
+							add.attach = JSON.stringify(this.uploadCloud);
 							console.log(add);
 				this.$refs[name].validate((valid) => {
 					if (valid) {
@@ -321,7 +333,42 @@
 			},
 			upEditorContent(value){//获取富文本的数据
 				this.resList.remark = value;
+			},
+			uploadFile(list){ //附件上传监听事件 如果id没有 就加入
+			//判断要上传的附件所在这个文件夹是否存在数组里
+					if(this.uploadCloud == 0){
+						console.log('first')
+								let obj = {
+														folder_id : list.folder_id,
+														attch_id : []
+													}
+													obj.attch_id.push(list.id);
+													this.uploadCloud.push(obj);
+						
+					}else{
+							let flag =false;
+							let index = -1;
+							for(let i of this.uploadCloud){
+								if(i.folder_id ==list.folder_id)	{
+									flag =true;
+									index =this.uploadCloud.indexOf(i);
+								}
+							}
+							if(flag == true){
+								this.uploadCloud[index].attch_id.push(list.id);
+							}else {
+																let obj = {
+																						folder_id : list.folder_id,
+																						attch_id : []
+																					}
+																					obj.attch_id.push(list.id);
+																					this.uploadCloud.push(obj);
+							}
+				
+					}
+						
 			}
+			
 		},
 		computed: { //计算属性
 			tableDa(){

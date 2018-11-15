@@ -122,12 +122,12 @@
 			<h1 slot="title">项目介绍</h1>
 		<UEditor :configs='editor_config' @up_editor_content="upEditorContent"></UEditor>
 		</Card>
-		<Card style="margin-top: 16px;height: 600px;">
+		<Card style="margin-top: 16px;">
 		
 					<h1 slot="title">附件上传</h1>
 <!-- 		
 					<file-manage></file-manage>  @changeFold="changeFold"-->
-					<file ></file>
+					<file @uploadFile="uploadFile"></file>
 		<p style="margin-top: 15px;text-align: center;width: 100%;">
 			<Button type="primary" 
 			@click="handleSubmit('link')">
@@ -183,7 +183,6 @@
 						height:'500px'
 				},
 				userdata:[],
-				out: false,
 				res_s: [],
 				showImport: false,
 				result: [],
@@ -200,6 +199,7 @@
 					assure: '',
 					remark:''
 				},
+				uploadCloud:[],
 				count:0, //数据总条数
 				tableColumns: [{
 						type: 'selection'
@@ -292,6 +292,12 @@
 							scope_select:this.selected,
 							is_company:this.resList.is_company
 							}
+							for(let i =0;i<this.uploadCloud.length;i++){
+								let str =this.uploadCloud[i].attch_id.join();
+								this.uploadCloud[i].attch_id = str;
+							}
+							add.attach = JSON.stringify(this.uploadCloud);
+							
 				this.$refs[name].validate((valid) => {
 
 					if (valid) {
@@ -341,28 +347,53 @@
 				console.log(selectedData)
 				
 			},
-// 			getFolder(){
-// 				$ax.getAjaxData('service/Folder/index', {}, res => {	 	
-// 				if(res.status == 200){
-// // 					let folderList = res.data;
-// // 					let folder =[];	
-// // 					folderList.forEach(item=>{
-// // 						if(item.level ==0){
-// // 							folder.push(item);
-// // 						}
-// // 					});					
-// // 					this.folderGroup = folder;
-// 						this.folderGroup = res.data;
-// 
-// 				}
-// 				});
-// 			},
-
-//       changeFold(current){
-// 				    this.folderGroup=[];
-//             this.getFolder()			
-// 			},
+      uploadFile(list){ //附件上传监听事件 如果id没有 就加入
+     //判断要上传的附件所在这个文件夹是否存在数组里
+         if(this.uploadCloud == 0){
+					 console.log('first')
+					 			let obj = {
+					 									folder_id : list.folder_id,
+					 									attch_id : []
+					 								}
+					 								obj.attch_id.push(list.id);
+					 								this.uploadCloud.push(obj);
+					 
+				 }else{
+              let flag =false;
+							let index = -1;
+							for(let i of this.uploadCloud){
+								if(i.folder_id ==list.folder_id)	{
+									flag =true;
+									index =this.uploadCloud.indexOf(i);
+								}
+							}
+						  if(flag == true){
+								this.uploadCloud[index].attch_id.push(list.id);
+							}else {
+													   		let obj = {
+													   								folder_id : list.folder_id,
+													   								attch_id : []
+													   							}
+													   							obj.attch_id.push(list.id);
+													   							this.uploadCloud.push(obj);
+							}
+       
+				 }
+						
+			}
 		},
+		// 					   if(this.uploadCloud[i].folder_id ==list.folder_id){
+		// 					   this.uploadCloud[i].attch_id.push(list.id);
+		// 					   console.log('floder有了呢')
+		// 					   }else {
+		// 					   	console.log('第一次')
+		// 					   		let obj = {
+		// 					   								folder_id : list.folder_id,
+		// 					   								attch_id : []
+		// 					   							}
+		// 					   							obj.attch_id.push(list.id);
+		// 					   							this.uploadCloud.push(obj);
+		// 					   }	
 		computed: { //计算属性
 			 selected(){
 				 let arr=[]

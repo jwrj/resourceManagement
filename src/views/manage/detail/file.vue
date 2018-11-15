@@ -5,9 +5,10 @@
 		  <Tag color="blue" @click.native.stop="add(0)">添加子文件夹</Tag>
 	  	<div v-for="item in folderList"
 		:key="item.title" >
-			<div class="fileRow" @click="selectChild(item,$event)" :style="{marginLeft:item.level*5+'0px'}">
-				<span><Icon type="md-folder" />{{item.title}}</span>
-				<div>
+			<div :class="{active: item.id === activeId.id}" class="fileRow"  :style="{marginLeft:item.level*5+'0px'}">
+				<span v-if="!item.child"><Icon type="md-folder" />{{item.title}}</span>
+				<span v-if="item.child"><Icon type="md-document" color="skyblue"/>{{item.title}}</span>
+				<div v-if="!item.child">
 <!-- 					<Tag color="blue" @click.native.stop="add(item.id)">添加子文件夹</Tag>
 					<Tag color="blue" @click.native.stop="del(item)">删除</Tag>
 					<Tag color="blue"  @click.native.stop="edit(item)">编辑</Tag> -->
@@ -40,12 +41,14 @@
 					:key="file.title" style="display: flex;flex-direction: column;">
 						<div class="fileLeft" 
 						@click="choiceFile(file,$event)" :style="{marginLeft:file.level*5+'0px'}">
-							<span style="line-height: 30px;padding: 5px;" :class="{active: file.title === activeFile}"><Icon type="md-folder" />{{file.title}}</span>
+							<span style="line-height: 30px;padding: 5px;" :class="{active: file.id === activeFile}"><Icon type="md-folder" />{{file.title}}</span>
 						</div>
 					</div>
 				</Col>
 				<Col span="18" style="overflow: hidden;">
-					<div v-for="cloud in fileCloud" :key="cloud.id">
+					<div v-for="(cloud,index) in fileCloud" :key="index"
+					 @click="choiceCloudFile(cloud,$event)"
+					 :class="{active: cloud.id === activeCloudF}">
 						<Icon :type="iconType(cloud.extension)" size="58"></Icon>{{cloud.source_name}}
 					</div>
 				</Col>
@@ -86,7 +89,10 @@ export default {
 			fileList:[],
 			activeId: '',//选中的文件名称
 			activeFile:'',
-			fileCloud:'请选择一个文件夹' //文件云文件列表
+			activeCloudF:'',
+			fileCloud:'请选择一个文件夹' ,//文件云文件列表
+			currentCloudFile:{},
+			uploadFile:[] //要传递给父组件的数据
         }
     },
     methods: {//方法
@@ -116,15 +122,47 @@ export default {
 // 		},
 		af(current){
 			this.fileModel = true;
-			this.activeId = current.id;		
+			this.activeId = current;		
 			$ax.getAjaxData('service/Oauth/get_user_dir', {}, res => {	 	
 			if(res.status == 200){	
 				this.fileList = res.data;
 			}
 			});
 		},
-		addFile(){
-			
+		addFile(){  //添加文件到页面
+		   if(this.currentCloudFile){
+			   let arr = {
+				   id:this.currentCloudFile.id,
+				   title:this.currentCloudFile.source_name,
+				   user_id:this.currentCloudFile.user_id,
+				   parent_id: this.activeId.id,
+				   level:this.activeId.level+1,
+				   child:'child',
+				   bpath:`${this.activeId.bpath}-${this.currentCloudFile.id}`
+			   }
+			        let flag = false;
+                    for(let i=0;i<this.folderList.length;i++){
+						if(this.folderList[i].id == arr.id){
+							alert('该文件已添加！');
+							return;
+						}else{
+							flag = true;
+						}
+					}
+					  if(flag == true){
+						  let index = this.folderList.indexOf(this.activeId);
+						  this.folderList.splice(index+1, 0, arr);
+						  // this.uploadFile.push(arr.id); //添加一个 提交一个
+						  let list = {
+						  	folder_id:this.activeId.id,
+						  	id:arr.id,
+						  	}
+						  this.$emit('uploadFile',list);
+						  
+					  }
+					
+		   }
+		   
 		},
 // 		editFolder(id){
 // 			$ax.getAjaxData('service/Folder/edit', {id:this.activeId,title:this.folderName}, res => {	 	
@@ -150,19 +188,12 @@ export default {
 		},
 		selectChild(fold){		
 			this.activeId = fold.id;
-			let arr =[];
-			this.folderList.forEach(item=>{
-				if(this.activeId ==item.parent_id){
-					arr.push(item)
-				}
-			})
-			let i = this.folderList.indexOf(fold);
-			this.$set(fold,'children',arr);
-			this.activeId = '';
-
 		},
 		choiceFile(file,event){
-			this.activeFile = file.title;
+			this.activeFile = file.id;
+			this.activeCloudF = '';
+			this.currentCloudFile = [];
+			this.active
 			let obj = {
 				user_id:file.user_id,
 				dir_id:file.id
@@ -173,6 +204,15 @@ export default {
 				}
 			});
 		},
+		choiceCloudFile(cloud,event){
+// 			let ob = {
+// 				folder_id:cloud.dir_id,
+// 				attch_id:[]
+// 			}
+
+        this.activeCloudF = cloud.id;
+		this.currentCloudFile = cloud;
+		}
 
     },
     computed: {//计算属性
@@ -273,6 +313,6 @@ export default {
 	flex-wrap: wrap;
 }
 .active{
-	background-color: pink;
+	background-color: rgba(102,175,233,0.3);
 }
 </style>
