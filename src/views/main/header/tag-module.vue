@@ -58,7 +58,6 @@
 <template>
 
 	<div class="tag-box">
-		
 		<div class="tag-left-btn">
 			<Button @click="leftBtn" type="text" style="padding: 0;width: 100%;height: 28px;float: left;">
 				<Icon size="20" type="ios-arrow-back" />

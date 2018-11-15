@@ -5,7 +5,7 @@
 			<div slot="title">
 				<h1>政府资源</h1>
 			</div>
-			<img-text :resIn="true" :hideRadio="true" :hidecheck="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
+			<img-text :resgov="true" :hideRadio="true" :hidecheck="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
 		</Card>
 
 

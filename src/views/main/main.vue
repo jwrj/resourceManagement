@@ -32,6 +32,7 @@
 			
 			<!--左侧菜单-->
 			<Sider ref="siderInstance" hide-trigger collapsible :collapsed-width="64" v-model="isCollapsed" style="height: 100vh;z-index: 1000;">
+				<p style="font-size: 28px;text-align: center;margin: 15px 0;color: white;">资源管理系统</p>
 				<!--<div style="height:50px;line-height:50px;color: #fff;padding: 0 5px;text-align: center;font-size: 24px;overflow: hidden;background: #19be6b;margin: 10px;">资源管理</div>-->
 				<menu-sider ref='sideMenu' :menuList="menuList" :isCollapsed="isCollapsed"></menu-sider>
 			</Sider>

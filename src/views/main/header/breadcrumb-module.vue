@@ -1,7 +1,6 @@
 <template>
 
 	<div style="height: 53px;display: flex;align-items: center;overflow: hidden;">
-			
 		<Icon @click.native="collapsedSider" :class="{'rotate-icon': isCollapsed}" class="menu-collapsed-icon" type="md-menu" size="28"></Icon>
 		
 		<div style="white-space:nowrap;overflow: hidden;margin-right: 16px;">

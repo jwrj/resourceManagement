@@ -14,7 +14,7 @@
 				<h1>承接单位信息</h1>
 				<br>
 				<p>承接单位：{{datalist.company_name}}</p>
-				<p>联系人：{{people.center_name}}</p>
+				<p>联系人&nbsp;&nbsp;&nbsp;&nbsp;：{{people.center_name}}</p>
 				<p>联系电话：{{people.work_phone}}</p>
 				<p>承接时间：{{datalist.create_time}}</p>
 				<p>进度状况：已承接</p>
@@ -46,9 +46,9 @@
 		 	<div class="centent">
 		 					<Icon type="md-image" size="120" />
 		 					<div class="middle">
-		 					<h1></h1>
-		 					<p>所属单位：</p>
-		 					<p>手机号码：</p>
+		 					<h1>王大锤</h1>
+		 					<p>所属单位：水利局</p>
+		 					<p>手机号码：4654676</p>
 		 					</div>
 		 	</div>
 		 </Card>
@@ -101,11 +101,14 @@ export default {
     	openDetail(detailData){
     	this.list=detailData.unit;
     	},
-			rowclick(unitData){  //后台验证用户是超管或者这是用户在查看自己发布的资源的承接者时跳转
-				$ax.getAjaxData('service/ResourceUser/detail',{id:unitData.id}, res => {				
+			rowclick(unitData){ 
+         this.ajaxResUser(unitData.id);
+			},
+			ajaxResUser(id){
+				$ax.getAjaxData('service/ResourceUser/detail',{id:id}, res => {				
 					if(res.status == 200){
 							this.datalist = res.data;
-							this.person = res.data.contract_person;
+							this.person = res.data.contract_people;
 							this.resource = res.data.resource;
 					}else if(res.status == 300){
 						this.$Message.error({
@@ -114,16 +117,17 @@ export default {
 						});
 					}
 				});
-				
-				
-			},
+			}
     },
     computed: {//计算属性
     },
     watch: {//监测数据变化
        currentResource(newValue,oldValue) {
 		   this.list=newValue;
-	   }
+	   },
+		 datalist(){
+			 sessionStorage.setItem('currentCarry', JSON.stringify(this.datalist));
+		 }
 	},
 	filters: {
 			formatDate(time) {
@@ -141,7 +145,16 @@ export default {
     	
 	},
     mounted () {//模板被渲染完毕之后执行
-
+		if(this.$route.query.id){
+			this.ajaxResUser(this.$route.query.id);
+		}else{
+			const userJsonStr = sessionStorage.getItem('currentCarry');
+			this.datalist = JSON.parse(userJsonStr);
+			this.person = this.datalist.contract_people;
+			this.resource = this.datalist.resource;
+			
+		}
+     
 	},
 	
 	//=================组件路由勾子==============================
@@ -165,13 +178,15 @@ export default {
 				 * console.log(await abc);
 				 * ...beforeRouteUpdate：在当前路由改变，但是该组件被复用时调用
 				*/
-			 let resourceData = await $ax.getAsyncAjaxData('service/ResourceUser/detail',{id:to.query.id});
+				// let resourceData = await $ax.getAsyncAjaxData('service/ResourceUser/detail',{id:to.query.id});
 				next(vm => {
-					 if(resourceData.status == 200){
-					 	vm.datalist=resourceData.data;
-								 vm.people = resourceData.data.contract_people;
-								 vm.resource = resourceData.data.resource;
-					 }
+// 					if(resourceData.status == 200){
+// 								vm.datalist=resourceData.data;
+// 								vm.people = resourceData.data.contract_people;
+// 								vm.resource = resourceData.data.resource;
+// 								sessionStorage.setItem('currentCarry', JSON.stringify(resourceData.data));
+// 								
+// 					}
 				});
 				
 			} catch(err) {

@@ -6,8 +6,8 @@
 			<img-text :datalist="datalist" @search="searchList" :showChoice="true"
 			 @openDetail="openDetail" :hideRadio="true"  ref="showNews" :showSelected="true">
 			</img-text>
-			<Page :total="100" show-total
-			 @on-change="pageChange"
+			<Page :total="total" show-total
+			 @on-change="pageChange" :current="currentPage"
 			 style="margin-top: 10px;margin-left: 30px;"/>
 		</Card>
 		
@@ -36,7 +36,9 @@ export default {
         return {
         	datalist:[],
 					routeName:'chamDetail',
-					searchlist:[]
+					searchlist:[],
+					currentPage:1,
+					total:100
         }
     },
     methods: {//方法
@@ -44,17 +46,18 @@ export default {
 				// this.$set(this.searchlist,"scope_release",this.range);
 				let objList=[];
 				let arr=list.check;
-				
+				this.$set(objList,"page",1);
 				this.$set(objList,"title",list.word);
 				this.$set(objList,"status",arr.join());			
 				this.$set(objList,"start_time",list.time[0]);
 				this.$set(objList,"end_time",list.time[1]);
 				this.$set(objList,"society",list.society);
-				// this.$set(objList,"scope_release",);
 				this.searchlist =Object.assign({},objList);
 				$ax.getAjaxData('service/Resource/preview_index',this.searchlist, (res) =>{
 					if(res.status == 200){
 						this.datalist=res.data;
+						this.total = res.page_info.record_count;　
+						this.currentPage =1;
 					}else if(res.status==300){
 						this.datalist=[];
 					}
@@ -65,13 +68,23 @@ export default {
 				this.$router.push({ path: '/audit/chamDetail', query: { id:data.id}});		
 		},
 		pageChange(page){
-			console.log('页码是'+page)  //传页码给后端 获取每页要得到的数据
+			  //传页码给后端 获取每页要得到的数据
+				this.searchlist.page = page;
+				$ax.getAjaxData('service/Resource/preview_index',this.searchlist, (res) =>{
+					if(res.status == 200){
+						this.datalist=res.data;
+					}else if(res.status==300){
+						this.datalist=[];
+					}
+				});
 		}
     },
     computed: {//计算属性
-  
     },
     watch: {//监测数据变化
+		searchlist(){
+			this.currentPage = 1;
+		}
 	},
     
     //===================组件钩子===========================
@@ -104,11 +117,12 @@ export default {
 				 * console.log(await abc);
 				 * ...
 				*/
-			   let resourceData = await $ax.getAsyncAjaxData('service/Resource/preview_index',{});
+			   let resourceData = await $ax.getAsyncAjaxData('service/Resource/preview_index',{page:1});
 				   
 					next(vm => {
 							if(resourceData.status == 200){
-								vm.datalist=resourceData.data;		 
+								vm.datalist=resourceData.data;
+								vm.total = resourceData.page_info.record_count;　
 							}
 					});
 				

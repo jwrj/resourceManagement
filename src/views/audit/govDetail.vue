@@ -134,13 +134,20 @@ export default {
 				* ...
 				*/
 					next(vm => {
-							$ax.getAjaxData('service/Resource/detail',{id:to.query.id}, (res) =>{
-								if(res.status == 200){
-									vm.datalist = res.data;
-								}else if(res.status==300){
-									vm.datalist = [];
-								}
-							});
+				//有id就请求  没id就读取session
+					if(to.query.id){
+						$ax.getAjaxData('service/Resource/detail',{id:to.query.id}, (res) =>{
+							if(res.status == 200){
+								vm.datalist = res.data;
+								sessionStorage.setItem('govRes', JSON.stringify(res.data));
+							}else if(res.status==300){
+								vm.datalist = []
+							}
+						});
+					}else{
+						const userJsonStr = sessionStorage.getItem('govRes');
+							vm.datalist = JSON.parse(userJsonStr);
+					}
 					});
 				
 			} catch(err) {

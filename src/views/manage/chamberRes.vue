@@ -124,9 +124,10 @@
 		</Card>
 		<Card style="margin-top: 16px;height: 600px;">
 		
-					<h1 slot="title">附件文件夹</h1>
-		
-					<file-manage currentRouteName="createActivity"></file-manage>
+					<h1 slot="title">附件上传</h1>
+<!-- 		
+					<file-manage></file-manage>  @changeFold="changeFold"-->
+					<file ></file>
 		<p style="margin-top: 15px;text-align: center;width: 100%;">
 			<Button type="primary" 
 			@click="handleSubmit('link')">
@@ -157,13 +158,14 @@
 	import tableList from '@/components/tableList/table-list.vue'
 	import UEditor from '@/components/richTextEditor/UEditor.vue';//富文本编辑器
 	import fileManage from '@/components/fileManage/file-manage.vue'; //文件管理
-	import {bus} from '@/components/bus/event-bus.js'
+  import file from '@/views/manage/detail/file.vue' //附件
 	export default {
 		name: '',
 		components: { //组件模板,
 			tableList,
 			UEditor,
-			fileManage
+			fileManage,
+			file
 		},
 		props: { //组件道具（参数）
 			/* ****属性用法*****
@@ -338,7 +340,28 @@
 			change(value,selectedData){
 				console.log(selectedData)
 				
-			}
+			},
+// 			getFolder(){
+// 				$ax.getAjaxData('service/Folder/index', {}, res => {	 	
+// 				if(res.status == 200){
+// // 					let folderList = res.data;
+// // 					let folder =[];	
+// // 					folderList.forEach(item=>{
+// // 						if(item.level ==0){
+// // 							folder.push(item);
+// // 						}
+// // 					});					
+// // 					this.folderGroup = folder;
+// 						this.folderGroup = res.data;
+// 
+// 				}
+// 				});
+// 			},
+
+//       changeFold(current){
+// 				    this.folderGroup=[];
+//             this.getFolder()			
+// 			},
 		},
 		computed: { //计算属性
 			 selected(){
@@ -391,6 +414,7 @@
 					this.count = res.data.length; //数据总条数
 				}
 			});
+			// this.getFolder();
 		},
 
 		//=================组件路由勾子==============================

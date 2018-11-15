@@ -26,12 +26,12 @@
 						</p>
 					</Form>
 					<div class="imgtext" style="margin: 15px;">
-						<div class="centent" v-for="(data,index) of datalist" :key="index" @click="rowclick(data)">
+						<div class="centent" v-for="(data,index) in datalist" :key="index" @click="rowclick(data)">
 							<Icon type="md-image" size="180" />
 							<div class="middle">
 						<p>
-							<div class="user">{{data.person.truest_name}}</div>
-						<span style="color: #AAAAAA;">注册时间：{{data.person.addtime | formatDate}}</span>
+							<div class="user">{{list(data.person,'truest_name')}}</div>
+						<span style="color: #AAAAAA;">注册时间：{{list(data.person,'addtime') |formatDate}}</span>
 						</p>
 				
 				<Row type="flex" justify="start" align="top" >
@@ -46,7 +46,7 @@
 							<div>
 								<p>：{{data.unit}}</p>
 								<p>：{{data.office}}</p>
-								<p>：{{data.person.hometown}}</p>
+								<p>：{{list(data.person,'hometown')}}</p>
 							</div>
 						</div>
 					</Col>
@@ -60,7 +60,7 @@
 						</div>
 						<div>
 							<p >：{{data.unit_license | flag}}</p>
-							<p>：{{data.person.card_img | flag}}</p>
+							<p>：{{list(data.person,'card_img')}}</p>
 							<p>：{{data.unit_prove | flag}}</p>
 						</div>
 					</div>
@@ -73,8 +73,8 @@
 								<p>审核时间</p>
 							</div>
 							<div>
-								<p>：{{data.reg_time}}</p>
-								<p>：{{data.last_time}}</p>
+								<p>：{{data.reg_time }}</p>
+								<p>：{{data.last_time |formatDate}}</p>
 							</div>
 						</div>
 					</Col>
@@ -147,8 +147,17 @@ export default {
     	}
     },
     computed: {//计算属性
-
-		
+			list(){
+				  
+				    return function(tome,type) {
+                if(tome === null){
+									return '未填写'
+								}else {
+												return tome[type];
+									}
+									
+           }
+			}
     },
 
     watch: {//监测数据变化
@@ -171,8 +180,9 @@ export default {
 			}
 		},
 				formatDate(time) {
-						var date = new Date(time*1000);
-						return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+						 var date = new Date(time*1000);
+							 return formatDate(date, 'yyyy-MM-dd');
+						 
 				}
 
 		
@@ -211,7 +221,7 @@ export default {
 						   
 							next(vm => {
 									if(resourceData.status == 200){
-										vm.datalist=resourceData.data;		 
+										vm.datalist=resourceData.data;
 									}
 							});
 						

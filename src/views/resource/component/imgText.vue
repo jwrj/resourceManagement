@@ -58,7 +58,7 @@
 					</Row>
 					
 					<Row :gutter="16">
-						<Col span="12"  v-if="defaultShow">发布者  &nbsp;&nbsp;：{{data.release_people.center_name || data.center_name}}</Col>
+						<Col span="12"  v-if="defaultShow">发布用户：{{data.release_people.center_name || data.center_name}}</Col>
 						<Col span="12" >发布时间：{{data.release_time |formatDate}}</Col>	
 					</Row>
 					<Row :gutter="16" v-if="gettime">
@@ -68,7 +68,11 @@
 					<Row :gutter="16" v-if="resIn">
 						<Col span="12" >访问次数：{{data.hits?data.hits:0}}</Col>
 						<Col span="12" >结束时间：{{data.end_time}}</Col>	
-					</Row>	
+					</Row>
+					<Row :gutter="16" v-if="resgov">
+						<Col span="12" >用户职务：{{data.uinfo.office}}</Col>
+						<Col span="12" >结束时间：{{data.end_time}}</Col>	
+					</Row>
 				</div>
 				<hr>
 
@@ -119,6 +123,10 @@ import {formatDate} from '../../../../public/js/date.js'
 				default:false
 			},
 			resIn:{
+				type:Boolean,
+				default:false
+			},
+			resgov:{
 				type:Boolean,
 				default:false
 			},
@@ -182,6 +190,8 @@ import {formatDate} from '../../../../public/js/date.js'
 					
 				}
 			}
+			this.formInline.society = this.selected;
+			this.search();
 		},
 		resetResult() {//清空
 			this.result = [];
