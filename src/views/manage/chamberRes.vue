@@ -183,6 +183,7 @@
 						height:'500px'
 				},
 				userdata:[],
+				changeFile:false,
 				res_s: [],
 				showImport: false,
 				result: [],
@@ -265,7 +266,6 @@
 			this.$refs.selectCham.tableData.forEach(item => { //去掉默认选中
 			this.$set(item, '_checked', false);
 			});
-			
 			},
 			resetResult() {//清空
 				this.result = [];
@@ -275,13 +275,13 @@
 				this.resList.remark = value;
 			},
 			handleSubmit(name) {
-				if(this.resList.remark==''){
-					this.$Message.error({
-							content: '项目简介不能为空',
-							duration: 7
-					});
-					return;
-				}
+// 				if(this.resList.remark==''){
+// 					this.$Message.error({
+// 							content: '项目简介不能为空',
+// 							duration: 7
+// 					});
+// 					return;
+// 				}
 				var add={		
 							title:this.resList.title,
 							scope_release:this.resList.replease,
@@ -318,7 +318,6 @@
 										content: res.message,
 										duration: 7
 								});
-								
 							}
 						});
 						
@@ -390,18 +389,6 @@
 						
 			}
 		},
-		// 					   if(this.uploadCloud[i].folder_id ==list.folder_id){
-		// 					   this.uploadCloud[i].attch_id.push(list.id);
-		// 					   console.log('floder有了呢')
-		// 					   }else {
-		// 					   	console.log('第一次')
-		// 					   		let obj = {
-		// 					   								folder_id : list.folder_id,
-		// 					   								attch_id : []
-		// 					   							}
-		// 					   							obj.attch_id.push(list.id);
-		// 					   							this.uploadCloud.push(obj);
-		// 					   }	
 		computed: { //计算属性
 			 selected(){
 				 let arr=[]
@@ -453,7 +440,6 @@
 					this.count = res.data.length; //数据总条数
 				}
 			});
-			// this.getFolder();
 		},
 
 		//=================组件路由勾子==============================

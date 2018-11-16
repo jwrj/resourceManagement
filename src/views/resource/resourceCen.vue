@@ -5,7 +5,11 @@
 			<div slot="title">
 				<h1>会间资源</h1>
 			</div>
-			<img-text :resIn="true" :hideRadio="true" :datalist="datalist"  @search="searchList" @openDetail="openDetail"></img-text>
+			<img-text :resIn="true" :hideRadio="true" :datalist="datalist"  
+			@search="searchList" @openDetail="openDetail"></img-text>
+			<Page :total="total" show-total
+			@on-change="pageChange" :current="currentPage"
+			style="margin-top: 10px;margin-left: 30px;"/>
 		</Card>
 
 
@@ -32,12 +36,15 @@
 		data() { //数据
 			return {
             datalist:[],
-						searchlist:{}
+						searchlist:{},
+						total:100,
+						currentPage:1
 			}
 		},
 	methods: {//方法
 		searchList(list){
 		let arr=list.check;
+		this.$set(this.searchlist,"page",1);
 		this.$set(this.searchlist,"title",list.word);
 		this.$set(this.searchlist,"status",arr.join());
 		this.$set(this.searchlist,"start_time",list.time[0]);
@@ -53,14 +60,27 @@
 		},
 			openDetail(data){
 						this.$router.push({ path: '/audit/chamDetail', query: { id:data.id}});
-			}
 			},
+			pageChange(page){
+					//传页码给后端 获取每页要得到的数据
+					this.searchlist.page = page;
+					$ax.getAjaxData('service/Resource/external_index',this.searchlist, (res) =>{
+						if(res.status == 200){
+							this.datalist=res.data;
+						}else if(res.status==300){
+							this.datalist=[];
+						}
+					});
+			}
+		},
 
 		computed: { //计算属性
 
 		},
 		watch: { //监测数据变化
-
+      searchlist(){
+      	this.currentPage = 1;
+      }
 		},
 
 		//===================组件钩子===========================
@@ -98,6 +118,7 @@
 					next(vm => {
 							if(myPostData.status == 200){
 								vm.datalist=myPostData.data;
+								vm.total = myPostData.page_info.record_count;　
 							}else if(myPostData.status == 300){
 								alert(myPostData.message)
 							}

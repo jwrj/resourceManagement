@@ -45,7 +45,7 @@
 						</div>
 					</div>
 				</Col>
-				<Col span="18" style="overflow: hidden;">
+				<Col span="18" style="overflow: hidden;" v-if="fileCloud.length>0">
 					<div v-for="(cloud,index) in fileCloud" :key="index"
 					 @click="choiceCloudFile(cloud,$event)"
 					 :class="{active: cloud.id === activeCloudF}">
@@ -71,10 +71,6 @@ export default {
 		 * 默认值 default: ''
 		 * 
 		 */
-// 		folderGroup:{
-// 			type:Array,
-// 			default: () => []
-// 		}
 	},
     data () {//数据
         return {
@@ -201,6 +197,8 @@ export default {
 			$ax.getAjaxData('service/Oauth/get_user_attch', obj, res => {	 	
 				if(res.status == 200){					   								
                     this.fileCloud = res.data;
+				}else{
+					this.fileCloud = [];
 				}
 			});
 		},
@@ -243,7 +241,6 @@ export default {
 	},
     mounted () {//模板被渲染完毕之后执行
            this.getFolderList();
-
 	},
 	
 	//=================组件路由勾子==============================

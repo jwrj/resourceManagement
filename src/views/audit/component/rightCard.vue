@@ -158,13 +158,27 @@ export default {
 			 this.carryOut();
 		 }
 		},
-		carryOut(){  //承接资源的Main方法
-			for(let item of this.chamList){
-			if(item.name == this.company){
-				let add={
-					id:this.list.id,
-					company_id:item.company_id
+		carryOut(num){  //承接资源的Main方法
+		    let add ={};
+        if(this.company == ''){
+           add = {
+           	id:this.list.id,
+						company_id:''
+           }		
+				}else if(!this.company == ''){
+					console.log('选了')
+		        for(let i=0;i<this.chamList.length;i++){
+		        	if(this.chamList[i].name == this.company){
+		        		console.log(this.chamList[i].company_unid)
+		        		add = {
+		        			id:this.list.id,
+		        			company_id:this.chamList[i].company_unid
+		        		}
+		        		
+		        	}
+		        }
 				}
+				//ajax
 				$ax.getAjaxData('service/ResourceUser/add',Object.assign({}, add), res => {
 					
 					if(res.status == 200){
@@ -172,18 +186,16 @@ export default {
 						this.choice=false;
 					}else if(res.status == 300){
 						this.$Message.error({
-							  content: res.message,
-                duration: 7
+								content: res.message,
+								duration: 7
 						});
 					}
 				});
-			}
-			}
 		},
 		audit(auditFlag){
 			this.$emit('adminAudit',auditFlag);
 		}
-    },
+   },
     computed: {//计算属性
 					tableDa(){
 						let arr=this.chamList;

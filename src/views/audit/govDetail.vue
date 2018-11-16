@@ -22,7 +22,7 @@
 	  		<p>结束时间：{{datalist.end_time}}</p>
 	  		<p>合作方式：政企合作</p>
 	  		<p>预计收益：{{datalist.profit |Trans}}</p>
-	  		<p>联系人员：<p v-for="(u,index) of datalist.contacts">{{u.name}}-{{u.phone}}</p></p>
+	  		<p>联系人员：<span v-for="(u,index) of datalist.econtact">{{u.title}}-{{u.contact}}&nbsp;</span></p>
 	  	</Col>
 	  </Row>
   </div>
@@ -35,6 +35,16 @@
    
 
    
+		</Card>
+		<Card style="margin-top: 5px;padding-left: 15px;">
+		<h1 slot="title">资源附件</h1>
+								<!-- <div class="content-body between">
+									<div style="flex: 0 0 auto;">点击图片下载附件：</div>
+									<div style="padding: 15px 15px 0 0;" 
+									v-for="(url,index) of ">
+										<img :src="`${host}${url}`" style="width: 100px;margin-right:15px;border: 1px solid #515A6E;">										
+									</div>
+								</div> -->
 		</Card>
 		
 	 <Card style="margin-top: 5px;padding-left: 15px;">
@@ -53,7 +63,7 @@
 	 </Card>
 		
 	</div>
-    <right-card :list="datalist" :showResource="true"></right-card>
+    <right-card :list="datalist" :person="person"  :showResource="true"></right-card>
 		
 	</div>
 	
@@ -82,7 +92,8 @@ export default {
         return {
 			title:'',
 			img:defaultImg,
-			datalist:[]
+			datalist:[],
+			person:[]
 			
         }
     },
@@ -90,10 +101,14 @@ export default {
     	
     },
     computed: {//计算属性
-        	
+
     },
     watch: {//监测数据变化
-    	
+    	datalist(){
+    		this.$set(this.person,'center_name',this.datalist.release_people.center_name);
+    		this.$set(this.person,'work_phone',this.datalist.release_people.work_phone);
+    		this.$set(this.person,'unit',this.datalist.release_people.unit);
+    	}
 	},
     filters: {
     		formatDate(time) {
@@ -109,7 +124,7 @@ export default {
     created () {//实例被创建完毕之后执行
 	},
     mounted () {//模板被渲染完毕之后执行
-						  
+					  
 	},
 	
 	//=================组件路由勾子==============================
@@ -190,5 +205,11 @@ export default {
 		padding-bottom:20px;
 		color:#333333;
 		border-bottom: 1px solid brown;
+	}
+	.content-body{
+				display: flex;
+	}
+	.between{
+		margin: 5px 0;
 	}
 </style>

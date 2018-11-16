@@ -54,7 +54,10 @@
 						<h1 class="title">{{data.title}}</h1>
 						</Col>
 						<Col span="6" style="color: #F43838;" v-if="data.invest_money">{{data.invest_money |Trans}}</Col>
-						<Col span="6" style="color: #F43838;" v-if="data.total_money">{{data.total_money |Trans}}</Col>
+				<!-- 		<Col span="3" style="color: #F43838;" v-if="data.total_money">{{data.total_money |Trans}}</Col> -->
+						<Col span="6" v-if="isPost"> 					
+								<Tag color="blue" @click.native.stop="delRes(data.id)">删除资源</Tag>
+						</Col>
 					</Row>
 					
 					<Row :gutter="16">
@@ -141,6 +144,10 @@ import {formatDate} from '../../../../public/js/date.js'
 			defaultShow:{
 				type:Boolean,
 				default:true
+			},
+			isPost:{
+				type:Boolean,
+				default:false
 			}
 		},
 		data() { //数据
@@ -199,31 +206,34 @@ import {formatDate} from '../../../../public/js/date.js'
 			this.$refs.selectCham.checkedData=[];
 		},
 		getData() {//获取选中的数据并去重 去重待改进
-			let sk = this.$refs.selectCham.checkedData;
-		// this.result = this.result.concat(sk);			
-			let res = sk;
-		for(let i = 0; i < this.result.length; i++){
-				let item = this.result[i];
-				var repeat = false;
-				for (let j = 0; j < res.length; j++) {
-						if (item.id == res[j].id) {
-								repeat = true;
-								break;
+					let sk = this.$refs.selectCham.checkedData;
+				// this.result = this.result.concat(sk);			
+					let res = sk;
+				for(let i = 0; i < this.result.length; i++){
+						let item = this.result[i];
+						var repeat = false;
+						for (let j = 0; j < res.length; j++) {
+								if (item.id == res[j].id) {
+										repeat = true;
+										break;
+								}
+						}
+						if (!repeat) {
+								res.push(item);
 						}
 				}
-				if (!repeat) {
-						res.push(item);
-				}
+				this.result=res;
+				this.formInline.society = this.selected;
+				this.search();//提交一次
+				this.$refs.selectCham.tableData.forEach(item => { //去掉默认选中
+				this.$set(item, '_checked', false);
+				});
+				
+				},
+		delRes(resId){ //删除资源
+			  this.$emit('delRes',resId);      
 		}
-		this.result=res;
-		this.formInline.society = this.selected;
-		this.search();//提交一次
-		this.$refs.selectCham.tableData.forEach(item => { //去掉默认选中
-		this.$set(item, '_checked', false);
-		});
-		
-		}
-		},
+	},
 		computed: { //计算属性
 			selected(){
 				let arr=[]

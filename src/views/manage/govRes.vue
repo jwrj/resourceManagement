@@ -11,7 +11,6 @@
 				<span>单位：{{userdata.unit}}</span>
 			</div>
 			<br>
-			
 		<Form :model="resList" 
 		:rules="ruleValidate" 
 		label-position="right"
@@ -77,7 +76,7 @@
 
 					</Col>
 				</Row>
-									<FormItem
+<!-- 									<FormItem
                 v-for="(person, index) in resList.personList"
                 v-if="person.status"
                 :key="index"
@@ -98,7 +97,30 @@
 							<Button type="dashed"  @click="handleAdd" icon="md-add">新增联系人</Button>
 						</Col>
 					</Row>
-				</FormItem>
+				</FormItem> -->
+         <FormItem
+                v-for="(item, index) in resList.testPerson"
+                v-if="item.status"
+                :key="index"
+                :label="'联系人 '"
+                :prop="'testPerson.' + index + '.value'"
+                :rules="{pattern:/-/,required: true, message: '联系人 ' + item.index +' 格式错误', trigger: 'blur'}">
+            <Row>
+                <Col span="18">
+                    <Input type="text" v-model="item.value" placeholder="填写格式:联系人-联系电话"></Input>
+                </Col>
+                <Col span="4" offset="1">
+                    <Button @click="testRemove(index)">Delete</Button>
+                </Col>
+            </Row>
+        </FormItem>
+        <FormItem>
+            <Row>
+                <Col span="12">
+                    <Button type="dashed" long  @click="testAdd" icon="md-add">Add item</Button>
+                </Col>
+            </Row>
+        </FormItem>
 			</Form>
 		</Card>
 		<Card style="margin-top: 16px;">
@@ -108,7 +130,7 @@
 		<Card style="margin-top: 16px;height: 600px;">
 		
 					<h1 slot="title">附件上传</h1>
-						<file @uploadFile="uploadFile"></file>
+						<file @uploadFile="uploadFile" ></file>
 		<p style="margin-top: 15px;text-align: center;width: 100%;">
 			<Button type="primary" @click="handleSubmit('link')">立即创建</Button>
 		</p>
@@ -117,17 +139,6 @@
 		:mask-closable="false" 
 		title="请选择商会"
 		@on-ok="getData" :width="800">
-<!-- 			<table-list 
-			:tableColumns="tableColumns" 
-			ref="selectCham" 
-			:tableData="tableDa" 
-			:modalTitle="modalTitle"
-			>
-
-				<div slot="header">
-					<al-cascader v-model="res_s" placeholder="选择地区" style="width: 300px;" />
-				</div>
-			</table-list> -->
 			<xw-table :tableColumns="tableColumns" 
 			ref="selectCham" 
 			:tableData="tableDa" >
@@ -167,7 +178,7 @@
 						height:'500px'
 				},
 				userdata:[],
-				person:{},
+				person:[],
 				res_s: [],
 				modalTitle:'',
 				showImport: false,
@@ -185,14 +196,13 @@
 					profit_limit:'',
 					qualification:'',
 					index: 1,
-					personList: [
-                        {
-                            title: '',
-														contact:'',
+					testPerson:[
+						              {
+                            value: '',
                             index: 1,
                             status: 1
                         }
-                    ]
+					]
 				},
 				tableColumns: [{
 						type: 'selection'
@@ -236,6 +246,18 @@
 		},
 
 		methods: { //方法
+		      testAdd () {
+                this.index++;
+                this.resList.testPerson.push({
+                    value: '',
+                    index: this.index,
+                    status: 1
+                });
+            },
+            testRemove (index) {
+                this.resList.testPerson[index].status = 0;
+            },
+						
 			getData() {//获取选中的数据并去重 去重待改进
 				let sk = this.$refs.selectCham.checkedData;
 			// this.result = this.result.concat(sk);			
@@ -265,13 +287,13 @@
 			},
 			
 			handleSubmit(name) {//提交
-        if(this.resList.remark==''){
-        	this.$Message.error({
-        			content: '项目简介不能为空',
-        			duration: 7
-        	});
-        	return;
-        }
+			  if(this.resList.remark==''){
+			  	this.$Message.error({
+			  			content: '项目简介不能为空',
+			  			duration: 7
+			  	});
+			  	return;
+			  }
 				var add={		
 							title:this.resList.title,
 							scope_release:this.resList.replease,
@@ -291,7 +313,6 @@
 								this.uploadCloud[i].attch_id = str.join();
 							}
 							add.attach = JSON.stringify(this.uploadCloud);
-							console.log(add.attach);
 				this.$refs[name].validate((valid) => {
 					if (valid) {
 						$ax.getAjaxData('service/Resource/government', Object.assign({}, add), res => {
@@ -299,6 +320,7 @@
 							if(res.status == 200){
 								this.$Message.success('添加成功!');
 								this.resList=[];
+								this.$router.push('myPost')
 							}else if(res.status ==300){
 								this.$Modal.confirm({
 									title: '错误',
@@ -306,7 +328,11 @@
 								});
 							}
 						});
-					} else {             
+					} else {
+						this.$Modal.confirm({
+							title: '错误',
+							content: '表单填写错误，请检查表单！'
+						});
 					}
 				})
 			},
@@ -397,21 +423,22 @@
 				console.log(arr);
 				return arr;
 			},
+
 			contactList(){
 				let arr=[];
-				// return this.resList.personList.slice(0,1);
-				for (let i=0;i<this.resList.personList.length;i++ ){
+				let person = this.resList.testPerson
+				for (var p in person) {//遍历json数组时，这么写p为索引，0,1
 				let resl={
 					"title":'',
 					"contact":''
 				};
-				resl.title = this.resList.personList[i].title
-				resl.contact = this.resList.personList[i].contact
+				let list = person[p].value.split('-');
+				resl.title = list[0];
+				resl.contact = list[1];
 				arr.push(resl)
-					
-					
 				}
 				return JSON.stringify(arr);
+				// return arr;
 			}
 		},
 		watch: { //监测数据变化,
