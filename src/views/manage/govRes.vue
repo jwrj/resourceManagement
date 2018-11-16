@@ -174,6 +174,7 @@
 				result: [],
 				chamList:[],
 				uploadCloud:[],
+				cloud:[],
 				resList: {
 					title:'',
 					replease:'3',
@@ -187,7 +188,7 @@
 					personList: [
                         {
                             title: '',
-							contact:'',
+														contact:'',
                             index: 1,
                             status: 1
                         }
@@ -264,6 +265,13 @@
 			},
 			
 			handleSubmit(name) {//提交
+        if(this.resList.remark==''){
+        	this.$Message.error({
+        			content: '项目简介不能为空',
+        			duration: 7
+        	});
+        	return;
+        }
 				var add={		
 							title:this.resList.title,
 							scope_release:this.resList.replease,
@@ -279,11 +287,11 @@
 							contacts:this.contactList
 							}
 							for(let i =0;i<this.uploadCloud.length;i++){
-								let str =this.uploadCloud[i].attch_id.join();
-								this.uploadCloud[i].attch_id = str;
+								let str =this.uploadCloud[i].attch_id;
+								this.uploadCloud[i].attch_id = str.join();
 							}
 							add.attach = JSON.stringify(this.uploadCloud);
-							console.log(add);
+							console.log(add.attach);
 				this.$refs[name].validate((valid) => {
 					if (valid) {
 						$ax.getAjaxData('service/Resource/government', Object.assign({}, add), res => {
@@ -294,7 +302,7 @@
 							}else if(res.status ==300){
 								this.$Modal.confirm({
 									title: '错误',
-									content: '<p>用户资料未完善或者账户未通过审核</p>'
+									content: res.message
 								});
 							}
 						});
@@ -366,7 +374,7 @@
 							}
 				
 					}
-						
+
 			}
 			
 		},
@@ -407,6 +415,7 @@
 			}
 		},
 		watch: { //监测数据变化,
+
 		},
 
 		//===================组件钩子===========================

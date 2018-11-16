@@ -8,7 +8,7 @@
 							<Icon type="md-image" size="180" />
 							
 							<div class="middle">
-								<h1>{{person.truest_name}}</h1>
+								<h1 v-if="person">{{person.truest_name}}</h1>
 														
 								<Row type="flex" justify="start" align="top" >
 									<Col span="8">
@@ -18,8 +18,8 @@
 												<p>身份证号</p>
 											</div>
 											<div>
-												<p>：{{person.addtime | formatDate}}</p>
-												<p>：{{card?card:'--'}}</p>
+												<p v-if="person">：{{person.addtime | formatDate}}</p>
+												<p v-if="person">：{{card?card:'--'}}</p>
 											</div>
 										</div>
 									</Col>
@@ -31,8 +31,8 @@
 											<p>手机号码</p>
 										</div>
 										<div>
-											<p>：{{person.work_phone}}</p>
-											<p>：{{person.touch_phone}}</p>
+											<p v-if="person">：{{person.work_phone}}</p>
+											<p v-if="person">：{{person.touch_phone}}</p>
 										</div>
 									</div>
 									</Col>
@@ -54,7 +54,7 @@
 									<div style="flex: 0 0 auto;">单位执照：</div>
 									<div style="padding: 15px 15px 0 0;" 
 									v-for="(url,index) of licenseList">
-										<img :src="`${host}${url}`" style="width: 100px;margin-right:15px;">										
+										<img :src="`${host}${url}`" style="width: 100px;margin-right:15px;border: 1px solid #515A6E;">										
 									</div>
 								</div>
 								
@@ -62,7 +62,7 @@
 									<div style="flex: 0 0 auto;">单位证明：</div>
 									<div style="padding: 15px 15px 0 0;" 
 									v-for="(url,index) of proveList">
-										<img :src="`${host}${url}`" style="width: 100px;margin-right:15px;">
+										<img :src="`${host}${url}`" style="width: 100px;margin-right:15px;border: 1px solid #515A6E;">
 										
 									</div>
 						
@@ -205,7 +205,7 @@ export default {
 			return arr;
 		},
 		card(){
-		return this.person.card_num
+				return this.person.card_num;
 		}
     },
     watch: {//监测数据变化

@@ -274,7 +274,14 @@
 			upEditorContent(value){//获取富文本的数据
 				this.resList.remark = value;
 			},
-			handleSubmit(name) {					
+			handleSubmit(name) {
+				if(this.resList.remark==''){
+					this.$Message.error({
+							content: '项目简介不能为空',
+							duration: 7
+					});
+					return;
+				}
 				var add={		
 							title:this.resList.title,
 							scope_release:this.resList.replease,
@@ -311,6 +318,7 @@
 										content: res.message,
 										duration: 7
 								});
+								
 							}
 						});
 						
