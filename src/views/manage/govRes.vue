@@ -76,28 +76,6 @@
 
 					</Col>
 				</Row>
-<!-- 									<FormItem
-                v-for="(person, index) in resList.personList"
-                v-if="person.status"
-                :key="index"
-                :label="'联系人 ' + person.index">
-            <Row>
-						<Col span="18">
-							<Input type="text" v-model="person.title" style="width: 200px;" placeholder="请输入姓名"></Input>——
-							<Input type="text" v-model="person.contact" style="width: 200px;" placeholder="请输入手机号码"></Input>
-						</Col>
-						<Col span="4" offset="1">
-							<Button @click="handleRemove(index)">Delete</Button>
-						</Col>
-					</Row>
-				</FormItem>
-				<FormItem>
-					<Row>
-						<Col span="10">
-							<Button type="dashed"  @click="handleAdd" icon="md-add">新增联系人</Button>
-						</Col>
-					</Row>
-				</FormItem> -->
          <FormItem
                 v-for="(item, index) in resList.testPerson"
                 v-if="item.status"
@@ -320,7 +298,7 @@
 							if(res.status == 200){
 								this.$Message.success('添加成功!');
 								this.resList=[];
-								this.$router.push('myPost')
+								this.$router.push('myPost');
 							}else if(res.status ==300){
 								this.$Modal.confirm({
 									title: '错误',

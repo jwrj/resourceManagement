@@ -13,7 +13,7 @@
 			<p style="padding: 15px 0;">
 				<h1>承接单位信息</h1>
 				<br>
-				<p>承接单位：{{datalist.company_name}}</p>
+				<p>承接单位：{{datalist.company_name==''?'个人承接':datalist.company_name}}</p>
 				<p>联系人&nbsp;&nbsp;&nbsp;&nbsp;：{{people.center_name}}</p>
 				<p>联系电话：{{people.work_phone}}</p>
 				<p>承接时间：{{datalist.create_time}}</p>
@@ -46,9 +46,9 @@
 		 	<div class="centent">
 		 					<Icon type="md-image" size="120" />
 		 					<div class="middle">
-		 					<h1>王大锤</h1>
-		 					<p>所属单位：水利局</p>
-		 					<p>手机号码：4654676</p>
+		 					<h1>{{poster.center_name}}</h1>
+		 					<p>所属单位：{{poster.unit}}</p>
+		 					<p>手机号码：{{poster.work_phone}}</p>
 		 					</div>
 		 	</div>
 		 </Card>
@@ -92,8 +92,9 @@ export default {
 				person:'user'
 			},
 			datalist:[],
-			people:[],
-			resource:[],
+			people:[],//承接者相关
+			poster:[],//发布者县官
+			resource:[],//资源相关
 			title:'标题',
         }
     },
@@ -108,7 +109,8 @@ export default {
 				$ax.getAjaxData('service/ResourceUser/detail',{id:id}, res => {				
 					if(res.status == 200){
 							this.datalist = res.data;
-							this.person = res.data.contract_people;
+							this.people = res.data.contract_people;
+							this.poster = res.data.release_people;
 							this.resource = res.data.resource;
 					}else if(res.status == 300){
 						this.$Message.error({
@@ -150,7 +152,8 @@ export default {
 		}else{
 			const userJsonStr = sessionStorage.getItem('currentCarry');
 			this.datalist = JSON.parse(userJsonStr);
-			this.person = this.datalist.contract_people;
+			this.person = this.datalist.contract_people;	
+			this.poster = this.datalist.release_people;
 			this.resource = this.datalist.resource;
 			
 		}

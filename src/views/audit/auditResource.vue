@@ -7,7 +7,8 @@
 			 @openDetail="openDetail" :hideRadio="true"  ref="showNews" :showSelected="true">
 			</img-text>
 			<Page :total="total" show-total
-			 @on-change="pageChange" :current="currentPage"
+			 @on-change="pageChange" ref="pages"
+			 :current="currentPage"
 			 style="margin-top: 10px;margin-left: 30px;"/>
 		</Card>
 		
@@ -57,7 +58,7 @@ export default {
 					if(res.status == 200){
 						this.datalist=res.data;
 						this.total = res.page_info.record_count;　
-						this.currentPage =1;
+						this.$refs.pages.currentPage = 1;
 					}else if(res.status==300){
 						this.datalist=[];
 					}

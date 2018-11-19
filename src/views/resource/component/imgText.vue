@@ -19,7 +19,7 @@
 						>{{res.name}}
 						</Tag>
 					</p>
-					<p>
+					<p style="margin-bottom: 5px;">
 						<Button @click="resetResult" 
 						v-if="result.length !== 0" 
 						type="primary">清空
@@ -46,18 +46,20 @@
 			</p>
 		</Form>
 		<div class="imgtext" style="margin: 15px;">
-			<div class="centent" v-for="(data,index) of datalist" :key="index" @click="rowclick(data)">
-				<Icon type="md-image" size="120" />
+			<div class="centent" :class="{active: data.id === active ||data.rid ===active}"
+			 v-for="(data,index) of datalist" :key="index" @mouseenter="data.id?active=data.id:active=data.rid"
+			 @mouseleave="active=''">
+			 <!-- <Icon type="ios-trash-outline" size="30" @click.native.stop="delRes(data.id)" v-if="isPost" /> -->
+				<Icon type="md-image" size="120" @click="rowclick(data)"/>
 				<div class="middle" style="flex: 2;">
 						<Row :gutter="16">
-						<Col span="10">
-						<h1 class="title">{{data.title}}</h1>
+						<Col span="10" >
+						<h1 class="title" @click="rowclick(data)">{{data.title}}</h1>
 						</Col>
 						<Col span="6" style="color: #F43838;" v-if="data.invest_money">{{data.invest_money |Trans}}</Col>
 				<!-- 		<Col span="3" style="color: #F43838;" v-if="data.total_money">{{data.total_money |Trans}}</Col> -->
-						<Col span="6" v-if="isPost"> 					
-								<Tag color="blue" @click.native.stop="delRes(data.id)">删除资源</Tag>
-						</Col>
+						<Col span="3" v-if="postSign"><img v-if="isaudit(data)" src="../../../assets/img/default-img/audit.png" alt="审核通过" width="80" height="60"></Col>
+						<Col span="3" v-if="postSign"><img v-if="isget(data)" src="../../../assets/img/default-img/get.png" alt="已有承接" width="80" height="60"></Col>
 					</Row>
 					
 					<Row :gutter="16">
@@ -77,8 +79,7 @@
 						<Col span="12" >结束时间：{{data.end_time}}</Col>	
 					</Row>
 				</div>
-				<hr>
-
+      <Icon  style="margin-right: 10px;" type="ios-trash-outline" size="30" @click.native.stop="delRes(data.id)" v-if="isPost" />
 			</div>
 		</div>
 		<Modal 
@@ -101,6 +102,7 @@
 
 <script>
 import {formatDate} from '../../../../public/js/date.js'
+
 	export default {
 		name: '',
 		components: { //组件模板
@@ -148,6 +150,10 @@ import {formatDate} from '../../../../public/js/date.js'
 			isPost:{
 				type:Boolean,
 				default:false
+			},
+			postSign:{
+				type:Boolean,
+				default:false
 			}
 		},
 		data() { //数据
@@ -159,6 +165,7 @@ import {formatDate} from '../../../../public/js/date.js'
 					range:'1',
 					society:[]
 				},
+				active:'',
 				userdata:[],
 				result:[],
 				tableData:[],
@@ -260,7 +267,21 @@ import {formatDate} from '../../../../public/js/date.js'
 					}
 					return arr;
 		
-			}	
+			}	,
+			isget(){
+				return function(obj){
+			  if(obj.contract_count>0){
+					return true;
+				}				
+				}
+			},
+			isaudit(){
+				return function(obj){
+				if(obj.status==1){
+					return true;
+				}				
+				}
+			}
 		},
 		watch: { //监测数据变化,
 	
@@ -345,8 +366,12 @@ import {formatDate} from '../../../../public/js/date.js'
 	}
 	.title{
 		display: -webkit-box;
+		cursor:pointer;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 2;
 		overflow: hidden;
+	}
+	.active{
+		background: #D9EDF7;
 	}
 </style>

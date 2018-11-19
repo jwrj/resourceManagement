@@ -5,7 +5,12 @@
 		<div slot="title">
 			<h1>我承接的资源</h1>
 		</div>
-		<img-text :gettime="true" :hideRadio="true" :hidecheck="true" :datalist="datalist" @search="searchList" @openDetail="openDetail"></img-text>
+		<img-text :gettime="true" :hideRadio="true" :hidecheck="true" 
+		:datalist="datalist" @search="searchList" @openDetail="openDetail">
+		</img-text>
+		<Page :total="total" show-total ref="pages"
+		@on-change="pageChange" :current="currentPage"
+		style="margin-top: 10px;margin-left: 30px;"/>
 	</Card>	
 		
 		
@@ -32,17 +37,22 @@ export default {
     data () {//数据
         return {
         	datalist:[],
-					searchlist:[]
+					searchlist:[],
+					currentPage:1,
+					total:100
         }
     },
     methods: {//方法
     	searchList(list){
 			this.$set(this.searchlist,"title",list.word);
+			this.$set(this.searchlist,"page",1);
 			this.$set(this.searchlist,"start_time",list.time[0]);
 			this.$set(this.searchlist,"end_time",list.time[1]);
 			$ax.getAjaxData('service/Resource/icontract',Object.assign({}, this.searchlist), (res) =>{
 				if(res.status == 200){
 					this.datalist=res.data;
+					this.total = res.page_info.record_count;
+					this.$refs.pages.currentPage = 1;
 				}else if(res.status==300){
 					this.datalist=[];
 				}
@@ -55,13 +65,26 @@ export default {
 			 	this.$router.push({ path: '/audit/chamDetail', query: { id:data.source_id}});
 			 }
 				
+		},
+		pageChange(page){
+				//传页码给后端 获取每页要得到的数据
+				this.searchlist.page = page;
+				$ax.getAjaxData('service/Resource/icontract',this.searchlist, (res) =>{
+					if(res.status == 200){
+						this.datalist=res.data;
+					}else if(res.status==300){
+						this.datalist=[];
+					}
+				});
 		}
     },
     computed: {//计算属性
         	
     },
     watch: {//监测数据变化
-    	
+    	searchlist(){
+    		this.currentPage = 1;
+    	}
 	},
     
     //===================组件钩子===========================
@@ -99,6 +122,7 @@ export default {
 					next(vm => {
 							if(myGetData.status == 200){
 								vm.datalist=myGetData.data;
+								vm.total = myGetData.page_info.record_count;　
 							}
 					});
 				

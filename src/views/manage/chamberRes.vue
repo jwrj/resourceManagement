@@ -313,6 +313,7 @@
 							if(res.status == 200){
 								this.$Message.success('添加成功!');
 								this.resList={};
+								this.$router.push('myPost');
 							}else if(res.status ==300){
 								this.$Message.error({
 										content: res.message,

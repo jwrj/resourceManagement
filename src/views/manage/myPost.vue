@@ -7,11 +7,12 @@
 			<!-- <div v-for="(data,index) of datalist">{{datalist.title}}</div> -->
 		</div>
 		<img-text :isPost="true" :defaultShow="false" 
+		:postSign="true"
 		:hideRadio="true" :datalist="datalist" 
 		 @search="searchList" @openDetail="openDetail"
 		 @delRes="deleteRes">
 		 </img-text>
-		 <Page :total="total" show-total
+		 <Page :total="total" show-total ref="pages"
 		 @on-change="pageChange" :current="currentPage"
 		 style="margin-top: 10px;margin-left: 30px;"/>
 	</Card>	
@@ -56,6 +57,8 @@ export default {
 			$ax.getAjaxData('service/Resource/irelease',Object.assign({}, this.searchlist), (res) =>{
 				if(res.status == 200){
 					this.datalist=res.data;
+					this.total = res.page_info.record_count;
+					this.$refs.pages.currentPage = 1;
 				}else if(res.status==300){
 					this.datalist=[];
 				}
