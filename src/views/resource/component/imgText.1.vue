@@ -46,12 +46,9 @@
 			</p>
 		</Form>
 		<div class="imgtext" style="margin: 15px;">
- 	 <div class="centent" :class="{active: `${data.id}+${index}`=== active ||`${data.rid}+${index}`===active}"
-			 v-for="(data,index) of datalist" :key="index" @mouseenter="data.id?active=`${data.id}+${index}`:active=`${data.rid}+${index}`"
+			<div class="centent" :class="{active: data.id === active ||data.rid ===active}"
+			 v-for="(data,index) of datalist" :key="index" @mouseenter="data.id?active=data.id:active=data.rid"
 			 @mouseleave="active=''">
-<!-- 			 <div class="centent" :class="{active: data.id=== active ||data.rid===active}"
-			 		v-for="(data,index) of datalist" :key="index" @mouseenter="data.id?active=data.id:active=data.rid"
-			 		@mouseleave="active=''"> -->
 			 <!-- <Icon type="ios-trash-outline" size="30" @click.native.stop="delRes(data.id)" v-if="isPost" /> -->
 				<Icon type="md-image" size="120" @click="rowclick(data)"/>
 				<div class="middle" style="flex: 2;">
@@ -94,7 +91,7 @@
 			<xw-table
 			:tableColumns="tableColumns" 
 			ref="selectCham" 
-			:tableData="tableData"
+			:tableData="tableDa"
 			>
 			</xw-table>
 		</Modal>
@@ -167,6 +164,7 @@ import {formatDate} from '../../../../public/js/date.js'
 					range:'1',
 					society:[]
 				},
+				dass:'',
 				active:'',
 				userdata:[],
 				result:[],
@@ -203,11 +201,7 @@ import {formatDate} from '../../../../public/js/date.js'
 			for(let i=0;i<this.result.length;i++){
 				if(this.result[i].name==res.name){
 					this.result.splice(i,1)
-					this.tableData.forEach(item => {
-    			if(item.id === res.id){
-      				this.$set(item, '_checked', false);
-    			}
-    		});
+					
 				}
 			}
 			this.formInline.society = this.selected;
@@ -216,14 +210,14 @@ import {formatDate} from '../../../../public/js/date.js'
 		resetResult() {//清空
 			this.result = [];
 			this.formInline.society = [];
-		  this.tableData.forEach(item=>{
+		  this.tableDa.forEach(item=>{
 				this.$set(item, '_checked', false);
-			});
-
+			})
 			this.search();
 		},
 		getData() {//获取选中的数据并去重 去重待改进
-					let sk = this.$refs.selectCham.checkedData;	
+					let sk = this.$refs.selectCham.checkedData;
+				// this.result = this.result.concat(sk);			
 					let res = sk;
 				for(let i = 0; i < this.result.length; i++){
 						let item = this.result[i];
@@ -240,7 +234,8 @@ import {formatDate} from '../../../../public/js/date.js'
 				}
 				this.result=res;
 				this.formInline.society = this.selected;
-				this.search();//提交一次
+				this.search();//提交一次			
+				this.$refs.selectCham.checkedData=[];
 				
 				},
 		delRes(resId){ //删除资源
@@ -252,12 +247,28 @@ import {formatDate} from '../../../../public/js/date.js'
 				let arr=[]
 				for(let i of this.result){
 					if(i.name){
-						arr.push(i.id);
+						arr.push(i.org_unid);
 					}
 				}
 				arr=arr.join();
 				return arr;
 			},
+			tableDa(){
+					let arr =[];
+					for(let i in this.tableData){
+							let obj ={
+								id:'',
+								name:'',
+								org_unid:''
+							}
+							obj.id = i;
+							obj.name = this.tableData[i].name;
+							obj.org_unid = this.tableData[i].org_unid;
+							arr.push(obj)
+					}
+					return arr;
+		
+			}	,
 			isget(){
 				return function(obj){
 			  if(obj.contract_count>0){
@@ -274,7 +285,7 @@ import {formatDate} from '../../../../public/js/date.js'
 			}
 		},
 		watch: { //监测数据变化,
-	    
+	
 		},
 		filters: {
 				formatDate(time) {
@@ -298,14 +309,7 @@ import {formatDate} from '../../../../public/js/date.js'
 		mounted() { //模板被渲染完毕之后执行	
 			 $ax.getAjaxData('service/Oauth/allOrgList',{}, res => {				
 			 	if(res.status == 200){
-					let newArr = [];
-					res.data.forEach(item => {
-						newArr.push({
-							name:item.name,
-							id: item.org_unid
-						});
-					});
-					this.tableData = newArr;
+			 		this.tableData = res.data;
 			 	}
 			 });
 		},

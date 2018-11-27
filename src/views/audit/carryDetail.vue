@@ -39,7 +39,7 @@
 		</Card>
 	</div>
 	 <div style="flex: 1;">
-		 <Card>
+<!-- 		 <Card>
 		 	<div slot="title">
 		 		<h1>发布人信息</h1>
 		 	</div>
@@ -47,17 +47,17 @@
 		 					<Icon type="md-image" size="120" />
 		 					<div class="middle">
 		 					<h1>{{poster.center_name}}</h1>
-		 					<p>所属单位：{{poster.unit}}</p>
+		 					<p>所属单位：{{poster.unit?poster.unit:''}}</p>
 		 					<p>手机号码：{{poster.work_phone}}</p>
 		 					</div>
 		 	</div>
-		 </Card>
+		 </Card> -->
 		 <Card style="margin-top: 5px;">
 		 	<div slot="title">
 		 		<h1>其他承接单位</h1>
 		 	</div>
 		 	
-		 	<div class="unit" v-for="(unit,index) of datalist.relation" :key="index" @click="rowclick(unit)" v-if="unit.company_id">
+		 	<div class="unit" v-for="(unit,index) of datalist.relation" :key="index" @click="rowclick(unit)" ><!--v-if="unit.company_id"-->
 		 		<p style="font-size: 16px;color: black;" >{{unit.company_name?unit.company_name:'个人承接'}}</p>
 		 		<p class="gray">创建时间：{{unit.create_time | formatDate}}</p>
 		 	</div>

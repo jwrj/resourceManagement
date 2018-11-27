@@ -144,8 +144,7 @@
 			<xw-table
 			:tableColumns="tableColumns" 
 			ref="selectCham" 
-			:chamber="result"
-			:tableData="tableDa"
+			:tableData="tableData"
 			>
 			</xw-table>
 		</Modal>
@@ -214,7 +213,7 @@
 						key: 'name'
 					}
 				],
-				tableData:{},
+				tableData:[],
 				ruleValidate: {
 					time: [{
 						type: 'array',
@@ -263,25 +262,24 @@
 					}
 			}
 			this.result=res;
-			this.$refs.selectCham.tableData.forEach(item => { //去掉默认选中
-			this.$set(item, '_checked', false);
-			});
 			},
 			resetResult() {//清空
 				this.result = [];
-				this.$refs.selectCham.checkedData=[];
+				this.tableData.forEach(item=>{
+					this.$set(item, '_checked', false);
+				});
 			},
 			upEditorContent(value){//获取富文本的数据
 				this.resList.remark = value;
 			},
 			handleSubmit(name) {
-// 				if(this.resList.remark==''){
-// 					this.$Message.error({
-// 							content: '项目简介不能为空',
-// 							duration: 7
-// 					});
-// 					return;
-// 				}
+				if(this.resList.remark==''){
+					this.$Message.error({
+							content: '项目简介不能为空',
+							duration: 7
+					});
+					return;
+				}
 				var add={		
 							title:this.resList.title,
 							scope_release:this.resList.replease,
@@ -340,7 +338,11 @@
 				for(let i=0;i<this.result.length;i++){
 					if(this.result[i].name==res.name){
 						this.result.splice(i,1)
-						
+							this.tableData.forEach(item => {
+							if(item.id === res.id){
+									this.$set(item, '_checked', false);
+							}
+						});
 					}
 				}
 			},
@@ -401,22 +403,7 @@
 				 arr=arr.join();
 				 return arr;
 			 },
-			 tableDa(){
-					let arr =[];
-					for(let i in this.tableData){
-						  let obj ={
-								id:'',
-								name:'',
-								org_unid:''
-							}
-							obj.id = i;
-							obj.name = this.tableData[i].name;
-							obj.org_unid = this.tableData[i].org_unid;
-							arr.push(obj)
-					}
-					return arr;
-		
-			 },
+
 			 companyData(){
 			 	let arr=this.chamList;
 			 	for(let i=0;i<arr.length;i++){
@@ -437,7 +424,14 @@
 		mounted() { //模板被渲染完毕之后执行
 			$ax.getAjaxData('service/Oauth/allOrgList',{}, res => {				
 				if(res.status == 200){
-					this.tableData = res.data;
+					let newArr = [];
+					for(let i in res.data){
+						newArr.push({
+							name:res.data[i].name,
+							id: res.data[i].org_unid
+						});
+					}
+					this.tableData = newArr;				
 					this.count = res.data.length; //数据总条数
 				}
 			});

@@ -38,13 +38,14 @@
 		</Card>
 		<Card style="margin-top: 5px;padding-left: 15px;">
 		<h1 slot="title">资源附件</h1>
-								<!-- <div class="content-body between">
+								<div class="content-body between">
 									<div style="flex: 0 0 auto;">点击图片下载附件：</div>
 									<div style="padding: 15px 15px 0 0;" 
-									v-for="(url,index) of ">
-										<img :src="`${host}${url}`" style="width: 100px;margin-right:15px;border: 1px solid #515A6E;">										
+									v-for="(url,index) of datalist.resource_attch">
+										<img :src="url.attch_list[0].min_thumb"
+										style="width: 100px;height: 100px;margin-right:15px;border: 1px solid #515A6E;">						
 									</div>
-								</div> -->
+								</div>
 		</Card>
 		
 	 <Card style="margin-top: 5px;padding-left: 15px;">
@@ -98,7 +99,9 @@ export default {
         }
     },
     methods: {//方法
-    	
+    	upload(URL){
+				window.location.open(URL);
+			}
     },
     computed: {//计算属性
 

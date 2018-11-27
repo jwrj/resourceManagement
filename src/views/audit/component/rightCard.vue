@@ -68,7 +68,7 @@
 					<h1>其他承接单位</h1>
 				</div>
 				
-				<div class="unit" v-for="(unit,index) of list.user" :key="index" @click="rowclick(unit)" v-if="unit.pivot.company_id">
+				<div class="unit" v-for="(unit,index) of list.user" :key="index" @click="rowclick(unit)" ><!--v-if="unit.pivot.company_id"-->
 					<p style="font-size: 16px;color: black;" >{{unit.company_name?unit.company_name:'个人承接'}}</p>
 					<p class="gray">创建时间：{{unit.pivot.create_time}}</p>
 				</div>
