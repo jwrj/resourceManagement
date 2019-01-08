@@ -1,6 +1,7 @@
 <template>
 	
 	<div style="display: flex;">
+	<Spin size="large" fix v-if="spinShow"></Spin>	
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p  class="bold top">
@@ -11,10 +12,10 @@
 				</p>
 			</p>
   <div style="padding: 15px 0; border-bottom: 1px solid #C2CCD1;">
-	  <Row style="width: 75%;">
+	  <Row style="width: 78%;">
 	  	<Col span="12" style="text-align: left;">
 	  		<p>开始时间：{{datalist.start_time}}</p>
-	  		<p>发布范围：<span v-for="(data,index) of datalist.scope_select">{{data}}</span></p>
+	  		<p>发布范围：<span style="color: #006699;" v-for="(data,index) of datalist.scope_select">{{data}}</span></p>
 	  		<p>投资金额：{{datalist.invest_money |Trans}}</p>
 	  		<p>收益年限：{{datalist.profit_limit}}年</p>
 	  	</Col>
@@ -36,19 +37,20 @@
 
    
 		</Card>
-		<Card style="margin-top: 5px;padding-left: 15px;">
+<!-- 		<Card style="margin-top: 5px;padding-left: 15px;">
 		<h1 slot="title">资源附件</h1>
 								<div class="content-body between">
 									<div style="flex: 0 0 auto;">点击图片下载附件：</div>
 									<div style="padding: 15px 15px 0 0;" 
 									v-for="(url,index) of datalist.resource_attch">
 										<img :src="url.attch_list[0].min_thumb"
+										@click="uploadImg(url)"
 										style="width: 100px;height: 100px;margin-right:15px;border: 1px solid #515A6E;">						
 									</div>
 								</div>
-		</Card>
+		</Card> -->
 		
-	 <Card style="margin-top: 5px;padding-left: 15px;">
+	 <!-- <Card style="margin-top: 5px;padding-left: 15px;">
 		<h1 slot="title">投资环境介绍</h1>
      <div class="cham">
 		 <p>
@@ -61,7 +63,7 @@
 			 说明：中投顾问展示本文案例仅供您参考，关于您的区域产业规划问题，更多个性化的解决方案，请与我们的咨询顾问联络，我们的园区产业规划咨询顾问将与您一起来深入分析项目，并为您制定针对性的项目解决方案。
 		 </p>
 	 </div>
-	 </Card>
+	 </Card> -->
 		
 	</div>
     <right-card :list="datalist" :person="person"  :showResource="true"></right-card>
@@ -91,6 +93,7 @@ export default {
 	},
     data () {//数据
         return {
+			spinShow:false,
 			title:'',
 			img:defaultImg,
 			datalist:[],
@@ -99,9 +102,10 @@ export default {
         }
     },
     methods: {//方法
-    	upload(URL){
-				window.location.open(URL);
-			}
+		uploadImg(url){
+			window.location.href= url.attch_list[0].link;
+		}
+			
     },
     computed: {//计算属性
 
@@ -154,6 +158,7 @@ export default {
 					next(vm => {
 				//有id就请求  没id就读取session
 					if(to.query.id){
+						vm.spinShow = true;
 						$ax.getAjaxData('service/Resource/detail',{id:to.query.id}, (res) =>{
 							if(res.status == 200){
 								vm.datalist = res.data;
@@ -161,10 +166,12 @@ export default {
 							}else if(res.status==300){
 								vm.datalist = []
 							}
+							vm.spinShow = false;
 						});
 					}else{
 						const userJsonStr = sessionStorage.getItem('govRes');
 							vm.datalist = JSON.parse(userJsonStr);
+							vm.spinShow = false;
 					}
 					});
 				

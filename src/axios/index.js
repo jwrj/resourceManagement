@@ -10,7 +10,7 @@ const vm = new Vue();
 
 axios.defaults.baseURL = window._HOST.BASE_URL; //配置接口基础地址,在globalVariable.js
 
-axios.defaults.timeout = 5000; //响应超时时间
+axios.defaults.timeout = 30000; //响应超时时间
 
 axios.defaults.withCredentials = true; //允许携带cookie,实现跨域登录	
 

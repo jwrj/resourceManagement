@@ -4,30 +4,12 @@
 		<Card>
 			<h1 slot="title">政府账户审核</h1>
 				<div>
-					<Form :model="formInline">
 						<slot name="header"></slot>
-						<DatePicker 
-						:value="formInline.time" 
-						type="daterange" 
-						split-panels 
-						placeholder="选择时间"
-						@on-change="formatTime"
-						style="width: 200px">
-						</DatePicker>
-						
-						<Input v-model="formInline.word" style="width: 200px;margin:0 5px;" />
+						<Input v-model="word" style="width: 200px;margin:0 5px;" />
 						<Button type="primary" @click.native="search">搜索</Button>
-						<p style="margin-top: 6px;">
-							<CheckboxGroup v-model="formInline.check" @on-change="search">
-								<Checkbox label="0">审核中</Checkbox>
-								<Checkbox label="1">审核通过</Checkbox>
-								<Checkbox label="2">审核不通过</Checkbox>
-							</CheckboxGroup>
-						</p>
-					</Form>
 					<div class="imgtext" style="margin: 15px;">
 						<div class="centent" v-for="(data,index) in datalist" :key="index" @click="rowclick(data)">
-							<Icon type="md-image" size="180" />
+							<Icon type="md-contact" size="160" />
 							<div class="middle">
 						<p>
 							<div class="user">{{list(data.person,'truest_name')}}</div>
@@ -69,12 +51,11 @@
 
 						<div style="display: flex;">
 							<div>
-								<p>审核单位</p>
-								<p>审核时间</p>
+								<p>审核状态：</p>
 							</div>
 							<div>
-								<p>：{{data.reg_time }}</p>
-								<p>：{{data.last_time |formatDate}}</p>
+								<p v-if="data.status == 0" style="color: red;">审核未通过</p>
+								<p v-if="data.status ==1" style="color: green;">审核已通过</p>
 							</div>
 						</div>
 					</Col>
@@ -83,7 +64,7 @@
 							<hr>
 
 						</div>
-						 <Page :total="100" show-total  style="margin-top: 10px;margin-left: 30px;"/>
+						 <Page :total="total" show-total @on-change="changePage" style="margin-top: 10px;margin-left: 30px;"/>
 					</div>
 					
 				</div>
@@ -95,6 +76,7 @@
 
 <script>
 import {formatDate} from '../../../public/js/date.js'
+import defaultHead from '../../../public/head.jpg'
 export default {
 	name: '',
 	components:{//组件模板
@@ -110,11 +92,10 @@ export default {
 	},
     data () {//数据
         return {
-        	formInline: {
-        		check: [],
-        		word: '',
-        		time: []
-        	},
+			defaultHead:defaultHead,
+        	word: '',
+			total:0,
+			current:1,
 			pageShow:true,
 			datalist:[]
 
@@ -122,29 +103,27 @@ export default {
     },
     methods: {//方法
     	search() {
-//     		let objList=[];
-//     		let arr=formInline.check;  		
-//     		this.$set(objList,"title",list.word);
-//     		this.$set(objList,"status",arr.join());			
-//     		this.$set(objList,"start_time",list.time[0]);
-//     		this.$set(objList,"end_time",list.time[1]);
-//     		this.$set(objList,"society",list.society);
-//     		// this.$set(objList,"scope_release",);
-//     		this.searchlist =Object.assign({},objList);
-//     		$ax.getAjaxData('service/Resource/preview_index',this.searchlist, (res) =>{
-//     			if(res.status == 200){
-//     				this.datalist=res.data;
-//     			}else if(res.status==300){
-//     				this.datalist=[];
-//     			}
-//     		});
+    		let searchList = {
+				page:this.current,
+				name:this.word
+			}
+    		$ax.getAjaxData('service/User/gov_user',searchList, (res) =>{
+    			if(res.status == 200){
+    				this.datalist=res.data;
+    			}else if(res.status==300){
+    				this.datalist=[];
+    			}
+    		});
     	},
     	rowclick(data){
     		this.$router.push({ path: '/audit/accountDetail', query: { id:data.id}});
     	},
     	formatTime(date){
     		this.formInline.time = date;
-    	}
+    	},
+		changePage(page){
+			this.current = page;
+		}
     },
     computed: {//计算属性
 			list(){
@@ -217,11 +196,12 @@ export default {
 						 * console.log(await abc);
 						 * ...
 						*/
-					   let resourceData = await $ax.getAsyncAjaxData('service/User/gov_user',{});
+					   let resourceData = await $ax.getAsyncAjaxData('service/User/gov_user',{page:1});
 						   
 							next(vm => {
 									if(resourceData.status == 200){
 										vm.datalist=resourceData.data;
+										vm.total = resourceData.page_info.record_count;
 									}
 							});
 						

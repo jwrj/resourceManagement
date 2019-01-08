@@ -38,9 +38,8 @@ export default {
     	tologin(){
 			if(this.user_type == 3){
 				this.$router.push('/admin')
-			}else if(this.user_type == 1){
-				this.$router.push('login')
-				
+			}else {
+				this.$router.push('login')				
 			}
 		}
     },

@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {//数据
-
 	},
 	mutations: { //事件集,mutation是同步的
 

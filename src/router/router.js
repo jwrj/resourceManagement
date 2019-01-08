@@ -220,7 +220,7 @@ export default [
 				path: 'chamDetail',
 				name: 'chamDetail',
 				meta: {
-					title: '会间资源审核',
+					title: '资源详情',
 					hideMenu:true,
 					icon: 'md-alarm',
 					access:[1,3],
@@ -266,26 +266,7 @@ export default [
 		]
 	},
 
-	{
-		path: '/testPages',
-		name: 'testPages',
-		meta: {
-			icon: 'md-alarm',
-			hideBreadcrumb: true
-		},
-		component: Main,
-		children: [
-			{
-				path: 'comPage',
-				name: 'comPage',
-				meta: {
-					title: '组件',
-					icon: 'md-alarm',
-				},
-				component: () => import('@/views/testPages/comPage.vue')
-			},
-		]
-	},
+
 	{
 	    path: '/401',
 	    name: 'error-401',

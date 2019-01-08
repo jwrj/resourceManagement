@@ -164,8 +164,7 @@ export default {
 								// sessionStorage.user_type=this.datalist.user_type;
 								this.show= false;
 								this.selectCompany = true;
-								
-								// this.$router.replace({name: 'home'});
+
 							}else if(res.status==300){
 								console.log(res)
 							}

@@ -173,7 +173,8 @@ import {formatDate} from '../../../../public/js/date.js'
 				tableData:[],
 				showImport: false,
 				tableColumns: [{
-						type: 'selection'
+						type: 'selection',
+						width:80
 					},
 					{
 						title: 'ID',

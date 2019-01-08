@@ -1,6 +1,7 @@
 <template>
 	
 	<div style="display: flex;">
+	<Spin size="large" fix v-if="spinShow"></Spin>
 	<div style="flex: 3;margin-right: 5px;">
 		<Card style="padding: 15px;">
 			<p style="font-size: 26px;margin-bottom: 20px;color:#333333;" class="bold">
@@ -80,6 +81,7 @@ export default {
 	},
     data () {//数据
         return {
+			spinShow:false,
 			title:'',
 			datalist:[],
 			img:defaultImg,
@@ -152,8 +154,10 @@ export default {
 				 * 						
 				*/
 				next(vm => {
+
 					let id =''; //有id就请求  没id就读取session
          if(to.query.id || to.query.source_id){
+			 vm.spinShow = true;
 					 if(to.query.source_id){
 					 	id = to.query.source_id;
 					 }else if(to.query.id){
@@ -167,10 +171,13 @@ export default {
 					 	}else if(res.status==300){
 					 		vm.datalist = []
 					 	}
+						vm.spinShow = false;
 					 });
+					 
 				 }else{
 					 const userJsonStr = sessionStorage.getItem('current');
 					 	vm.datalist = JSON.parse(userJsonStr);
+						vm.spinShow = false;
 				 }
 				});
 				

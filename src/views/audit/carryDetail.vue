@@ -10,7 +10,7 @@
 				<span style="margin-right:5px;" v-if="!resource.release_time ==0">发布时间：{{resource.release_time | formatDate}}</span>
 				<span>点击量：{{resource.hits}}</span>
 			</p>
-			<p style="padding: 15px 0;">
+			<!-- <p style="padding: 15px 0;">
 				<h1>承接单位信息</h1>
 				<br>
 				<p>承接单位：{{datalist.company_name==''?'个人承接':datalist.company_name}}</p>
@@ -19,23 +19,32 @@
 				<p>承接时间：{{datalist.create_time}}</p>
 				<p>进度状况：已承接</p>
 				<p>交付时间：2019-02-01</p>
-				<div>
-					<p>资质:</p>
-					<Icon type="md-image"  size="100"/>
-					<Icon type="md-image"  size="100"/>
-					<Icon type="md-image"  size="100"/>
+				<p>担保金额：50万</p>
+				<p>介绍费用：10万</p>
+			</p> -->
+			<div style="width: 400px;margin: 10px 0;">
+				<div style="display: flex;justify-content: center;align-items: center;">
+					<div class="left" style="flex: 3;">
+						<h1>承接单位信息</h1>
+						<br>
+						<p>承接单位：{{datalist.company_name==''?'个人承接':datalist.company_name}}</p>
+						<p>联系人&nbsp;&nbsp;&nbsp;&nbsp;：{{people.center_name}}</p>
+						<p>联系电话：{{people.work_phone}}</p>
+						<p>承接时间：{{datalist.create_time}}</p>
+						<p>进度状况：已承接</p>
+						<p>交付时间：2019-02-01</p>
+						<p>担保金额：50万</p>
+						<p>介绍费用：10万</p>
+					</div>
+					<div class="right" style="flex: 1;">
+						    <i-circle :percent="100">
+        <span class="demo-Circle-inner" style="font-size:24px">已承接</span>
+    </i-circle>
+					</div>
+
 				</div>
-				
-				<div>
-					<p>担保金额:50万</p>
-					<Icon type="md-image"  size="100"/>
-				</div>
-				
-				<div>
-					<p>介绍费用:10万</p>
-					<Icon type="md-image"  size="100"/>
-				</div>
-			</p>
+			</div>
+
 		</Card>
 	</div>
 	 <div style="flex: 1;">

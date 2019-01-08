@@ -7,7 +7,7 @@
 					<h1>发布人信息</h1>
 				</div>
 				<div class="centent">
-								<Icon type="md-image" size="120" />
+								<Icon type="md-contact" size="120" />
 								<div class="middle">
 								<h1>{{person.center_name}}</h1>
 								<p>所属单位：{{person.unit}}</p>

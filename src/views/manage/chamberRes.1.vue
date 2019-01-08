@@ -123,11 +123,14 @@
 		<UEditor :configs='editor_config' @up_editor_content="upEditorContent"></UEditor>
 		</Card>
 		<Card style="margin-top: 16px;">
-<!-- 		
+		
 					<h1 slot="title">附件上传</h1>
-					<file @uploadFile="uploadFile"></file> -->
+<!-- 		
+					<file-manage></file-manage>  @changeFold="changeFold"-->
+					<file @uploadFile="uploadFile"></file>
 		<p style="margin-top: 15px;text-align: center;width: 100%;">
-			<Button type="primary" @click="handleSubmit('link')">
+			<Button type="primary" 
+			@click="handleSubmit('link')">
 			立即创建
 			</Button>
 		</p>

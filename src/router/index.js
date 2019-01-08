@@ -61,7 +61,6 @@ export const router = new Router({
 
 router.beforeEach((to, from, next) => {//路由跳转前
 if(to.meta.auth == false){
-	
 		// 检测系统内部登录
 		if(!sessionStorage.user_type &&to.name !== 'mainLogin'){//用户中心未登录
 			console.log('没登陆')

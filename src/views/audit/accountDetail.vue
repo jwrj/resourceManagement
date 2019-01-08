@@ -5,7 +5,7 @@
 			<h1 slot="title">政府账户审核</h1>
 			<div  style="margin: 15px;">
 						<div class="centent">
-							<Icon type="md-image" size="180" />
+							<Icon type="md-contact" size="160" />
 							
 							<div class="middle">
 								<h1 v-if="person">{{person.truest_name}}</h1>
@@ -95,7 +95,6 @@
 						
 						<p class="between">审核单位：广西南宁市某机关单位</p>
 						
-						<p class="between">审核时间：2018-01-15</p>
 										
 <!-- 						<p class="between">颁发验证：<Tag :color="Verification?'blue':'red'">{{verText}}</Tag>
 						<Poptip
@@ -111,23 +110,16 @@
 			
 		</Card>
 		
-		<Card style="margin-top: 16px;height: 600px;" v-show="false">
-			
-			<h1 slot="title">文件管理</h1>
-			<file-manage currentRouteName="comPage"></file-manage>	
-		</Card>
-		
 	</div>
 	
 </template>
 
 <script>
 import {formatDate} from '../../../public/js/date.js'
-import fileManage from '@/components/fileManage/file-manage.vue';//文件管理
 export default {
 	name: 'accountDetail',
 	components:{//组件模板
-	fileManage
+
 	},
 	props:{//组件道具（参数）
 		/* ****属性用法*****
@@ -223,7 +215,7 @@ export default {
   
 	},
     mounted () {//模板被渲染完毕之后执行
-    	
+
 	},
 	
 	//=================组件路由勾子==============================
@@ -247,7 +239,15 @@ export default {
 						* console.log(await abc);
 						* ...
 						*/
-					   let user_id = to.query.id;
+						let user_id = '';
+						if( to.query.id){
+							user_id =  to.query.id;
+							sessionStorage.cur_auditAc = user_id;
+						}else {
+							if(sessionStorage.cur_auditAc){
+								user_id = sessionStorage.cur_auditAc;
+							}
+						}
 						let resourceData = await $ax.getAsyncAjaxData('service/User/detail',{user_id:user_id});						
 							next(vm => {
 									if(resourceData.status == 200){
