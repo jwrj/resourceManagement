@@ -13,15 +13,15 @@ import secondaryView from '@/components/secondary-view.vue';
  */
 
 export default [
-	{
-	    path: '/login',
-	    name: 'login',
-	    meta: {
-	      hideMenu: true,
-				auth:true
-	    },
-	    component: () => import('@/views/login/login.vue')
-	},
+// 	{
+// 	    path: '/login',
+// 	    name: 'login',
+// 	    meta: {
+// 	      hideMenu: true,
+// 				auth:true
+// 	    },
+// 	    component: () => import('@/views/login/login.vue')
+// 	},
 	{
 			path: '/edit',
 			name: 'edit',
@@ -32,15 +32,15 @@ export default [
 			},
 			component: () => import('@/views/login/edit.vue')
 	},
-	{
-			path: '/admin',
-			name: 'admin',
-			meta: {
-				hideMenu: true,
-				auth:true
-			},
-			component: () => import('@/views/login/admin.vue')
-	},
+// 	{
+// 			path: '/admin',
+// 			name: 'admin',
+// 			meta: {
+// 				hideMenu: true,
+// 				auth:true
+// 			},
+// 			component: () => import('@/views/login/admin.vue')
+// 	},
 	{
 			path: '/mainLogin',
 			name: 'mainLogin',
@@ -53,7 +53,7 @@ export default [
 	{
 		path: '/',
 		name: '_home',
-	    redirect: '/home',
+	    redirect: '/mainLogin',
 	    meta: {//里面的参数用来做各种显示效果的判断（关键字段）
 	    	hideMenu: true,
 				auth:false

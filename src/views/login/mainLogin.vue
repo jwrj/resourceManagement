@@ -1,7 +1,7 @@
 <template>
 	
 	<div style="height: 100%;background: #001529;padding-top: 20%;">
-  <Card style="width: 400px;margin: auto;">
+  <Card style="width: 400px;margin: auto;" v-show="mainShow">
 		<h1 slot="title">请选择进入的身份</h1>
 		<RadioGroup v-model="user_type">
 						<Radio label="1">普通/政府用户登陆</Radio>
@@ -9,16 +9,96 @@
 					</RadioGroup>
 					<p style="margin:15px 0;"><Button type="primary" @click="tologin">确定进入</Button></p>
 	</Card>
+			<div style="height: 100%;background: #001529;display: flex;" v-if="showLogin">
+				 <Card style="width: 400px;margin: auto;" >
+					 <h1 slot="title">欢迎您！</h1>	
+					 <div v-if="show">
+						 							
+						 		<span style="font-size: 12px;" class="bold">请选择用户类型：</span>
+						 		<RadioGroup v-model="datalist.user_type">
+						 						<Radio label="1">普通用户</Radio>
+						 						<Radio label="2">政府用户</Radio>
+						 					</RadioGroup>
+						 		<Form  :model="datalist" v-if="datalist.user_type ==2">
+						 			<FormItem label="单位名称:" >
+						 					<Input type="text" v-model="datalist.unit"> </Input>
+						 			</FormItem>
+						 			<FormItem label="所属部门:" >
+						 					<Input type="text" v-model="datalist.department"> </Input>
+						 			</FormItem>
+						 			<FormItem label="职位:" >
+						 					<Input type="text" v-model="datalist.office"> </Input>
+						 			</FormItem>
+						 			<FormItem label="单位执照:">
+						 								<Upload
+						 								:multiple="true"
+						 								name="image"
+						 								:on-success="uploadLicense"
+						 								:on-remove='upremoveLicense'
+						 								action="http://192.168.2.251:8083/index.php/service/Uploadfile/simple_itf">
+						 									<Button icon="ios-cloud-upload-outline">选择文件</Button>
+						 								</Upload>
+						 			</FormItem>
+						 			<FormItem label="单位证明:">
+						 							<Upload
+						 							:multiple="true"
+						 							name="image"
+						 							:on-success="uploadProve"
+						 							:on-remove='upremoveProve'
+						 							action="http://192.168.2.251:8083/index.php/service/Uploadfile/simple_itf">
+						 								<Button icon="ios-cloud-upload-outline">选择文件</Button>
+						 							</Upload>
+						 			</FormItem>
+						 			<FormItem label="单位联系人:" >
+						 					<Input type="text" v-model="datalist.unit_contact"> </Input>
+						 			</FormItem>
+						 			<FormItem label="单位联系电话:" >
+						 					<Input type="text" v-model="datalist.unit_telphone"> </Input>
+						 			</FormItem>
+						 	</Form>
+						 	
+						 	<p>
+						 		<Button type="primary" @click="submit(datalist.user_type)" style="margin: 10px 0;">确定提交</Button>
+						 	</p>
+					 </div>
+					 
+					 <div v-if="selectCompany">
+						 请选择公司：
+						 <Select v-model="company" style="width:200px" >
+								<Option v-for="item in companySelect" :value="item.value" :key="item.value">{{ item.label }}</Option>
+						 </Select>
+						 <Button type="primary" @click="selectSuc" style="margin: 10px 0;">确定进入</Button>
+					 </div>
+					 
+				 </Card>
+			</div>
 		
+			<div style="height: 100%;background: #001529;display: flex;" v-if="showAdmin">
+				 <Card style="width: 400px;margin: auto;">
+					 <h1 slot="title">超级管理员登陆</h1>
+						<Form :model="adminlist">
+				 				<FormItem label="用户名:" >
+					 						<Input type="text" v-model="adminlist.title"> </Input>
+					 				</FormItem>
+									<FormItem label="密码:" >
+											<Input type="password" v-model="adminlist.password"> </Input>
+									</FormItem>
+									<FormItem>
+										<Button type="primary" @click="adminlogin">登陆</Button>
+									</FormItem>
+						</Form>
+					</Card>
+			</div>	
+
 	</div>
 	
 </template>
 
 <script>
-
 export default {
 	name: '',
 	components:{//组件模板
+
 	},
 	props:{//组件道具（参数）
 		/* ****属性用法*****
@@ -31,20 +111,188 @@ export default {
 	},
     data () {//数据
         return {
-        	user_type:''
+        	user_type:null,
+			mainShow:false,
+			showAdmin:false,
+			showLogin:false,
+			adminlist:{
+				title:'admin',
+				password:'admin888'
+			},
+			datalist:{
+				 unit:'',
+				 department:'',
+				 office:'',
+				 user_type:"1",
+				 unit_license:[],
+				 unit_prove:[],
+				 unit_contact:'',
+				 unit_telphone:''
+			 },
+			 show:false,
+			 user_t:999,
+			 UserType:0,
+			 companyList:[],
+			 company:'0',
+			 selectCompany:false			
         }
     },
     methods: {//方法
     	tologin(){
+			this.mainShow = false;
 			if(this.user_type == 3){
-				this.$router.push('/admin')
+				this.showAdmin = true;
+				this.showLogin = false;
 			}else {
-				this.$router.push('login')				
+				this.showLogin = true;
+				this.initTwo();
+				this.showAdmin = false;
 			}
-		}
+		},
+		   adminlogin(){
+			$ax.getAjaxData('service/Role/login_admin',this.adminlist, res => {
+				
+				if(res.status == 200){
+					sessionStorage.user_type=3;
+					this.$router.push('/home');
+				}else{
+					 this.$Message.error('用户名或密码错误');
+				}
+			});
+		},
+					init(){ //初始化
+						$ax.getAjaxData('service/Oauth/get_center_info',{}, (resourceData) =>{
+							if(resourceData.status == 200){ //已登陆用户中心																	 
+								 this.start();
+							}else if(resourceData.status == 300){  //未登陆用户中心
+								this.mainShow = true;
+							}
+						});										
+					},
+					initTwo(){
+						let loginUrl="";
+						$ax.getAjaxData('service/Oauth/get_jump_addr',{}, (res) =>{
+							if(res.status == 200){
+								loginUrl=res.data;
+								 window.location.href=loginUrl;
+							}else if(res.status==300){
+								console.log('没有获取到链接');
+							}
+						});	
+					},
+					start(){
+						$ax.getAjaxData('service/User/detail',{}, (res) =>{  //获取资料管理用户信息
+							if(res.status == 200){
+									this.mainShow = false;
+									this.showLogin = true;
+								  if(res.data.user_type ==0){											    
+										this.show = true;
+									}else if(res.data.user_type == 2){ //不是首次进入的政府账户 直接进入
+										sessionStorage.user_type = res.data.user_type;
+										this.$router.replace({name: 'home'});
+									}else if(res.data.user_type == 1){ //不是首次进入的普通用户 要选公司												    
+										$ax.getAjaxData('service/Oauth/getCompanyList',{}, (res) =>{ //获取公司列表
+											if(res.status == 200){
+												this.companyList = res.data;
+											}
+										});
+										this.selectCompany = true;
+									}
+							}
+						});
+					},
+						uploadLicense(res,file,filelist){ 
+							let arr=[];
+							filelist.forEach(item =>{
+								arr.push(item.response.data);
+							})
+							this.datalist.unit_license=arr;
+							console.log(this.datalist.unit_license)
+						},
+						upremoveLicense(file,filelist){
+		let arr=[];
+		filelist.forEach(item =>{
+			arr.push(item.response.data);
+		})
+		this.datalist.unit_license=arr;
+						},
+						uploadProve(res,file,filelist){
+							let arr=[];
+							filelist.forEach(item =>{
+								arr.push(item.response.data);
+							})
+							this.datalist.unit_prove=arr;
+							// console.log(this.datalist.unit_prove)
+						},
+						upremoveProve(file,filelist){
+							let arr=[];
+							filelist.forEach(item =>{
+								arr.push(item.response.data);
+							})
+							this.datalist.unit_prove=arr;
+						},
+						submit(type){
+							let postData = [];
+							if(type == 2){  //政府账户首次提交
+								postData = this.datalist;
+									$ax.getAjaxData('service/User/change_type',Object.assign({}, postData), (res) =>{
+									if(res.status == 200){
+										sessionStorage.user_type=this.datalist.user_type;	
+										this.$router.replace({name: 'home'});
+									}else if(res.status==300){
+										console.log(res)
+									}
+								});
+							}else if(type ==1){ //普通账户首次
+								 postData = {user_type:this.datalist.user_type} ;
+			 						$ax.getAjaxData('service/User/change_type',Object.assign({}, postData), (res) =>{
+									if(res.status == 200){
+										// sessionStorage.user_type=this.datalist.user_type;
+										this.show= false;
+										this.selectCompany = true;
+		
+									}else if(res.status==300){
+										console.log(res)
+									}
+								});
+							}
+			
+						},
+						selectSuc(){   //普通账户每次选择公司
+							console.log(this.company);					
+								$ax.getAjaxData('service/Oauth/select_company',this.company, (res) =>{
+								if(res.status == 200){
+									sessionStorage.user_type=this.datalist.user_type;
+									this.$router.replace({name: 'home'});
+								}else if(res.status==300){
+									console.log(res)
+								}
+							});
+						},
+						
     },
     computed: {//计算属性
-        	
+			 GovShow(){
+			if(this.datalist.user_type==2){
+				return true;
+			}else{
+				return false;
+			}
+		},
+        companySelect(){
+        	let arr = [];
+        	arr.push({value:'0',label:'默认'});
+        	for(let item of this.companyList){
+        		let com = {
+        			value:'',
+        			label:''
+        		}
+        		com.value = item.company_unid;
+        		com.label = item.name;
+        		arr.push(com);
+        	}
+        	return arr;
+        }	
     },
     watch: {//监测数据变化
     	
@@ -69,19 +317,22 @@ export default {
 						try {
 							
 							/*
-							* 
-							* ------串行执行---------
-							* console.log(await getAjaxData());
-							* ...
-							* 
-							* ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
-							* let abc = getAjaxData();//先执行promise函数
-							* ...
-							* console.log(await abc);
-							* ...
+							 * 
+							 * ------串行执行---------
+							 * console.log(await getAjaxData());
+							 * ...
+							 * 
+							 * ---------并行：将多个promise直接发起请求（先执行async所在函数），然后再进行await操作。（执行效率高、快）----------
+							 * let abc = getAjaxData();//先执行promise函数
+							 * ...
+							 * console.log(await abc);
+							 * ...
 							*/
-
 								
+							   
+								next(vm => {
+									vm.init();
+								});
 							
 						} catch(err) {
 							console.log(err);

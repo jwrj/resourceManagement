@@ -30,7 +30,6 @@
   
    <div>
 	<p class="title">项目介绍</p> 
-	<Img :src="img" width="60%" style="margin-right: auto;"/>
    <p style="margin: 10px 5px;" v-html="datalist.remark"></p>
    </div>
    

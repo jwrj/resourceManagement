@@ -10,7 +10,6 @@
 	import "../../../public/UEditor/ueditor.config.js";
 	import "../../../public/UEditor/ueditor.all.js";
 	import "../../../public/UEditor/lang/zh-cn/zh-cn.js";
-
 export default {
 	name: "UEditor",
 	props: ["configs", "content"],

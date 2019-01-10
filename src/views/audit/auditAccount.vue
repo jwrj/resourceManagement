@@ -201,7 +201,7 @@ export default {
 							next(vm => {
 									if(resourceData.status == 200){
 										vm.datalist=resourceData.data;
-										vm.total = resourceData.page_info.record_count;
+										vm.total = resourceData.data.length;
 									}
 							});
 						

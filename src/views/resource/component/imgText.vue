@@ -53,7 +53,7 @@
 			 		v-for="(data,index) of datalist" :key="index" @mouseenter="data.id?active=data.id:active=data.rid"
 			 		@mouseleave="active=''"> -->
 			 <!-- <Icon type="ios-trash-outline" size="30" @click.native.stop="delRes(data.id)" v-if="isPost" /> -->
-				<Icon type="md-image" size="120" @click="rowclick(data)"/>
+				<Icon type="md-image" size="120" @click="rowclick(data)" />
 				<div class="middle" style="flex: 2;">
 						<Row :gutter="16">
 						<Col span="10" >
@@ -64,7 +64,6 @@
 						<Col span="3" v-if="postSign"><img v-if="isaudit(data)" src="../../../assets/img/default-img/audit.png" alt="审核通过" width="80" height="60"></Col>
 						<Col span="3" v-if="postSign"><img v-if="isget(data)" src="../../../assets/img/default-img/get.png" alt="已有承接" width="80" height="60"></Col>
 					</Row>
-					
 					<Row :gutter="16">
 						<Col span="12"  v-if="defaultShow">发布用户：{{data.release_people.center_name || data.center_name}}</Col>
 						<Col span="12" >发布时间：{{data.release_time |formatDate}}</Col>	
@@ -275,7 +274,7 @@ import {formatDate} from '../../../../public/js/date.js'
 			}
 		},
 		watch: { //监测数据变化,
-	    
+
 		},
 		filters: {
 				formatDate(time) {
